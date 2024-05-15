@@ -1,0 +1,56 @@
+{
+    "name": "VoidSanctuaryActions",
+    "maps": [
+        {
+            "name": "ControlsActionMap",
+            "id": "94662d90-ea66-4bef-9fb6-b245da2f6dea",
+            "actions": [
+                {
+                    "name": "ExitGameAction",
+                    "type": "Button",
+                    "id": "44a0eb93-0320-4c6c-8789-a2b2a809b92c",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "f682047e-d24b-4206-a1b2-903055f1a953",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ExitGameAction",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "5c627a58-cf1f-4b8e-a5c2-6e978de742f7",
+                    "path": "<Gamepad>/buttonNorth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ExitGameAction",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "33eca119-57a7-4334-abdf-f9344a525c97",
+                    "path": "<Gamepad>/start",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ExitGameAction",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
