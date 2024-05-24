@@ -4,64 +4,67 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    [SerializeField] private float movementSpeed = 5f;
+    [SerializeField] private float movementSpeed = 20f;
+    [SerializeField] private float groundDrag = 6f;
     [SerializeField] private GameInput gameInput;
 
+    private Rigidbody rb;
+    private LayerMask groundLayer;
+    private bool isGrounded;
+    private CapsuleCollider playerCollider;
     private bool isWalking;
 
-    private void Update()
+    private void Start()
+    {
+        rb = GetComponent<Rigidbody>();
+        rb.freezeRotation = true;
+
+        playerCollider = GetComponentInChildren<CapsuleCollider>();
+        if (playerCollider == null)
+        {
+            Debug.LogError("Player collider not found");
+        }
+    }
+
+    private void FixedUpdate()
     {
         HandleMovement();
     }
 
     private void HandleMovement()
     {
+        // Get input for movement
         Vector2 movementVector = gameInput.GetMovementVectorNormalized();
+        Vector3 moveDir = new Vector3(movementVector.x, 0f, movementVector.y).normalized;
 
-        Vector3 moveDir = new Vector3(movementVector.x, 0, movementVector.y);
+        // Handle ground detection
+        isGrounded = Physics.Raycast(transform.position, Vector3.down, playerCollider.height / 2 + 0.2f, groundLayer);
 
-        float moveDistance = movementSpeed * Time.deltaTime;
-        float playerRadius = 0.7f;
-        float playerHeight = 2f;
+        // Handle movement
+        Vector3 targetVelocity = moveDir * movementSpeed;
+        Vector3 velocity = rb.velocity;
+        Vector3 velocityChange = targetVelocity - velocity;
 
-        bool canMove = !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerRadius, moveDir, moveDistance);
+        // Clamp velocity change to prevent abrupt changes
+        velocityChange.y = 0;
 
-        if (!canMove)
-        {
-            // atempt only X movement
-            Vector3 moveDirX = new Vector3(moveDir.x, 0, 0).normalized;
-            canMove = !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerRadius, moveDirX, moveDistance);
+        rb.AddForce(velocityChange, ForceMode.VelocityChange);
 
-            if (canMove)
-            {
-                moveDir = moveDirX;
-            }
-            else
-            {
-                // atempt only Z movement
-                Vector3 moveDirZ = new Vector3(0, 0, moveDir.z).normalized;
-                canMove = !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerRadius, moveDirZ, moveDistance);
+        // Apply drag if grounded
+        rb.drag = isGrounded ? groundDrag : 0;
 
-                if (canMove)
-                {
-                    moveDir = moveDirZ;
-                }
-                else
-                {
-                    // can't move in any direction
-                }
-            }
-        }
-
-        if (canMove)
-        {
-            transform.position += moveDir * moveDistance;
-        }
-
+        // Check if the player is walking
         isWalking = moveDir != Vector3.zero;
 
-        float rotateSpeed = 20f;
+        // Smoothly rotate player towards movement direction
 
-        transform.forward = Vector3.Slerp(transform.forward, moveDir, Time.deltaTime * rotateSpeed);
+        float rotationSpeed = 20f;
+        transform.forward = Vector3.Slerp(transform.forward, moveDir, Time.deltaTime * rotationSpeed);
+
+    }
+
+    public bool IsWalking()
+    {
+        return isWalking;
     }
 }
