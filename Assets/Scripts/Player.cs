@@ -7,6 +7,7 @@ public class Player : MonoBehaviour
     [SerializeField] private float movementSpeed = 20f;
     [SerializeField] private float groundDrag = 6f;
     [SerializeField] private GameInput gameInput;
+    [SerializeField] private Transform camera_direction;
 
     private Rigidbody rb;
     private LayerMask groundLayer;
@@ -35,8 +36,9 @@ public class Player : MonoBehaviour
     {
         // Get input for movement
         Vector2 movementVector = gameInput.GetMovementVectorNormalized();
-        Vector3 moveDir = new Vector3(movementVector.x, 0f, movementVector.y).normalized;
-
+        Vector3 moveDir = new Vector3(movementVector.x, 0, movementVector.y);
+        moveDir = camera_direction.forward * moveDir.z + camera_direction.right * moveDir.x;
+        moveDir.y = 0;
         // Handle ground detection
         isGrounded = Physics.Raycast(transform.position, Vector3.down, playerCollider.height / 2 + 0.2f, groundLayer);
 
