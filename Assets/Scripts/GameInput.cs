@@ -1,10 +1,18 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using static UnityEngine.InputSystem.InputAction;
 
 public class GameInput : MonoBehaviour
 {
     private VoidSanctuaryActions playerInputActions;
+
+    private InputAction _attackAction;
+    private InputAction _fireAction;
+    private InputAction _blockAction;
+
 
     private void Awake()
     {
@@ -17,6 +25,12 @@ public class GameInput : MonoBehaviour
             Application.Quit();
         };
 
+        _attackAction = playerInputActions.FindAction("Attack");
+
+        _fireAction = playerInputActions.FindAction("Fire");
+
+        _blockAction = playerInputActions.FindAction("Block");
+
     }
     public Vector2 GetMovementVectorNormalized()
     {
@@ -25,5 +39,20 @@ public class GameInput : MonoBehaviour
         inputVector = inputVector.normalized;
 
         return inputVector;
+    }
+
+    public Action<CallbackContext> OnAttack
+    {
+        set { _attackAction.performed += value; }
+    }
+
+    public Action<CallbackContext> OnFire
+    {
+        set { _fireAction.performed += value; }
+    }
+
+    public Action<CallbackContext> OnBlock
+    {
+        set { _blockAction.performed += value; }
     }
 }

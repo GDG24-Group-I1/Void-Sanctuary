@@ -669,6 +669,8 @@ MonoBehaviour:
   movementSpeed: 10
   groundDrag: 10
   gameInput: {fileID: 362574346}
+  projectilePrefab: {fileID: 2225220425910028821, guid: d648b877a1539bf43864fdddf250861d, type: 3}
+  swordPrefab: {fileID: 2768645055402703451, guid: 7683967413d9cd849919ec2e7d09a9d2, type: 3}
 --- !u!1001 &1623985554
 PrefabInstance:
   m_ObjectHideFlags: 0
