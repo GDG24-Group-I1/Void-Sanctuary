@@ -1,14 +1,9 @@
 fileFormatVersion: 2
-guid: 5c17406a5aa08a64a8601a4d486c0fd2
+guid: 2376d349f10f6f347b80de3d37a23298
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Laser
-    second: {fileID: 2100000, guid: 191fc1aae0963a94faf6a3b723ee7695, type: 2}
+  externalObjects: {}
   materials:
     materialImportMode: 2
     materialName: 0
