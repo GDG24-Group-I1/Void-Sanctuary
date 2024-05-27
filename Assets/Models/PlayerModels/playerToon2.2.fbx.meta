@@ -9,6 +9,36 @@ ModelImporter:
       assembly: UnityEngine.CoreModule
       name: Laser
     second: {fileID: 2100000, guid: 191fc1aae0963a94faf6a3b723ee7695, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Tailight Led Tube
+    second: {fileID: 2100000, guid: 78f2e4a57fe4e19469dc378c88d95087, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: corpo
+    second: {fileID: 2100000, guid: 0c48c9e855dd6d4488483ebcb8b95b09, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: giunto
+    second: {fileID: 2100000, guid: ea50ccb33ef16ca499edc608675cc110, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: lente
+    second: {fileID: 2100000, guid: 62fdab2b105b77c468b3ba8c0aed7e8a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: linea
+    second: {fileID: 2100000, guid: ca63b80f3998879469651c777f313721, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: visiera
+    second: {fileID: 2100000, guid: a610d5aee067c224d8999bf125c849a5, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

@@ -120,7 +120,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43770ab6d411b074fa0276064d6cbf37, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  swipeSpeed: 360
+  swipeSpeed: 450
   maxRotation: 120
   pivot: {x: 0, y: 0, z: 0}
   axis: {x: 0, y: 0, z: 0}

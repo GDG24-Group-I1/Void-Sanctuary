@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SwordScript : MonoBehaviour
 {
-    [SerializeField] private float swipeSpeed = 360;
+    [SerializeField] private float swipeSpeed = 450;
     [SerializeField] private float maxRotation = 120;
     private float rotation = 0;
     public Vector3 pivot;
