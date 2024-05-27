@@ -8,6 +8,7 @@ public class Player : MonoBehaviour
 {
     enum FiringStage { notFiring, startCharging, charging, firing, knockback }
 
+    private const float firingKnockbackSpeed = 50f;
     [SerializeField] private float movementSpeed = 20f;
     [SerializeField] private float groundDrag = 6f;
     [SerializeField] private GameInput gameInput;
@@ -25,15 +26,14 @@ public class Player : MonoBehaviour
     private bool canAct = true;
     private bool canFire = true;
     private bool canAttack = true;
-    private float movementCooldownTimer = 0;
-    private float actionCooldownTimer = 0;
-    private float fireCooldownTimer = 0;
-    private float attackCooldownTimer = 0;
+    private Timer movementCooldownTimer;
+    private Timer actionCooldownTimer;
+    private Timer fireCooldownTimer;
+    private Timer attackCooldownTimer;
+    private Timer attackComboTimer;
+    private Timer firingStageCooldown;
     private int attackComboCounter = 1;
-    private float attackComboTimer = 0;
     private FiringStage firingStage = FiringStage.notFiring;
-    private float firingStageCooldown = 0;
-    private float firingKnockbackSpeed = 50f;
 
 
 
@@ -43,10 +43,7 @@ public class Player : MonoBehaviour
         rb.freezeRotation = true;
 
         playerCollider = GetComponentInChildren<CapsuleCollider>();
-        if (playerCollider == null)
-        {
-            Debug.LogError("Player collider not found");
-        }
+        Debug.Assert(playerCollider != null, "Player collider not found");
         gameInput.OnAttack = (context) =>
         {
             Attack();
@@ -59,6 +56,50 @@ public class Player : MonoBehaviour
         {
             Block();
         };
+        movementCooldownTimer = new Timer(this)
+        {
+            OnTimerElapsed = () =>
+            {
+                canMove = true;
+            }
+        };
+        actionCooldownTimer = new Timer(this)
+        {
+            OnTimerElapsed = () =>
+            {
+                canAct = true;
+            }
+        };
+        fireCooldownTimer = new Timer(this)
+        {
+            OnTimerElapsed = () =>
+            {
+                canFire = true;
+            }
+        };
+        attackCooldownTimer = new Timer(this)
+        {
+            OnTimerElapsed = () =>
+            {
+                canAttack = true;
+            }
+        };
+        firingStageCooldown = new Timer(this)
+        {
+            OnTimerElapsed = () =>
+            {
+                firingStage += 1;
+                if (firingStage > FiringStage.knockback)
+                    firingStage = FiringStage.notFiring;
+            }
+        };
+        attackComboTimer = new Timer(this)
+        {
+            OnTimerElapsed = () =>
+            {
+                attackComboCounter = 1;
+            }
+        };
     }
 
     private void FixedUpdate()
@@ -68,7 +109,6 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
-        Cooldowns();
         FiringSequence();
     }
 
@@ -79,20 +119,11 @@ public class Player : MonoBehaviour
         Vector3 moveDir = new Vector3(movementVector.x, 0, movementVector.y);
         moveDir = camera_direction.forward * moveDir.z + camera_direction.right * moveDir.x;
         moveDir.y = 0;
-        
+
         // Check if movement is disabled
         if (!canMove)
         {
             moveDir = Vector3.zero;
-            if (movementCooldownTimer > 0)
-            {
-                movementCooldownTimer -= Time.fixedDeltaTime;
-                if (movementCooldownTimer <= 0)
-                {
-                    movementCooldownTimer = 0;
-                    canMove = true;
-                }
-            }
         }
 
 
@@ -122,71 +153,6 @@ public class Player : MonoBehaviour
 
     }
 
-    private void Cooldowns()
-    {
-        if (movementCooldownTimer > 0)
-        {
-            movementCooldownTimer -= Time.deltaTime;
-            if (movementCooldownTimer <= 0)
-            {
-                movementCooldownTimer = 0;
-                canMove = true;
-            }
-        }
-
-        if (actionCooldownTimer > 0)
-        {
-            actionCooldownTimer -= Time.deltaTime;
-            if (actionCooldownTimer <= 0)
-            {
-                actionCooldownTimer = 0;
-                canAct = true;
-            }
-        }
-
-        if (attackCooldownTimer > 0)
-        {
-            attackCooldownTimer -= Time.deltaTime;
-            if (attackCooldownTimer <= 0)
-            {
-                attackCooldownTimer = 0;
-                canAttack = true;
-            }
-        }
-
-        if (fireCooldownTimer > 0)
-        {
-            fireCooldownTimer -= Time.deltaTime;
-            if (fireCooldownTimer <= 0)
-            {
-                fireCooldownTimer = 0;
-                canFire = true;
-            }
-        }
-
-        if (attackComboTimer > 0)
-        {
-            attackComboTimer -= Time.deltaTime;
-            if (attackComboTimer <= 0)
-            {
-                attackComboTimer = 0;
-                attackComboCounter = 1;
-            }
-        }
-
-        if (firingStageCooldown > 0)
-        {
-            firingStageCooldown -= Time.deltaTime;
-            if (firingStageCooldown <= 0)
-            {
-                firingStageCooldown = 0;
-                firingStage += 1;
-                if (firingStage > FiringStage.knockback)
-                    firingStage = FiringStage.notFiring;
-            }
-        }
-    }
-
     private void Attack()
     {
         if (!canAttack || !canAct)
@@ -198,7 +164,7 @@ public class Player : MonoBehaviour
         Vector3 playerFacing = transform.forward;
 
         Quaternion swordRotation = Quaternion.Euler(90f, transform.rotation.eulerAngles.y, 180f);
-        Vector3 swordPosition = new Vector3(transform.position.x + swordRange * playerFacing.x, transform.position.y - 1.0f, transform.position.z + swordRange * playerFacing.z); ;
+        Vector3 swordPosition = new(transform.position.x + swordRange * playerFacing.x, transform.position.y - 1.0f, transform.position.z + swordRange * playerFacing.z); ;
 
         GameObject sword = Instantiate(swordPrefab, swordPosition, swordRotation);
 
@@ -212,22 +178,22 @@ public class Player : MonoBehaviour
         {
             attackComboCounter += 1;
             canAttack = false;
-            attackCooldownTimer = 0.4f;
-            attackComboTimer = 1.0f;
+            attackCooldownTimer.Start(0.4f);
+            attackComboTimer.Start(1.0f);
         }
         else
         {
             attackComboCounter = 1;
             canAttack = false;
-            attackCooldownTimer = 0.8f;
-            attackComboTimer = 0.0f;
+            attackCooldownTimer.Start(0.8f);
+            attackComboTimer.Start(0.0f);
         }
 
         canAct = false;
-        actionCooldownTimer = 0.4f;
+        actionCooldownTimer.Start(0.4f);
 
         canMove = false;
-        movementCooldownTimer = 0.5f;
+        movementCooldownTimer.Start(0.5f);
     }
 
     private void Fire()
@@ -247,11 +213,11 @@ public class Player : MonoBehaviour
             //stop movement while charging projectile
             case FiringStage.startCharging:
                 canMove = false;
-                movementCooldownTimer = 1.8f;
+                movementCooldownTimer.Start(1.8f);
                 canAct = false;
-                actionCooldownTimer = 1.8f;
+                actionCooldownTimer.Start(1.8f);
                 firingStage = FiringStage.charging;
-                firingStageCooldown = 1.0f;
+                firingStageCooldown.Start(1.0f);
                 break;
             // charging
             case FiringStage.charging:
@@ -260,8 +226,8 @@ public class Player : MonoBehaviour
             case FiringStage.firing:
                 var projectileSpawnDistance = 3f;
                 Vector3 projectilePosition = new Vector3(
-                    transform.position.x + projectileSpawnDistance * playerFacing.x, 
-                    transform.position.y + 1.5f, 
+                    transform.position.x + projectileSpawnDistance * playerFacing.x,
+                    transform.position.y + 1.5f,
                     transform.position.z + projectileSpawnDistance * playerFacing.z);
 
                 GameObject projectile = Instantiate(projectilePrefab, transform.position, transform.rotation);
@@ -269,15 +235,15 @@ public class Player : MonoBehaviour
                 projectileScript.facing = transform.forward;
 
                 canFire = false;
-                fireCooldownTimer = 3.0f;
+                fireCooldownTimer.Start(3.0f);
 
                 canAct = false;
-                actionCooldownTimer = 1.0f;
+                actionCooldownTimer.Start(1.0f);
 
                 canMove = false;
-                movementCooldownTimer = 0.4f;
+                movementCooldownTimer.Start(0.4f);
 
-                firingStageCooldown = 0.1f;
+                firingStageCooldown.Start(0.1f);
                 firingStage = FiringStage.knockback;
                 break;
             //knockback
