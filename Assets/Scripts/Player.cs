@@ -13,6 +13,7 @@ public class Player : MonoBehaviour
     [SerializeField] private GameInput gameInput;
     [SerializeField] private GameObject projectilePrefab;
     [SerializeField] private GameObject swordPrefab;
+    [SerializeField] private Transform camera_direction;
 
     private Rigidbody rb;
     private LayerMask groundLayer;
@@ -75,8 +76,10 @@ public class Player : MonoBehaviour
     {
         // Get input for movement
         Vector2 movementVector = gameInput.GetMovementVectorNormalized();
-        Vector3 moveDir = new Vector3(movementVector.x, 0f, movementVector.y).normalized;
-
+        Vector3 moveDir = new Vector3(movementVector.x, 0, movementVector.y);
+        moveDir = camera_direction.forward * moveDir.z + camera_direction.right * moveDir.x;
+        moveDir.y = 0;
+        
         // Check if movement is disabled
         if (!canMove)
         {
@@ -91,6 +94,7 @@ public class Player : MonoBehaviour
                 }
             }
         }
+
 
         // Handle ground detection
         isGrounded = Physics.Raycast(transform.position, Vector3.down, playerCollider.height / 2 + 0.2f, groundLayer);
