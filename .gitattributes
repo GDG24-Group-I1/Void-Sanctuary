@@ -1,5 +1,12 @@
+* text=auto
 .vsconfig text eol=lf
 *.meta text eol=lf
 *.asset text eol=lf
 *.json text eol=lf
 *.txt text eol=lf
+*.inputactions text eol=lf
+# this line is specifically to deal with auto-generated unity scripts
+# unity generates them with LF line endings and opening them with VS likes to convert them to CRLF
+# this prevents that.
+# all other .cs scripts can stay CRLF since visual studio by defaults uses that.
+*Actions.cs text eol=lf 
