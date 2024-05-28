@@ -1,3 +1,4 @@
+using Cinemachine;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -15,6 +16,11 @@ public class Player : MonoBehaviour
     [SerializeField] private GameObject projectilePrefab;
     [SerializeField] private GameObject swordPrefab;
     [SerializeField] private Transform camera_direction;
+    [SerializeField] private Transform cameraTransform;
+    [SerializeField] private LayerMask wallLayer;
+
+    [SerializeField] private CinemachineVirtualCamera normalCamera;
+    [SerializeField] private CinemachineVirtualCamera hiddenCamera;
 
     private Rigidbody rb;
     private LayerMask groundLayer;
@@ -110,6 +116,44 @@ public class Player : MonoBehaviour
     private void Update()
     {
         FiringSequence();
+        CheckIfPlayerIsHidden();
+    }
+
+    private void CheckIfPlayerIsHidden()
+    {
+        Vector3 cameraPosition = cameraTransform.position;
+        Vector3 directionToPlayer = transform.position - cameraPosition;
+        float distanceToPlayer = Vector3.Distance(cameraPosition, transform.position);
+
+        //Debug.DrawRay(cameraPosition, directionToPlayer, Color.red);
+
+        if (Physics.Raycast(cameraPosition, directionToPlayer, out RaycastHit hit, distanceToPlayer, wallLayer))
+        {
+            Debug.Log("Player is hidden by a wall");
+            // Log the hit object to see what the ray is hitting
+            SwitchToHiddenCamera();
+        }
+        else
+        {
+            Debug.Log("Player is visible");
+            SwitchToNormalCamera();
+        }
+    }
+
+    private void SwitchToNormalCamera()
+    {
+        if (normalCamera.Priority <= hiddenCamera.Priority)
+        {
+            normalCamera.Priority = hiddenCamera.Priority + 1;
+        }
+    }
+
+    private void SwitchToHiddenCamera()
+    {
+        if (hiddenCamera.Priority <= normalCamera.Priority)
+        {
+            hiddenCamera.Priority = normalCamera.Priority + 1;
+        }
     }
 
     private void HandleMovement()
