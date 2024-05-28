@@ -2,6 +2,7 @@ using Cinemachine;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Windows;
 
@@ -10,6 +11,7 @@ public class Player : MonoBehaviour
     enum FiringStage { notFiring, startCharging, charging, firing, knockback }
 
     private const float firingKnockbackSpeed = 50f;
+    private const int maxWallsCollided = 10;
     [SerializeField] private float movementSpeed = 20f;
     [SerializeField] private float groundDrag = 6f;
     [SerializeField] private GameInput gameInput;
@@ -19,14 +21,14 @@ public class Player : MonoBehaviour
     [SerializeField] private Transform cameraTransform;
     [SerializeField] private LayerMask wallLayer;
 
-    [SerializeField] private CinemachineVirtualCamera normalCamera;
-    [SerializeField] private CinemachineVirtualCamera hiddenCamera;
-
     private Rigidbody rb;
     private LayerMask groundLayer;
     private bool isGrounded;
     private CapsuleCollider playerCollider;
-    private bool isWalking;
+    private Collider[] previousWallsCollided = Array.Empty<Collider>();
+    private RaycastHit[] wallsCollided = new RaycastHit[maxWallsCollided];
+
+    public bool IsWalking { get; private set; }
 
     private bool canMove = true;
     private bool canAct = true;
@@ -119,41 +121,47 @@ public class Player : MonoBehaviour
         CheckIfPlayerIsHidden();
     }
 
+    private static void SetRendererOpacity(GameObject obj, float alpha)
+    {
+        var renderer = obj.GetComponent<Renderer>();
+        var color = renderer.material.GetColor("_Color");
+        renderer.material.SetColor("_Color", new Color(color.r, color.g, color.b, alpha));
+    }
+
+    private IEnumerable<Collider> FilterLostWalls(int hits)
+    {
+        return previousWallsCollided.Where(x => !wallsCollided.Take(hits).Select(x => x.collider).Contains(x));
+    }
+
+    private void UpdateCollidedWalls(int hits)
+    {
+        previousWallsCollided =  wallsCollided.Take(hits).Select(x => x.collider).Where(x => x != null).ToArray();
+    }
+
     private void CheckIfPlayerIsHidden()
     {
         Vector3 cameraPosition = cameraTransform.position;
-        Vector3 directionToPlayer = transform.position - cameraPosition;
+        Vector3 directionToPlayer = new Vector3(transform.position.x, 2, transform.position.z) - cameraPosition;
         float distanceToPlayer = Vector3.Distance(cameraPosition, transform.position);
 
-        //Debug.DrawRay(cameraPosition, directionToPlayer, Color.red);
+        // Debug.DrawRay(cameraPosition, directionToPlayer, Color.red);
 
-        if (Physics.Raycast(cameraPosition, directionToPlayer, out RaycastHit hit, distanceToPlayer, wallLayer))
+        var hits = Physics.RaycastNonAlloc(cameraPosition, directionToPlayer, wallsCollided, distanceToPlayer, wallLayer);
+        for (int i = 0; i < hits; ++i)
         {
-            Debug.Log("Player is hidden by a wall");
-            // Log the hit object to see what the ray is hitting
-            SwitchToHiddenCamera();
+            var hit = wallsCollided[i];
+            var wasAlreadyCollidedPreviousFrame = previousWallsCollided.Contains(hit.collider);
+            if (!wasAlreadyCollidedPreviousFrame)
+            {
+                SetRendererOpacity(hit.collider.gameObject, 0.5f);
+            }
         }
-        else
+        foreach (var oldWall in FilterLostWalls(hits))
         {
-            Debug.Log("Player is visible");
-            SwitchToNormalCamera();
+            // Reset the color of the wall
+            SetRendererOpacity(oldWall.gameObject, 1.0f);
         }
-    }
-
-    private void SwitchToNormalCamera()
-    {
-        if (normalCamera.Priority <= hiddenCamera.Priority)
-        {
-            normalCamera.Priority = hiddenCamera.Priority + 1;
-        }
-    }
-
-    private void SwitchToHiddenCamera()
-    {
-        if (hiddenCamera.Priority <= normalCamera.Priority)
-        {
-            hiddenCamera.Priority = normalCamera.Priority + 1;
-        }
+        UpdateCollidedWalls(hits);
     }
 
     private void HandleMovement()
@@ -188,7 +196,7 @@ public class Player : MonoBehaviour
         rb.drag = isGrounded ? groundDrag : 0;
 
         // Check if the player is walking
-        isWalking = moveDir != Vector3.zero;
+        IsWalking = moveDir != Vector3.zero;
 
         // Smoothly rotate player towards movement direction
 
@@ -303,10 +311,5 @@ public class Player : MonoBehaviour
     private void Block()
     {
 
-    }
-
-    public bool IsWalking()
-    {
-        return isWalking;
     }
 }
