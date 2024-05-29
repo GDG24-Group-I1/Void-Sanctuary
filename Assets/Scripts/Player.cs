@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Windows;
 
@@ -40,18 +41,39 @@ public class Player : MonoBehaviour
     private Timer attackCooldownTimer;
     private Timer attackComboTimer;
     private Timer firingStageCooldown;
+    private Timer deathTimer;
     private int attackComboCounter = 1;
     private FiringStage firingStage = FiringStage.notFiring;
-
+    private Vector3 startingPosition;
 
 
     private void Start()
     {
+        startingPosition = transform.position;
         rb = GetComponent<Rigidbody>();
+        deathTimer = new Timer(this)
+        {
+            OnTimerElapsed = () =>
+            {
+                // Reset player position, for now
+                // Later, add death logic here
+                Debug.Log("Player died");
+                transform.position = startingPosition;
+            }
+        };
+        var floorCollider = GetComponent<FloorCollider>();
+        floorCollider.CollisionEnterCallback = () =>
+        {
+            deathTimer?.Stop();
+            isGrounded = true;
+        };
+        floorCollider.CollisionExitCallback = () =>
+        {
+            Debug.Log("Start death timer");
+            deathTimer?.Start(5.0f);
+            isGrounded = false;
+        };
         rb.freezeRotation = true;
-
-        playerCollider = GetComponentInChildren<CapsuleCollider>();
-        Debug.Assert(playerCollider != null, "Player collider not found");
         gameInput.OnAttack = (context) =>
         {
             Attack();
@@ -180,7 +202,6 @@ public class Player : MonoBehaviour
 
 
         // Handle ground detection
-        isGrounded = Physics.Raycast(transform.position, Vector3.down, playerCollider.height / 2 + 0.2f, groundLayer);
 
         // Handle movement
         Vector3 targetVelocity = moveDir * movementSpeed;
