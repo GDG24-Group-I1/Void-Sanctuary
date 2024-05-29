@@ -51,17 +51,6 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""5c627a58-cf1f-4b8e-a5c2-6e978de742f7"",
-                    ""path"": ""<Gamepad>/buttonNorth"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""ExitGameAction"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""33eca119-57a7-4334-abdf-f9344a525c97"",
                     ""path"": ""<Gamepad>/start"",
                     ""interactions"": """",
