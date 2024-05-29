@@ -7,6 +7,7 @@
 *.inputactions text eol=lf
 *.mat text eol=lf
 *.unity text eol=lf
+*.prefab text eol=lf
 # this line is specifically to deal with auto-generated unity scripts
 # unity generates them with LF line endings and opening them with VS likes to convert them to CRLF
 # this prevents that.
