@@ -8,7 +8,7 @@ public class Timer
     private readonly MonoBehaviour ownerObject;
     private IEnumerator timerCoroutine;
 
-    public float Duration { get; private set; }
+    public float Duration { get; private set; } = 0f;
     public Action OnTimerElapsed;
     
     public Timer(MonoBehaviour owner) { ownerObject = owner; }
@@ -24,6 +24,15 @@ public class Timer
             Duration = durationSeconds;
             timerCoroutine = TimerCoroutine();
             ownerObject.StartCoroutine(timerCoroutine);
+        }
+    }
+
+    public void Stop()
+    {
+        if (timerCoroutine != null)
+        {
+            Duration = 0f;
+            ownerObject.StopCoroutine(timerCoroutine);
         }
     }
 
