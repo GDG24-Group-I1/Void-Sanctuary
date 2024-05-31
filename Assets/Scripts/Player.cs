@@ -163,7 +163,7 @@ public class Player : MonoBehaviour
     private void CheckIfPlayerIsHidden()
     {
         Vector3 cameraPosition = cameraTransform.position;
-        Vector3 directionToPlayer = new Vector3(transform.position.x, 2, transform.position.z) - cameraPosition;
+        Vector3 directionToPlayer = new Vector3(transform.position.x, 1, transform.position.z) - cameraPosition;
         float distanceToPlayer = Vector3.Distance(cameraPosition, transform.position);
 
         // Debug.DrawRay(cameraPosition, directionToPlayer, Color.red);
