@@ -12,6 +12,7 @@ public class GameInput : MonoBehaviour
     private InputAction _attackAction;
     private InputAction _fireAction;
     private InputAction _blockAction;
+    private InputAction _runAction;
 
 
     private void Awake()
@@ -30,6 +31,8 @@ public class GameInput : MonoBehaviour
         _fireAction = playerInputActions.FindAction("Fire");
 
         _blockAction = playerInputActions.FindAction("Block");
+
+        _runAction = playerInputActions.FindAction("Run");
 
     }
     public Vector2 GetMovementVectorNormalized()
@@ -54,5 +57,10 @@ public class GameInput : MonoBehaviour
     public Action<CallbackContext> OnBlock
     {
         set { _blockAction.performed += value; }
+    }
+
+    public Action<CallbackContext> OnRun
+    {
+        set { _runAction.performed += value; }
     }
 }

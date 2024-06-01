@@ -8,6 +8,7 @@ public class PlayerAnimator : MonoBehaviour
 
     private Animator animator;
     private const string IS_WALKING = "IsWalking";
+    private const string IS_RUNNING = "IsRunning";
     private void Awake()
     {
         animator = GetComponent<Animator>();
@@ -17,6 +18,11 @@ public class PlayerAnimator : MonoBehaviour
     {
         bool isWalking = player.IsWalking;
         animator.SetBool(IS_WALKING, isWalking);
+
+        bool isRunning = player.IsRunning;
+        animator.SetBool(IS_RUNNING, isRunning);
+
+        //Debug.Log("IsWalking: " + isWalking + " IsRunning: " + isRunning);
     }
     
 }

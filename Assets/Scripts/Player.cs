@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.Windows;
 
 public class Player : MonoBehaviour
@@ -13,7 +14,8 @@ public class Player : MonoBehaviour
 
     private const float firingKnockbackSpeed = 50f;
     private const int maxWallsCollided = 10;
-    [SerializeField] private float movementSpeed = 20f;
+    [SerializeField] private float walkSpeed = 5f;
+    [SerializeField] private float runSpeed = 10f;
     [SerializeField] private float groundDrag = 6f;
     [SerializeField] private GameInput gameInput;
     [SerializeField] private GameObject projectilePrefab;
@@ -31,6 +33,9 @@ public class Player : MonoBehaviour
 
     public bool IsWalking { get; private set; }
 
+    public bool IsRunning { get; private set; }
+
+    private float movementSpeed;
     private bool canMove = true;
     private bool canAct = true;
     private bool canFire = true;
@@ -49,6 +54,7 @@ public class Player : MonoBehaviour
 
     private void Start()
     {
+        movementSpeed = walkSpeed;
         startingPosition = transform.position;
         rb = GetComponent<Rigidbody>();
         deathTimer = new Timer(this)
@@ -86,6 +92,26 @@ public class Player : MonoBehaviour
         {
             Block();
         };
+        gameInput.OnRun = (context) =>
+        {
+
+            //Debug.Log($"IsWalking {IsWalking}, IsRunning {IsRunning} context {context.performed}");
+
+            if (IsWalking)
+            {
+                IsRunning = !IsRunning;
+                if (IsRunning)
+                {
+                    movementSpeed = runSpeed;
+                }
+                else
+                {
+                    movementSpeed = walkSpeed;
+                }
+            }
+                
+        };
+        
         movementCooldownTimer = new Timer(this)
         {
             OnTimerElapsed = () =>
@@ -218,6 +244,12 @@ public class Player : MonoBehaviour
 
         // Check if the player is walking
         IsWalking = moveDir != Vector3.zero;
+
+        if (IsWalking == false)
+        {
+            movementSpeed = walkSpeed;
+            IsRunning = false;
+        }
 
         // Smoothly rotate player towards movement direction
 
