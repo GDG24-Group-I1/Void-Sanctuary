@@ -110,6 +110,15 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""DrawWeapon"",
+                    ""type"": ""Button"",
+                    ""id"": ""eaddbf77-3a63-46e7-ac47-8138dc802ad1"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -226,7 +235,7 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""efeb4a3c-41fa-47f1-b194-e455da8f2ad5"",
-                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""path"": ""<Gamepad>/rightShoulder"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -277,6 +286,28 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
                     ""action"": ""Run"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e9af9bb1-ff5c-40b0-8f57-731c12560bd4"",
+                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""DrawWeapon"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""9482b8bc-6542-4e20-948c-bf7a5d185295"",
+                    ""path"": ""<Keyboard>/tab"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""DrawWeapon"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -293,6 +324,7 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
         m_Player_Fire = m_Player.FindAction("Fire", throwIfNotFound: true);
         m_Player_Block = m_Player.FindAction("Block", throwIfNotFound: true);
         m_Player_Run = m_Player.FindAction("Run", throwIfNotFound: true);
+        m_Player_DrawWeapon = m_Player.FindAction("DrawWeapon", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -405,6 +437,7 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Fire;
     private readonly InputAction m_Player_Block;
     private readonly InputAction m_Player_Run;
+    private readonly InputAction m_Player_DrawWeapon;
     public struct PlayerActions
     {
         private @VoidSanctuaryActions m_Wrapper;
@@ -414,6 +447,7 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
         public InputAction @Fire => m_Wrapper.m_Player_Fire;
         public InputAction @Block => m_Wrapper.m_Player_Block;
         public InputAction @Run => m_Wrapper.m_Player_Run;
+        public InputAction @DrawWeapon => m_Wrapper.m_Player_DrawWeapon;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -438,6 +472,9 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
             @Run.started += instance.OnRun;
             @Run.performed += instance.OnRun;
             @Run.canceled += instance.OnRun;
+            @DrawWeapon.started += instance.OnDrawWeapon;
+            @DrawWeapon.performed += instance.OnDrawWeapon;
+            @DrawWeapon.canceled += instance.OnDrawWeapon;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -457,6 +494,9 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
             @Run.started -= instance.OnRun;
             @Run.performed -= instance.OnRun;
             @Run.canceled -= instance.OnRun;
+            @DrawWeapon.started -= instance.OnDrawWeapon;
+            @DrawWeapon.performed -= instance.OnDrawWeapon;
+            @DrawWeapon.canceled -= instance.OnDrawWeapon;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -485,5 +525,6 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
         void OnFire(InputAction.CallbackContext context);
         void OnBlock(InputAction.CallbackContext context);
         void OnRun(InputAction.CallbackContext context);
+        void OnDrawWeapon(InputAction.CallbackContext context);
     }
 }

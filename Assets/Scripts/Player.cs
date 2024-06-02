@@ -35,6 +35,8 @@ public class Player : MonoBehaviour
 
     public bool IsRunning { get; private set; }
 
+    public bool IsWeaponEquipped { get; private set; }
+
     private float movementSpeed;
     private bool canMove = true;
     private bool canAct = true;
@@ -110,6 +112,10 @@ public class Player : MonoBehaviour
                 }
             }
                 
+        };
+        gameInput.OnDrawWeapon = (context) =>
+        {
+            IsWeaponEquipped = !IsWeaponEquipped;
         };
         
         movementCooldownTimer = new Timer(this)

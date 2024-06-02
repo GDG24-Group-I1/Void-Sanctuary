@@ -9,6 +9,7 @@ public class PlayerAnimator : MonoBehaviour
     private Animator animator;
     private const string IS_WALKING = "IsWalking";
     private const string IS_RUNNING = "IsRunning";
+    private const string IS_WEAPON_EQUP = "IsWeaponEquipped";
     private void Awake()
     {
         animator = GetComponent<Animator>();
@@ -22,7 +23,8 @@ public class PlayerAnimator : MonoBehaviour
         bool isRunning = player.IsRunning;
         animator.SetBool(IS_RUNNING, isRunning);
 
-        //Debug.Log("IsWalking: " + isWalking + " IsRunning: " + isRunning);
+        bool isWeaponEquip = player.IsWeaponEquipped;
+        animator.SetBool(IS_WEAPON_EQUP, isWeaponEquip);
     }
     
 }
