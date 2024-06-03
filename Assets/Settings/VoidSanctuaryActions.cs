@@ -112,6 +112,15 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Dash"",
+                    ""type"": ""Button"",
+                    ""id"": ""c6905988-db54-428f-93da-2c8685eccab8"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -184,7 +193,7 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""1559e2bf-e571-4599-91c2-48617cbb3051"",
-                    ""path"": ""<Keyboard>/r"",
+                    ""path"": ""<Mouse>/leftButton"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -206,7 +215,7 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""93f29098-f95f-426b-b8bd-3228b5978786"",
-                    ""path"": ""<Keyboard>/e"",
+                    ""path"": ""<Mouse>/rightButton"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -228,7 +237,7 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""cea987b3-ef84-4a5b-a7fe-1e07dd15f912"",
-                    ""path"": ""<Mouse>/rightButton"",
+                    ""path"": ""<Mouse>/middleButton"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -246,6 +255,28 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
                     ""action"": ""Block"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2d35607d-448a-4648-aaa3-2828177c3f50"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Dash"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2661904b-cfe5-4f09-adb3-89f2ee451448"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Dash"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -261,6 +292,7 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
         m_Player_Attack = m_Player.FindAction("Attack", throwIfNotFound: true);
         m_Player_Fire = m_Player.FindAction("Fire", throwIfNotFound: true);
         m_Player_Block = m_Player.FindAction("Block", throwIfNotFound: true);
+        m_Player_Dash = m_Player.FindAction("Dash", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -372,6 +404,7 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Attack;
     private readonly InputAction m_Player_Fire;
     private readonly InputAction m_Player_Block;
+    private readonly InputAction m_Player_Dash;
     public struct PlayerActions
     {
         private @VoidSanctuaryActions m_Wrapper;
@@ -380,6 +413,7 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
         public InputAction @Attack => m_Wrapper.m_Player_Attack;
         public InputAction @Fire => m_Wrapper.m_Player_Fire;
         public InputAction @Block => m_Wrapper.m_Player_Block;
+        public InputAction @Dash => m_Wrapper.m_Player_Dash;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -401,6 +435,9 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
             @Block.started += instance.OnBlock;
             @Block.performed += instance.OnBlock;
             @Block.canceled += instance.OnBlock;
+            @Dash.started += instance.OnDash;
+            @Dash.performed += instance.OnDash;
+            @Dash.canceled += instance.OnDash;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -417,6 +454,9 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
             @Block.started -= instance.OnBlock;
             @Block.performed -= instance.OnBlock;
             @Block.canceled -= instance.OnBlock;
+            @Dash.started -= instance.OnDash;
+            @Dash.performed -= instance.OnDash;
+            @Dash.canceled -= instance.OnDash;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -444,5 +484,6 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
         void OnAttack(InputAction.CallbackContext context);
         void OnFire(InputAction.CallbackContext context);
         void OnBlock(InputAction.CallbackContext context);
+        void OnDash(InputAction.CallbackContext context);
     }
 }
