@@ -77,9 +77,13 @@ public class Player : MonoBehaviour
         };
         floorCollider.CollisionExitCallback = () =>
         {
-            Debug.Log("Start death timer");
             deathTimer?.Start(5.0f);
             isGrounded = false;
+        };
+        floorCollider.CollisionStayCallback = () =>
+        {
+            deathTimer?.Stop();
+            isGrounded = true;
         };
         rb.freezeRotation = true;
         gameInput.OnAttack = (context) =>
