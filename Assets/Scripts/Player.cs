@@ -212,7 +212,7 @@ public class Player : MonoBehaviour
             var wasAlreadyCollidedPreviousFrame = previousWallsCollided.Contains(hit.collider);
             if (!wasAlreadyCollidedPreviousFrame)
             {
-                SetRendererOpacity(hit.collider.gameObject, 0.5f);
+                SetRendererOpacity(hit.collider.gameObject, 0.0f);
             }
         }
         foreach (var oldWall in FilterLostWalls(hits))
