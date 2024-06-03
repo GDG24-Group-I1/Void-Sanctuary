@@ -1,7 +1,11 @@
+using Cinemachine;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.Windows;
 
 public class Player : MonoBehaviour
@@ -9,19 +13,31 @@ public class Player : MonoBehaviour
     enum FiringStage { notFiring, startCharging, charging, firing, knockback }
 
     private const float firingKnockbackSpeed = 50f;
-    [SerializeField] private float movementSpeed = 20f;
+    private const int maxWallsCollided = 10;
+    [SerializeField] private float walkSpeed = 5f;
+    [SerializeField] private float runSpeed = 10f;
     [SerializeField] private float groundDrag = 6f;
     [SerializeField] private GameInput gameInput;
     [SerializeField] private GameObject projectilePrefab;
     [SerializeField] private GameObject swordPrefab;
     [SerializeField] private Transform camera_direction;
+    [SerializeField] private Transform cameraTransform;
+    [SerializeField] private LayerMask wallLayer;
 
     private Rigidbody rb;
     private LayerMask groundLayer;
     private bool isGrounded;
     private CapsuleCollider playerCollider;
-    private bool isWalking;
+    private Collider[] previousWallsCollided = Array.Empty<Collider>();
+    private RaycastHit[] wallsCollided = new RaycastHit[maxWallsCollided];
 
+    public bool IsWalking { get; private set; }
+
+    public bool IsRunning { get; private set; }
+
+    public bool IsWeaponEquipped { get; private set; }
+
+    private float movementSpeed;
     private bool canMove = true;
     private bool canAct = true;
     private bool canFire = true;
@@ -32,18 +48,40 @@ public class Player : MonoBehaviour
     private Timer attackCooldownTimer;
     private Timer attackComboTimer;
     private Timer firingStageCooldown;
+    private Timer deathTimer;
     private int attackComboCounter = 1;
     private FiringStage firingStage = FiringStage.notFiring;
-
+    private Vector3 startingPosition;
 
 
     private void Start()
     {
+        movementSpeed = walkSpeed;
+        startingPosition = transform.position;
         rb = GetComponent<Rigidbody>();
+        deathTimer = new Timer(this)
+        {
+            OnTimerElapsed = () =>
+            {
+                // Reset player position, for now
+                // Later, add death logic here
+                Debug.Log("Player died");
+                transform.position = startingPosition;
+            }
+        };
+        var floorCollider = GetComponent<FloorCollider>();
+        floorCollider.CollisionEnterCallback = () =>
+        {
+            deathTimer?.Stop();
+            isGrounded = true;
+        };
+        floorCollider.CollisionExitCallback = () =>
+        {
+            Debug.Log("Start death timer");
+            deathTimer?.Start(5.0f);
+            isGrounded = false;
+        };
         rb.freezeRotation = true;
-
-        playerCollider = GetComponentInChildren<CapsuleCollider>();
-        Debug.Assert(playerCollider != null, "Player collider not found");
         gameInput.OnAttack = (context) =>
         {
             Attack();
@@ -56,6 +94,31 @@ public class Player : MonoBehaviour
         {
             Block();
         };
+        gameInput.OnRun = (context) =>
+        {
+
+            //Debug.Log($"IsWalking {IsWalking}, IsRunning {IsRunning} context {context.performed}");
+
+            if (IsWalking)
+            {
+                IsRunning = !IsRunning;
+                if (IsRunning)
+                {
+                    movementSpeed = runSpeed;
+                }
+                else
+                {
+                    movementSpeed = walkSpeed;
+                }
+            }
+                
+        };
+        gameInput.OnDrawWeapon = (context) =>
+        {
+            IsWeaponEquipped = !IsWeaponEquipped;
+            canMove = false;
+        };
+        
         movementCooldownTimer = new Timer(this)
         {
             OnTimerElapsed = () =>
@@ -110,6 +173,50 @@ public class Player : MonoBehaviour
     private void Update()
     {
         FiringSequence();
+        CheckIfPlayerIsHidden();
+    }
+
+    private static void SetRendererOpacity(GameObject obj, float alpha)
+    {
+        var renderer = obj.GetComponent<Renderer>();
+        var color = renderer.material.GetColor("_Color");
+        renderer.material.SetColor("_Color", new Color(color.r, color.g, color.b, alpha));
+    }
+
+    private IEnumerable<Collider> FilterLostWalls(int hits)
+    {
+        return previousWallsCollided.Where(x => !wallsCollided.Take(hits).Select(x => x.collider).Contains(x));
+    }
+
+    private void UpdateCollidedWalls(int hits)
+    {
+        previousWallsCollided =  wallsCollided.Take(hits).Select(x => x.collider).Where(x => x != null).ToArray();
+    }
+
+    private void CheckIfPlayerIsHidden()
+    {
+        Vector3 cameraPosition = cameraTransform.position;
+        Vector3 directionToPlayer = new Vector3(transform.position.x, 1, transform.position.z) - cameraPosition;
+        float distanceToPlayer = Vector3.Distance(cameraPosition, transform.position);
+
+        // Debug.DrawRay(cameraPosition, directionToPlayer, Color.red);
+
+        var hits = Physics.RaycastNonAlloc(cameraPosition, directionToPlayer, wallsCollided, distanceToPlayer, wallLayer);
+        for (int i = 0; i < hits; ++i)
+        {
+            var hit = wallsCollided[i];
+            var wasAlreadyCollidedPreviousFrame = previousWallsCollided.Contains(hit.collider);
+            if (!wasAlreadyCollidedPreviousFrame)
+            {
+                SetRendererOpacity(hit.collider.gameObject, 0.5f);
+            }
+        }
+        foreach (var oldWall in FilterLostWalls(hits))
+        {
+            // Reset the color of the wall
+            SetRendererOpacity(oldWall.gameObject, 1.0f);
+        }
+        UpdateCollidedWalls(hits);
     }
 
     private void HandleMovement()
@@ -128,7 +235,6 @@ public class Player : MonoBehaviour
 
 
         // Handle ground detection
-        isGrounded = Physics.Raycast(transform.position, Vector3.down, playerCollider.height / 2 + 0.2f, groundLayer);
 
         // Handle movement
         Vector3 targetVelocity = moveDir * movementSpeed;
@@ -144,7 +250,13 @@ public class Player : MonoBehaviour
         rb.drag = isGrounded ? groundDrag : 0;
 
         // Check if the player is walking
-        isWalking = moveDir != Vector3.zero;
+        IsWalking = moveDir != Vector3.zero;
+
+        if (IsWalking == false)
+        {
+            movementSpeed = walkSpeed;
+            IsRunning = false;
+        }
 
         // Smoothly rotate player towards movement direction
 
@@ -261,8 +373,8 @@ public class Player : MonoBehaviour
 
     }
 
-    public bool IsWalking()
+    public void SwordAnimationEnded()
     {
-        return isWalking;
+        canMove = true;
     }
 }
