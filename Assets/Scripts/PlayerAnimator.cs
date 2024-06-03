@@ -18,66 +18,69 @@ public class PlayerAnimator : MonoBehaviour
     [SerializeField] private Player player;
 
     private Animator animator;
-    private const string IS_WALKING = "IsWalking";
-    private const string IS_RUNNING = "IsRunning";
-    private const string IS_WEAPON_EQUP = "IsWeaponEquipped";
     private const string PLAYER_STATE = "PlayerState";
+    private PlayerState currentState;
+    private PlayerState previousState;
+
     private void Awake()
     {
         animator = GetComponent<Animator>();
+        currentState = PlayerState.Idle;
+        previousState = PlayerState.Idle;
     }
 
     private void Update()
     {
+        PlayerState newState = GetPlayerState();
+        if (newState != currentState)
+        {
+            previousState = currentState;
+            currentState = newState;
+            animator.SetInteger(PLAYER_STATE, (int)currentState);
+        }
+    }
 
-        animator.SetInteger(PLAYER_STATE, GetPlayerState());
+    private PlayerState GetPlayerState()
+    {
+        bool isWalking = player.IsWalking;
+        bool isRunning = player.IsRunning;
+        bool isWeaponEquipped = player.IsWeaponEquipped;
 
+        if(isWeaponEquipped)
+        {
+            if(isRunning)
+            {
+                return PlayerState.RunningWithWeapon;
+            }
+            else if(isWalking)
+            {
+                return PlayerState.WalkingWithWeapon;
+            }
+            else
+            {
+                return PlayerState.IdleWithWeapon;
+            }
+        }
+        else
+        {
+            if(isRunning)
+            {
+                return PlayerState.Running;
+            }
+            else if(isWalking)
+            {
+                return PlayerState.Walking;
+            }
+            else
+            {
+                return PlayerState.Idle;
+            }
+        }
     }
 
     public Player GetPlayer()
     {
         return player;
     }
-
-    private int GetPlayerState()
-    {
-        bool isWalking = player.IsWalking;
-
-        bool isRunning = player.IsRunning;
-
-        bool isWeaponEquip = player.IsWeaponEquipped;
-
-        if (isWalking)
-        {
-            if (isWeaponEquip)
-            {
-                return (int)PlayerState.WalkingWithWeapon;
-            }
-            else
-            {
-                return (int)PlayerState.Walking;
-            }
-        }
-        else if (isRunning)
-        {
-            if (isWeaponEquip)
-            {
-                return (int)PlayerState.RunningWithWeapon;
-            }
-            else
-            {
-                return (int)PlayerState.Running;
-            }
-        } else 
-        {
-            if (isWeaponEquip)
-            {
-                return (int)PlayerState.IdleWithWeapon;
-            }
-            else
-            {
-                return (int)PlayerState.Idle;
-            }
-        }
-    }
 }
+
