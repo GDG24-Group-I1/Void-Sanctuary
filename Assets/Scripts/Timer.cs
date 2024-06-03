@@ -15,6 +15,7 @@ public class Timer
 
     public void Start(float durationSeconds)
     {
+        Stop();
         if (durationSeconds <= 0f)
         {
             OnTimerElapsed?.Invoke();
