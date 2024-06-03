@@ -26,5 +26,10 @@ public class PlayerAnimator : MonoBehaviour
         bool isWeaponEquip = player.IsWeaponEquipped;
         animator.SetBool(IS_WEAPON_EQUP, isWeaponEquip);
     }
+
+    public Player GetPlayer()
+    {
+        return player;
+    }
     
 }

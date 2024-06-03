@@ -116,6 +116,7 @@ public class Player : MonoBehaviour
         gameInput.OnDrawWeapon = (context) =>
         {
             IsWeaponEquipped = !IsWeaponEquipped;
+            canMove = false;
         };
         
         movementCooldownTimer = new Timer(this)
@@ -370,5 +371,10 @@ public class Player : MonoBehaviour
     private void Block()
     {
 
+    }
+
+    public void SwordAnimationEnded()
+    {
+        canMove = true;
     }
 }
