@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 9181228055648517078}
   - component: {fileID: -3644948222544819850}
   - component: {fileID: -550450161358688048}
+  - component: {fileID: 7106835033913648422}
   m_Layer: 0
   m_Name: Platform_1
   m_TagString: Untagged
@@ -30,7 +31,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 10, y: 1, z: 10}
+  m_LocalScale: {x: 10, y: 0.5, z: 10}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -60,7 +61,7 @@ Rigidbody:
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 126
   m_CollisionDetection: 0
 --- !u!23 &9181228055648517078
 MeshRenderer:
@@ -133,3 +134,22 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &7106835033913648422
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7344408833261143230}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec5a4cdc707e9664682ebb09b384fdcd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  activeSwitches: 0
+  movementType: 0
+  requiredSwitches: 1
+  movements:
+  - {x: 2, y: 0, z: 0}
+  - {x: 2, y: 0, z: 0}
+  travelDistance: 0a00000005000000
