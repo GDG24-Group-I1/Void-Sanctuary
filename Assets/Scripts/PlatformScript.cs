@@ -14,10 +14,6 @@ public class PlatformScript : MonoBehaviour
     private bool backtracking = false;
     private bool canMove = true;
     private Timer movementCooldownTimer;
-    private Rigidbody rb;
-    // these two are used to calculate the platform speed and pass it to the player
-    private Vector3 currentVelocity = new Vector3(0, 0, 0);
-    private Vector3 previousPosition = new Vector3(0, 0, 0);
 
     [SerializeField] private movementTypes movementType = movementTypes.forwardAndBackLoop;
     [SerializeField] private int requiredSwitches = 1;
@@ -26,8 +22,6 @@ public class PlatformScript : MonoBehaviour
 
     void Start()
     {
-        previousPosition = transform.position;
-        rb = GetComponent<Rigidbody>();
         startingPosition = transform.position;
 
         movementCooldownTimer = new Timer(this)
@@ -43,9 +37,7 @@ public class PlatformScript : MonoBehaviour
 
     void Update()
     {
-        currentVelocity = (transform.position - previousPosition) / Time.deltaTime;
-        previousPosition = transform.position;
-        if (activeSwitches == requiredSwitches && canMove)
+        if (activeSwitches >= requiredSwitches && canMove)
         {
             movePlatform();
         }
@@ -55,6 +47,7 @@ public class PlatformScript : MonoBehaviour
     {
         if (collision.gameObject.name == "Player")
         {
+            Debug.Log($"{collision.gameObject.name} is now child of platform");
             collision.gameObject.transform.parent = transform;
         }
     }
@@ -63,14 +56,19 @@ public class PlatformScript : MonoBehaviour
     {
         if (collision.gameObject.name == "Player")
         {
+            Debug.Log($"{collision.gameObject.name} is no longer child of platform");
             collision.gameObject.transform.parent = null;
         }
-    }    
+    }
 
-    private void movePlatform() 
+    private void OnCollisionStay(Collision collision)
+    {
+        
+    }
+
+    private void movePlatform()
     {
         transform.position += movements[movementStage] * Time.deltaTime;
-        rb.drag = 6f;
 
         var horizontalDistance = Mathf.Sqrt(Mathf.Pow(transform.position.x - startingPosition.x, 2) + Mathf.Pow(transform.position.z - startingPosition.z, 2));
         var distance = Mathf.Sqrt(Mathf.Pow(transform.position.y - startingPosition.y, 2) + Mathf.Pow(horizontalDistance, 2));
@@ -148,10 +146,5 @@ public class PlatformScript : MonoBehaviour
                 controlSwitch.gameObject.GetComponent<SwitchScript>().singleUse = true;
             }
         }
-    }
-
-    public Vector3 GetVelocity()
-    {
-        return currentVelocity;
     }
 }

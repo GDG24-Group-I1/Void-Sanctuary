@@ -22,7 +22,7 @@ public class SwitchScript : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         //Debug.Log($"switch was hit by {other.gameObject.name}");
-        if (other.gameObject.name == "Sword(Clone)" || other.gameObject.name == "Projectile(Clone)")
+        if (other.gameObject.name == "Sword(Clone)" || other.gameObject.name == "Projectile(Clone)" || other.gameObject.name == "fucileAnimato")
         {
             // broken is used to disable single use switches after use
             if (foreverOn)
