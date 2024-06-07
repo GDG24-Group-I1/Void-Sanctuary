@@ -85,6 +85,7 @@ public class Player : MonoBehaviour
                 // Later, add death logic here
                 Debug.Log("Player died");
                 transform.position = startingPosition;
+                rb.velocity = Vector3.zero;
             }
         };
         var floorCollider = GetComponent<FloorCollider>();
@@ -250,6 +251,8 @@ public class Player : MonoBehaviour
     private static void SetRendererOpacity(GameObject obj, float alpha)
     {
         var renderer = obj.GetComponent<Renderer>();
+        if (renderer == null)
+            return;
         var color = renderer.material.GetColor("_Color");
         renderer.material.SetColor("_Color", new Color(color.r, color.g, color.b, alpha));
     }

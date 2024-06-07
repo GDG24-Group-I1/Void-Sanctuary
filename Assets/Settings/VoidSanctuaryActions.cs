@@ -119,6 +119,15 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Dash"",
+                    ""type"": ""Button"",
+                    ""id"": ""6f452dbe-afcb-4cff-be87-053005122fcc"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -308,6 +317,28 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
                     ""action"": ""DrawWeapon"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ec8737b5-3378-4c90-845c-89963f652c1e"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Dash"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d789cd5b-16f6-4d06-be86-e4f63af5b65f"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Dash"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -325,6 +356,7 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
         m_Player_Block = m_Player.FindAction("Block", throwIfNotFound: true);
         m_Player_Run = m_Player.FindAction("Run", throwIfNotFound: true);
         m_Player_DrawWeapon = m_Player.FindAction("DrawWeapon", throwIfNotFound: true);
+        m_Player_Dash = m_Player.FindAction("Dash", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -438,6 +470,7 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Block;
     private readonly InputAction m_Player_Run;
     private readonly InputAction m_Player_DrawWeapon;
+    private readonly InputAction m_Player_Dash;
     public struct PlayerActions
     {
         private @VoidSanctuaryActions m_Wrapper;
@@ -448,6 +481,7 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
         public InputAction @Block => m_Wrapper.m_Player_Block;
         public InputAction @Run => m_Wrapper.m_Player_Run;
         public InputAction @DrawWeapon => m_Wrapper.m_Player_DrawWeapon;
+        public InputAction @Dash => m_Wrapper.m_Player_Dash;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -475,6 +509,9 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
             @DrawWeapon.started += instance.OnDrawWeapon;
             @DrawWeapon.performed += instance.OnDrawWeapon;
             @DrawWeapon.canceled += instance.OnDrawWeapon;
+            @Dash.started += instance.OnDash;
+            @Dash.performed += instance.OnDash;
+            @Dash.canceled += instance.OnDash;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -497,6 +534,9 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
             @DrawWeapon.started -= instance.OnDrawWeapon;
             @DrawWeapon.performed -= instance.OnDrawWeapon;
             @DrawWeapon.canceled -= instance.OnDrawWeapon;
+            @Dash.started -= instance.OnDash;
+            @Dash.performed -= instance.OnDash;
+            @Dash.canceled -= instance.OnDash;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -526,5 +566,6 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
         void OnBlock(InputAction.CallbackContext context);
         void OnRun(InputAction.CallbackContext context);
         void OnDrawWeapon(InputAction.CallbackContext context);
+        void OnDash(InputAction.CallbackContext context);
     }
 }
