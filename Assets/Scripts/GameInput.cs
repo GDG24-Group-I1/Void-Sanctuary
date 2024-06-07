@@ -14,6 +14,7 @@ public class GameInput : MonoBehaviour
     private InputAction _blockAction;
     private InputAction _runAction;
     private InputAction _drawWeaponAction;
+    private InputAction _dashAction;
 
 
     private void Awake()
@@ -36,6 +37,7 @@ public class GameInput : MonoBehaviour
         _runAction = playerInputActions.FindAction("Run");
            
         _drawWeaponAction = playerInputActions.FindAction("DrawWeapon");
+        _dashAction = playerInputActions.FindAction("Dash");
 
     }
     public Vector2 GetMovementVectorNormalized()
@@ -52,9 +54,14 @@ public class GameInput : MonoBehaviour
         set { _attackAction.performed += value; }
     }
 
+    public Action<CallbackContext> OnAim
+    {
+        set { _fireAction.started += value; }
+    }
+
     public Action<CallbackContext> OnFire
     {
-        set { _fireAction.performed += value; }
+        set { _fireAction.canceled += value; }
     }
 
     public Action<CallbackContext> OnBlock
@@ -70,5 +77,9 @@ public class GameInput : MonoBehaviour
     public Action<CallbackContext> OnDrawWeapon
     {
         set { _drawWeaponAction.performed += value; }
+    }
+    public Action<CallbackContext> OnDash
+    {
+        set { _dashAction.performed += value; }
     }
 }

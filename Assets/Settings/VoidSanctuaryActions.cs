@@ -191,7 +191,7 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""1559e2bf-e571-4599-91c2-48617cbb3051"",
-                    ""path"": ""<Keyboard>/r"",
+                    ""path"": ""<Mouse>/leftButton"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -213,7 +213,7 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""93f29098-f95f-426b-b8bd-3228b5978786"",
-                    ""path"": ""<Keyboard>/e"",
+                    ""path"": ""<Mouse>/rightButton"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -246,7 +246,7 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""cea987b3-ef84-4a5b-a7fe-1e07dd15f912"",
-                    ""path"": ""<Mouse>/rightButton"",
+                    ""path"": ""<Mouse>/middleButton"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",

@@ -35,6 +35,12 @@ public class SwordScript : MonoBehaviour
         swordSwipe();
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        Debug.Log($"sword hit {other.gameObject.name}");
+
+    }
+
     void swordSwipe()
     {
         switch (combo)
