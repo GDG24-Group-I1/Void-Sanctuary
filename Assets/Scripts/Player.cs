@@ -107,9 +107,9 @@ public class Player : MonoBehaviour
         rb.freezeRotation = true;
 
         //setting up the aim laser
-        aimLaserRenderer = GetComponent<LineRenderer>();
+        aimLaserRenderer = GetComponentInChildren<LineRenderer>();
         aimLaserRenderer.positionCount = 2;
-        aimLaserRenderer.SetPosition(0, new Vector3(0, 0, 100));
+        aimLaserRenderer.SetPosition(0, new Vector3(0, 0, 0));
         aimLaserRenderer.enabled = false;
 
         playerCollider = GetComponentInChildren<CapsuleCollider>();
@@ -444,6 +444,7 @@ public class Player : MonoBehaviour
         {
             //stop movement while aiming projectile
             case FiringStage.aiming:
+                aimLaserRenderer.SetPosition(0, new Vector3(1, 0, 0));
                 canMove = false;
                 break;
             //hold still while charging projectile
