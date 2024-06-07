@@ -21,7 +21,6 @@ public class SwitchScript : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log($"switch was hit by {other.gameObject.name}");
         if (other.gameObject.name == "Projectile(Clone)" || other.gameObject.CompareTag("Sword"))
         {
             // broken is used to disable single use switches after use

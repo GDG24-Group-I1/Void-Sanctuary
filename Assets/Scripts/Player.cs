@@ -41,6 +41,7 @@ public class Player : MonoBehaviour
     private GameObject WeaponOnBack;
     private GameObject WeaponInHand;
     private LineRenderer aimLaserRenderer;
+    private BoxCollider swordCollider;
 
     private Rigidbody rb;
     private LayerMask groundLayer;
@@ -93,6 +94,7 @@ public class Player : MonoBehaviour
         movementSpeed = walkSpeed;
         startingPosition = transform.position;
         rb = GetComponent<Rigidbody>();
+        swordCollider = GetComponentInChildren<BoxCollider>();
 
         WeaponOnBack = GameObject.Find("WeaponHolderOnBack");
         WeaponInHand = GameObject.Find("WeaponHolderOnHand");
@@ -123,6 +125,7 @@ public class Player : MonoBehaviour
         floorCollider.CollisionEnterCallback = () =>
         {
             deathTimer?.Stop();
+            IsFalling = FallingState.None;
             isGrounded = true;
         };
         floorCollider.CollisionExitCallback = () =>
@@ -133,6 +136,7 @@ public class Player : MonoBehaviour
         floorCollider.CollisionStayCallback = () =>
         {
             deathTimer?.Stop();
+            IsFalling = FallingState.None;
             isGrounded = true;
         };
         rb.freezeRotation = true;
@@ -154,6 +158,7 @@ public class Player : MonoBehaviour
                 IsAttacking = true;
                 canMove = false;
                 Attack();
+                swordCollider.enabled = true;
                 // attackCooldownTimer.Start(1.5f);
             }
             else
@@ -515,6 +520,7 @@ public class Player : MonoBehaviour
         {
             AttackNumber = 0;
             IsAttacking = false;
+            swordCollider.enabled = false;
             canAttack = true;
             canMove = true;
         }
