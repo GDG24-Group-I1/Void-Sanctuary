@@ -12,6 +12,8 @@ enum PlayerState
     WalkingWithWeapon = 5,
     RunningWithWeapon = 6,
     Attacking = 7,
+    FallingTransition = 8,
+    Falling = 9
 }
 
 public class PlayerAnimator : MonoBehaviour
@@ -20,8 +22,10 @@ public class PlayerAnimator : MonoBehaviour
 
     private Animator animator;
     private const string PLAYER_STATE = "PlayerState";
+    private const string ATTACK_NUMBER = "AttackNumber";
     private PlayerState currentState;
     private PlayerState previousState;
+    private int previousAttackNumber = 0;
 
     private void Awake()
     {
@@ -39,6 +43,11 @@ public class PlayerAnimator : MonoBehaviour
             currentState = newState;
             animator.SetInteger(PLAYER_STATE, (int)currentState);
         }
+        if (previousAttackNumber != player.AttackNumber)
+        {
+            previousAttackNumber = player.AttackNumber;
+            animator.SetInteger(ATTACK_NUMBER, player.AttackNumber);
+        }
     }
 
     private PlayerState GetPlayerState()
@@ -48,7 +57,11 @@ public class PlayerAnimator : MonoBehaviour
         bool isWeaponEquipped = player.IsWeaponEquipped;
         bool isAttacking = player.IsAttacking;
 
-        if(isWeaponEquipped)
+        if (player.IsFalling == FallingState.Transition) return PlayerState.FallingTransition;
+
+        if (player.IsFalling == FallingState.Falling) return PlayerState.Falling;
+
+        if (isWeaponEquipped)
         {
             if(isAttacking)
             {

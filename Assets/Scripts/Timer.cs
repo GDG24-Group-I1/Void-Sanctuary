@@ -9,7 +9,7 @@ public class Timer
     private IEnumerator timerCoroutine;
 
     public float Duration { get; private set; } = 0f;
-    public Action OnTimerElapsed;
+    public Func<float?> OnTimerElapsed;
     
     public Timer(MonoBehaviour owner) { ownerObject = owner; }
 
@@ -18,7 +18,11 @@ public class Timer
         Stop();
         if (durationSeconds <= 0f)
         {
-            OnTimerElapsed?.Invoke();
+            var ret = OnTimerElapsed?.Invoke();
+            if (ret != null)
+            {
+                Start(ret.Value);
+            }
         }
         else
         {
@@ -39,8 +43,12 @@ public class Timer
 
     private void OnElapsed()
     {
-        OnTimerElapsed?.Invoke();
+        var ret = OnTimerElapsed?.Invoke();
         ownerObject.StopCoroutine(timerCoroutine);
+        if (ret != null)
+        {
+            Start(ret.Value);
+        }
     }
 
     private IEnumerator TimerCoroutine()

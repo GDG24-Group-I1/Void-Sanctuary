@@ -29,6 +29,7 @@ public class PlatformScript : MonoBehaviour
             OnTimerElapsed = () =>
             {
                 canMove = true;
+                return null;
             }
         };
         if (movementType == movementTypes.single)

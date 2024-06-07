@@ -8,23 +8,35 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Windows;
 
+public enum ComboState
+{
+    CanCombo,
+    PressedEarly,
+    NotPressed,
+    Pressed
+}
+
+public enum FallingState
+{
+    None,
+    Transition,
+    Falling
+}
+
 public class Player : MonoBehaviour
 {
     enum FiringStage { notFiring, aiming, startCharging, charging, firing, knockback }
-
-    PlayerAnimator playerAnimator;
 
     private const float firingKnockbackSpeed = 50f;
     private const int maxWallsCollided = 10;
     [SerializeField] private float walkSpeed = 5f;
     [SerializeField] private float runSpeed = 10f;
     [SerializeField] private float groundDrag = 6f;
-    [SerializeField] private GameInput gameInput;
-    [SerializeField] private GameObject projectilePrefab;
-    [SerializeField] private GameObject swordPrefab;
-    [SerializeField] private Transform camera_direction;
-    [SerializeField] private Transform cameraTransform;
-    [SerializeField] private LayerMask wallLayer;
+    [SerializeField] public GameInput gameInput;
+    [SerializeField] public GameObject projectilePrefab;
+    [SerializeField] public Transform cameraDirection;
+    [SerializeField] public Transform cameraTransform;
+    [SerializeField] public LayerMask wallLayer;
 
     private GameObject WeaponOnBack;
     private GameObject WeaponInHand;
@@ -45,6 +57,12 @@ public class Player : MonoBehaviour
 
     public bool IsAttacking { get; private set; }
 
+    public FallingState IsFalling { get; private set; } = FallingState.None;
+
+    public ComboState CanCombo { get; set; } = ComboState.NotPressed;
+
+    public int AttackNumber { get; set; } = 0;
+
     private float movementSpeed;
     private bool canMove = true;
     private bool canTurn = true;
@@ -57,13 +75,17 @@ public class Player : MonoBehaviour
     private Timer actionCooldownTimer;
     private Timer fireCooldownTimer;
     private Timer attackCooldownTimer;
-    private Timer attackComboTimer;
     private Timer firingStageCooldown;
     private Timer deathTimer;
     private Timer dashCooldownTimer;
-    private int attackComboCounter = 1;
     private FiringStage firingStage = FiringStage.notFiring;
     private Vector3 startingPosition;
+
+
+    private void ResetPlayer()
+    {
+        Destroy(gameObject);
+    }
 
 
     private void Start()
@@ -83,9 +105,18 @@ public class Player : MonoBehaviour
             {
                 // Reset player position, for now
                 // Later, add death logic here
-                Debug.Log("Player died");
-                transform.position = startingPosition;
-                rb.velocity = Vector3.zero;
+                if (IsFalling != FallingState.None)
+                {
+                    Debug.Log("Player died");
+
+
+                    ResetPlayer();
+                    return null;
+                } else
+                {
+                    IsFalling = FallingState.Transition;
+                    return 4.0f;
+                }
             }
         };
         var floorCollider = GetComponent<FloorCollider>();
@@ -96,7 +127,7 @@ public class Player : MonoBehaviour
         };
         floorCollider.CollisionExitCallback = () =>
         {
-            deathTimer?.Start(5.0f);
+            deathTimer?.Start(1.0f);
             isGrounded = false;
         };
         floorCollider.CollisionStayCallback = () =>
@@ -119,13 +150,11 @@ public class Player : MonoBehaviour
             
             if (IsWeaponEquipped)
             {
+                OnPlayerAttack?.Invoke();
                 IsAttacking = true;
                 canMove = false;
-                if (IsAttacking)
-                {
-                    Attack();
-                }
-                attackCooldownTimer.Start(1.5f);
+                Attack();
+                // attackCooldownTimer.Start(1.5f);
             }
             else
             {
@@ -147,8 +176,6 @@ public class Player : MonoBehaviour
         };
         gameInput.OnRun = (context) =>
         {
-
-            //Debug.Log($"IsWalking {IsWalking}, IsRunning {IsRunning} context {context.performed}");
 
             if (IsWalking)
             {
@@ -180,6 +207,7 @@ public class Player : MonoBehaviour
             OnTimerElapsed = () =>
             {
                 canMove = true;
+                return null;
             }
         };
         turningCooldownTimer = new Timer(this)
@@ -187,6 +215,7 @@ public class Player : MonoBehaviour
             OnTimerElapsed = () =>
             {
                 canTurn = true;
+                return null;
             }
         };
         actionCooldownTimer = new Timer(this)
@@ -194,6 +223,7 @@ public class Player : MonoBehaviour
             OnTimerElapsed = () =>
             {
                 canAct = true;
+                return null;
             }
         };
         fireCooldownTimer = new Timer(this)
@@ -201,6 +231,7 @@ public class Player : MonoBehaviour
             OnTimerElapsed = () =>
             {
                 canFire = true;
+                return null;
             }
         };
         attackCooldownTimer = new Timer(this)
@@ -210,6 +241,7 @@ public class Player : MonoBehaviour
                 IsAttacking = false;
                 canAttack = true;
                 canMove = true;
+                return null;
             }
         };
         firingStageCooldown = new Timer(this)
@@ -219,20 +251,15 @@ public class Player : MonoBehaviour
                 firingStage += 1;
                 if (firingStage > FiringStage.knockback)
                     firingStage = FiringStage.notFiring;
-            }
-        };
-        attackComboTimer = new Timer(this)
-        {
-            OnTimerElapsed = () =>
-            {
-                attackComboCounter = 1;
+                return null;
             }
         };
         dashCooldownTimer = new Timer(this)
         { 
             OnTimerElapsed = () => 
             { 
-                canDash = true; 
+                canDash = true;
+                return null;
             } 
         };
     }
@@ -250,8 +277,7 @@ public class Player : MonoBehaviour
 
     private static void SetRendererOpacity(GameObject obj, float alpha)
     {
-        var renderer = obj.GetComponent<Renderer>();
-        if (renderer == null)
+        if (!obj.TryGetComponent<Renderer>(out var renderer))
             return;
         var color = renderer.material.GetColor("_Color");
         renderer.material.SetColor("_Color", new Color(color.r, color.g, color.b, alpha));
@@ -270,8 +296,9 @@ public class Player : MonoBehaviour
     private void CheckIfPlayerIsHidden()
     {
         Vector3 cameraPosition = cameraTransform.position;
-        Vector3 directionToPlayer = new Vector3(transform.position.x, 1, transform.position.z) - cameraPosition;
-        float distanceToPlayer = Vector3.Distance(cameraPosition, transform.position);
+        var playerCentrum = new Vector3(transform.position.x, 1, transform.position.z);
+        Vector3 directionToPlayer = playerCentrum - cameraPosition;
+        float distanceToPlayer = Vector3.Distance(cameraPosition, playerCentrum);
 
         // Debug.DrawRay(cameraPosition, directionToPlayer, Color.red);
 
@@ -299,7 +326,7 @@ public class Player : MonoBehaviour
         Vector2 movementVector = gameInput.GetMovementVectorNormalized();
         Vector3 moveDir = new Vector3(movementVector.x, 0, movementVector.y);
         Vector3 rotateDir;
-        moveDir = camera_direction.forward * moveDir.z + camera_direction.right * moveDir.x;
+        moveDir = cameraDirection.forward * moveDir.z + cameraDirection.right * moveDir.x;
         moveDir.y = 0;
         rotateDir = moveDir;
 
@@ -349,44 +376,9 @@ public class Player : MonoBehaviour
         if (!canAttack || !canAct)
             return;
 
-        // spawn sword at right offset and angle from player
-        float swordRange = 5f;
-
-        Vector3 playerFacing = transform.forward;
-
-        Quaternion swordRotation = Quaternion.Euler(90f, transform.rotation.eulerAngles.y, 180f);
-        Vector3 swordPosition = new(transform.position.x + swordRange * playerFacing.x, transform.position.y + 1f, transform.position.z + swordRange * playerFacing.z); ;
-
-        GameObject sword = Instantiate(swordPrefab, swordPosition, swordRotation);
-
-        var swordScript = sword.GetComponent<SwordScript>();
-        swordScript.pivot = transform.position;
-        swordScript.combo = attackComboCounter;
-
-        //Debug.Log($"Combo {attackComboCounter}");
-
-        if (attackComboCounter < 3)
-        {
-            attackComboCounter += 1;
-            canAttack = false;
-            //attackCooldownTimer.Start(0.4f);
-            attackComboTimer.Start(1.0f);
-        }
-        else
-        {
-            attackComboCounter = 1;
-            canAttack = false;
-            //attackCooldownTimer.Start(0.8f);
-            attackComboTimer.Start(0.0f);
-        }
-
-        
-
         canAct = false;
         actionCooldownTimer.Start(0.4f);
-
         canMove = false;
-        // movementCooldownTimer.Start(0.5f);
     }
 
     private void Aim()
@@ -414,7 +406,7 @@ public class Player : MonoBehaviour
         // Get input for movement
         Vector2 movementVector = gameInput.GetMovementVectorNormalized();
         Vector3 moveDir = new Vector3(movementVector.x, 0, movementVector.y);
-        moveDir = camera_direction.forward * moveDir.z * dashSpeed + camera_direction.right * moveDir.x * dashSpeed;
+        moveDir = dashSpeed * moveDir.z * cameraDirection.forward + dashSpeed * moveDir.x * cameraDirection.right;
         moveDir.y = 0;
 
         // Handle ground detection
@@ -512,4 +504,28 @@ public class Player : MonoBehaviour
         WeaponOnBack.SetActive(!IsWeaponEquipped);
         WeaponInHand.SetActive(IsWeaponEquipped);
     }
+
+    public void AttackAnimationEnded()
+    {
+        if (CanCombo == ComboState.Pressed)
+        {
+            IsAttacking = true;
+        }
+        else
+        {
+            AttackNumber = 0;
+            IsAttacking = false;
+            canAttack = true;
+            canMove = true;
+        }
+        CanCombo = ComboState.NotPressed;
+
+    }
+
+    public void StartFalling()
+    {
+        IsFalling = FallingState.Falling;
+    }
+
+    public Action OnPlayerAttack;
 }

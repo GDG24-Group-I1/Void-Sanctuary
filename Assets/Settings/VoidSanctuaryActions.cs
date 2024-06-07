@@ -199,17 +199,6 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""1559e2bf-e571-4599-91c2-48617cbb3051"",
-                    ""path"": ""<Mouse>/leftButton"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Attack"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""6f705e70-adde-4fce-956f-7ccb6acd7654"",
                     ""path"": ""<Gamepad>/buttonWest"",
                     ""interactions"": """",
