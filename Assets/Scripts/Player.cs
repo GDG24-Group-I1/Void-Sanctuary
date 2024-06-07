@@ -12,6 +12,8 @@ public class Player : MonoBehaviour
 {
     enum FiringStage { notFiring, startCharging, charging, firing, knockback }
 
+    PlayerAnimator playerAnimator;
+
     private const float firingKnockbackSpeed = 50f;
     private const int maxWallsCollided = 10;
     [SerializeField] private float walkSpeed = 5f;
@@ -23,6 +25,9 @@ public class Player : MonoBehaviour
     [SerializeField] private Transform camera_direction;
     [SerializeField] private Transform cameraTransform;
     [SerializeField] private LayerMask wallLayer;
+
+    private GameObject WeaponOnBack;
+    private GameObject WeaponInHand;
 
     private Rigidbody rb;
     private LayerMask groundLayer;
@@ -36,6 +41,8 @@ public class Player : MonoBehaviour
     public bool IsRunning { get; private set; }
 
     public bool IsWeaponEquipped { get; private set; }
+
+    public bool IsAttacking { get; private set; }
 
     private float movementSpeed;
     private bool canMove = true;
@@ -59,6 +66,12 @@ public class Player : MonoBehaviour
         movementSpeed = walkSpeed;
         startingPosition = transform.position;
         rb = GetComponent<Rigidbody>();
+
+        WeaponOnBack = GameObject.Find("WeaponHolderOnBack");
+        WeaponInHand = GameObject.Find("WeaponHolderOnHand");
+        WeaponInHand.SetActive(false);
+        
+
         deathTimer = new Timer(this)
         {
             OnTimerElapsed = () =>
@@ -86,9 +99,25 @@ public class Player : MonoBehaviour
             isGrounded = true;
         };
         rb.freezeRotation = true;
+
         gameInput.OnAttack = (context) =>
         {
-            Attack();
+            
+            if (IsWeaponEquipped)
+            {
+                IsAttacking = true;
+                canMove = false;
+                if (IsAttacking)
+                {
+                    Attack();
+                }
+                attackCooldownTimer.Start(1.5f);
+            }
+            else
+            {
+                IsAttacking = false;
+            }
+                
         };
         gameInput.OnFire = (context) =>
         {
@@ -115,11 +144,12 @@ public class Player : MonoBehaviour
                     movementSpeed = walkSpeed;
                 }
             }
-                
+
         };
         gameInput.OnDrawWeapon = (context) =>
         {
             IsWeaponEquipped = !IsWeaponEquipped;
+
             canMove = false;
         };
         
@@ -148,7 +178,9 @@ public class Player : MonoBehaviour
         {
             OnTimerElapsed = () =>
             {
+                IsAttacking = false;
                 canAttack = true;
+                canMove = true;
             }
         };
         firingStageCooldown = new Timer(this)
@@ -294,22 +326,24 @@ public class Player : MonoBehaviour
         {
             attackComboCounter += 1;
             canAttack = false;
-            attackCooldownTimer.Start(0.4f);
+            //attackCooldownTimer.Start(0.4f);
             attackComboTimer.Start(1.0f);
         }
         else
         {
             attackComboCounter = 1;
             canAttack = false;
-            attackCooldownTimer.Start(0.8f);
+            //attackCooldownTimer.Start(0.8f);
             attackComboTimer.Start(0.0f);
         }
+
+        
 
         canAct = false;
         actionCooldownTimer.Start(0.4f);
 
         canMove = false;
-        movementCooldownTimer.Start(0.5f);
+        // movementCooldownTimer.Start(0.5f);
     }
 
     private void Fire()
@@ -380,5 +414,11 @@ public class Player : MonoBehaviour
     public void SwordAnimationEnded()
     {
         canMove = true;
+    }
+
+    public void SwordDrawn()
+    {
+        WeaponOnBack.SetActive(!IsWeaponEquipped);
+        WeaponInHand.SetActive(IsWeaponEquipped);
     }
 }

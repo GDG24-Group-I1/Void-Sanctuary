@@ -11,6 +11,7 @@ enum PlayerState
     IdleWithWeapon = 4,
     WalkingWithWeapon = 5,
     RunningWithWeapon = 6,
+    Attacking = 7,
 }
 
 public class PlayerAnimator : MonoBehaviour
@@ -45,10 +46,15 @@ public class PlayerAnimator : MonoBehaviour
         bool isWalking = player.IsWalking;
         bool isRunning = player.IsRunning;
         bool isWeaponEquipped = player.IsWeaponEquipped;
+        bool isAttacking = player.IsAttacking;
 
         if(isWeaponEquipped)
         {
-            if(isRunning)
+            if(isAttacking)
+            {
+                return PlayerState.Attacking;
+            }
+            else if(isRunning)
             {
                 return PlayerState.RunningWithWeapon;
             }

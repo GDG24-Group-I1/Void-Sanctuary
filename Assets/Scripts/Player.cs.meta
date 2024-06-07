@@ -3,7 +3,14 @@ guid: dc24546c368420a4db5828a6627f8455
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - gameInput: {instanceID: 0}
+  - projectilePrefab: {instanceID: 0}
+  - swordPrefab: {instanceID: 0}
+  - camera_direction: {instanceID: 0}
+  - cameraTransform: {instanceID: 0}
+  - WeaponOnBack: {fileID: 302730436016639004, guid: 30268aa236a6a5a46a204b5a9134d6f9, type: 3}
+  - WeaponInHand: {fileID: 4680460921307043702, guid: 4900f9632c01e68429a2353cd87ab1f5, type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
