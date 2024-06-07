@@ -355,7 +355,7 @@ public class Player : MonoBehaviour
         Vector3 playerFacing = transform.forward;
 
         Quaternion swordRotation = Quaternion.Euler(90f, transform.rotation.eulerAngles.y, 180f);
-        Vector3 swordPosition = new(transform.position.x + swordRange * playerFacing.x, transform.position.y - 1.0f, transform.position.z + swordRange * playerFacing.z); ;
+        Vector3 swordPosition = new(transform.position.x + swordRange * playerFacing.x, transform.position.y + 1f, transform.position.z + swordRange * playerFacing.z); ;
 
         GameObject sword = Instantiate(swordPrefab, swordPosition, swordRotation);
 
