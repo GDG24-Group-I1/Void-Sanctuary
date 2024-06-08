@@ -37,6 +37,7 @@ public class Player : MonoBehaviour
     [SerializeField] public Transform cameraDirection;
     [SerializeField] public Transform cameraTransform;
     [SerializeField] public LayerMask wallLayer;
+    [SerializeField] private int thresholdFrameGrounded = 1;
 
     private GameObject WeaponOnBack;
     private GameObject WeaponInHand;
@@ -46,6 +47,7 @@ public class Player : MonoBehaviour
 
     private Rigidbody rb;
     private LayerMask groundLayer;
+    private int frameNotGrounded;
     private bool isGrounded;
     private CapsuleCollider playerCollider;
     private Collider[] previousWallsCollided = Array.Empty<Collider>();
@@ -129,6 +131,7 @@ public class Player : MonoBehaviour
         {
             deathTimer?.Stop();
             IsFalling = FallingState.None;
+            frameNotGrounded = 0;
             isGrounded = true;
         };
         floorCollider.CollisionExitCallback = () =>
@@ -140,6 +143,7 @@ public class Player : MonoBehaviour
         {
             deathTimer?.Stop();
             IsFalling = FallingState.None;
+            frameNotGrounded = 0;
             isGrounded = true;
         };
         rb.freezeRotation = true;
@@ -274,6 +278,10 @@ public class Player : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (!isGrounded)
+        {
+            frameNotGrounded++;
+        }
         HandleMovement();
     }
 
@@ -360,10 +368,15 @@ public class Player : MonoBehaviour
         // Clamp velocity change to prevent abrupt changes
         velocityChange.y = 0;
 
+        if (frameNotGrounded > thresholdFrameGrounded)
+        {
+            velocityChange.y = -9.8f;
+        }
+
         rb.AddForce(velocityChange, ForceMode.VelocityChange);
 
         // Apply drag if grounded
-        rb.drag = isGrounded ? groundDrag : 0;
+        rb.drag = frameNotGrounded == 0 ? groundDrag : 0.1f;
 
         // Check if the player is walking
         IsWalking = moveDir != Vector3.zero;
@@ -375,8 +388,11 @@ public class Player : MonoBehaviour
         }
 
         // Smoothly rotate player towards movement direction
-        float rotationSpeed = 20f;
-        transform.forward = Vector3.Slerp(transform.forward, rotateDir, Time.deltaTime * rotationSpeed);
+        if (canMove)
+        {
+            float rotationSpeed = 20f;
+            transform.forward = Vector3.Slerp(transform.forward, rotateDir, Time.deltaTime * rotationSpeed);
+        }
     }
 
     private void Attack()
@@ -417,9 +433,6 @@ public class Player : MonoBehaviour
         moveDir = dashSpeed * moveDir.z * cameraDirection.forward + dashSpeed * moveDir.x * cameraDirection.right;
         moveDir.y = 0;
 
-        // Handle ground detection
-        isGrounded = Physics.Raycast(transform.position, Vector3.down, playerCollider.height / 2 + 0.2f, groundLayer);
-
         // Handle movement
         Vector3 targetVelocity = moveDir * movementSpeed;
         Vector3 velocity = rb.velocity;
@@ -431,7 +444,7 @@ public class Player : MonoBehaviour
         rb.AddForce(velocityChange, ForceMode.VelocityChange);
 
         // Apply drag if grounded
-        rb.drag = isGrounded ? groundDrag : 0;
+        rb.drag = frameNotGrounded == 0 ? groundDrag : 0;
 
         canDash = false;
         dashCooldownTimer.Start(1.2f);
