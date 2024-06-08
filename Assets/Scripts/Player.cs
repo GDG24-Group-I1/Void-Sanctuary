@@ -147,7 +147,7 @@ public class Player : MonoBehaviour
         //setting up the aim laser
         aimLaserRenderer = GetComponentInChildren<LineRenderer>();
         aimLaserRenderer.positionCount = 2;
-        aimLaserRenderer.SetPosition(0, new Vector3(0, 0, 0));
+        aimLaserRenderer.SetPosition(0, new Vector3(0, .1f, 0));
         aimLaserRenderer.enabled = false;
 
         playerCollider = GetComponentInChildren<CapsuleCollider>();
@@ -444,7 +444,7 @@ public class Player : MonoBehaviour
         {
             //stop movement while aiming projectile
             case FiringStage.aiming:
-                aimLaserRenderer.SetPosition(0, new Vector3(1, 0, 0));
+                aimLaserRenderer.SetPosition(1, new Vector3(0, .1f, 100));
                 canMove = false;
                 break;
             //hold still while charging projectile
@@ -462,15 +462,14 @@ public class Player : MonoBehaviour
                 break;
             //fire projectile
             case FiringStage.firing:
-                var projectileSpawnDistance = 5f;
-                Vector3 projectilePosition = new Vector3(
-                    transform.position.x + projectileSpawnDistance * playerFacing.x,
-                    transform.position.y + 1.5f,
-                    transform.position.z + projectileSpawnDistance * playerFacing.z);
+                var projectileSpawnDistance = 2f;
+                var startingPosition = aimLaserRenderer.GetPosition(0);
+                var endingPosition = aimLaserRenderer.GetPosition(1);
+                Vector3 projectilePosition = aimLaserRenderer.transform.TransformPoint(startingPosition) + (transform.forward * projectileSpawnDistance);
 
-                GameObject projectile = Instantiate(projectilePrefab, transform.position, transform.rotation);
+                GameObject projectile = Instantiate(projectilePrefab, projectilePosition, transform.rotation);
                 var projectileScript = projectile.GetComponent<ProjectileScript>();
-                projectileScript.facing = transform.forward;
+                projectileScript.endingPosition = aimLaserRenderer.transform.TransformPoint(endingPosition);
 
                 canFire = false;
                 fireCooldownTimer.Start(3.0f);

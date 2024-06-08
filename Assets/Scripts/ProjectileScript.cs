@@ -5,10 +5,9 @@ using UnityEngine;
 public class ProjectileScript : MonoBehaviour
 {
     [SerializeField] private float projectileSpeed = 30f;
-    [SerializeField] private float maxDistanceFromStart = 50f;
     [SerializeField] private float minCollisionDistance = 1f;
     private Vector3 startingPosition;
-    public Vector3 facing;
+    public Vector3 endingPosition;
 
     void Start()
     {
@@ -23,23 +22,19 @@ public class ProjectileScript : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         var distance = Mathf.Sqrt(Mathf.Pow(transform.position.x - startingPosition.x, 2) + Mathf.Pow(transform.position.z - startingPosition.z, 2));
-        //Debug.Log($"distance = {distance}");
         if (distance > minCollisionDistance)
         {
-            //Debug.Log("kill projectile after collision");
-            Destroy(this.gameObject);
+            Destroy(gameObject);
         }
     }
 
     void projectileMove()
     {
-        transform.position += facing * Time.deltaTime * projectileSpeed;
+        transform.position = Vector3.MoveTowards(transform.position, endingPosition, projectileSpeed * Time.deltaTime);
 
-        //destroy the prefab after it travels too far
-        var distance = Mathf.Sqrt(Mathf.Pow(transform.position.x - startingPosition.x, 2) + Mathf.Pow(transform.position.z - startingPosition.z, 2));
-        if (distance > maxDistanceFromStart)
+        if (Vector3.Distance(transform.position, endingPosition) <= 0.1f)
         {
-            Destroy(this.gameObject);
+            Destroy(gameObject);
         }
     }
 }
