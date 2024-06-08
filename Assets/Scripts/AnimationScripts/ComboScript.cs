@@ -24,7 +24,7 @@ public class ComboScript : StateMachineBehaviour
         };
         // var duration
         var actualDuration = stateInfo.length - exitTransitionDuration - exitTime;
-        comboWindow = (actualDuration * 0.75f) / stateInfo.length;
+        comboWindow = (actualDuration * 0.25f) / stateInfo.length;
         Debug.Log($"Combo window is {comboWindow}");
     }
 
