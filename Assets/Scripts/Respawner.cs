@@ -7,7 +7,6 @@ public class Respawner : MonoBehaviour
 {
 
     [SerializeField] private GameObject playerPrefab;
-    private GameInput gameInput;
     private Transform cameraDirection;
     private Transform cameraTransform;
     private GameObject playerObject;
@@ -18,7 +17,6 @@ public class Respawner : MonoBehaviour
         playerObject = GameObject.FindGameObjectWithTag("Player");
         virtualCamera = GameObject.Find("TopDownCamera").GetComponent<CinemachineVirtualCamera>();
         var player = playerObject.GetComponent<Player>();
-        gameInput = player.gameInput;
         cameraDirection = player.cameraDirection;
         cameraTransform = player.cameraTransform;
     }
@@ -30,7 +28,6 @@ public class Respawner : MonoBehaviour
         {
             playerObject = Instantiate(playerPrefab, Vector3.zero, Quaternion.identity);
             var player = playerObject.GetComponent<Player>();
-            player.gameInput = gameInput;
             player.cameraDirection = cameraDirection;
             player.cameraTransform = cameraTransform;
             virtualCamera.Follow = playerObject.transform;

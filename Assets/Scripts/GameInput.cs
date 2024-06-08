@@ -22,22 +22,21 @@ public class GameInput : MonoBehaviour
         playerInputActions = new VoidSanctuaryActions();
         playerInputActions.Enable();
 
-        var exitGameAction = playerInputActions.FindAction("ExitGameAction");
-        exitGameAction.performed += (context) =>
+        playerInputActions.ControlsActionMap.ExitGameAction.performed += (context) =>
         {
             Application.Quit();
         };
 
-        _attackAction = playerInputActions.FindAction("Attack");
+        _attackAction = playerInputActions.Player.Attack;
 
-        _fireAction = playerInputActions.FindAction("Fire");
+        _fireAction = playerInputActions.Player.Fire;
 
-        _blockAction = playerInputActions.FindAction("Block");
+        _blockAction = playerInputActions.Player.Block;
 
-        _runAction = playerInputActions.FindAction("Run");
+        _runAction = playerInputActions.Player.Run;
            
-        _drawWeaponAction = playerInputActions.FindAction("DrawWeapon");
-        _dashAction = playerInputActions.FindAction("Dash");
+        _drawWeaponAction = playerInputActions.Player.DrawWeapon;
+        _dashAction = playerInputActions.Player.Dash;
 
     }
     public Vector2 GetMovementVectorNormalized()
@@ -81,5 +80,10 @@ public class GameInput : MonoBehaviour
     public Action<CallbackContext> OnDash
     {
         set { _dashAction.performed += value; }
+    }
+
+    private void OnDestroy()
+    {
+        playerInputActions.Dispose();
     }
 }

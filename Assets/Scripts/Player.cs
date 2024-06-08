@@ -6,6 +6,7 @@ using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.Windows;
 
 public enum ComboState
@@ -32,7 +33,6 @@ public class Player : MonoBehaviour
     [SerializeField] private float walkSpeed = 5f;
     [SerializeField] private float runSpeed = 10f;
     [SerializeField] private float groundDrag = 6f;
-    [SerializeField] public GameInput gameInput;
     [SerializeField] public GameObject projectilePrefab;
     [SerializeField] public Transform cameraDirection;
     [SerializeField] public Transform cameraTransform;
@@ -42,6 +42,7 @@ public class Player : MonoBehaviour
     private GameObject WeaponInHand;
     private LineRenderer aimLaserRenderer;
     private BoxCollider swordCollider;
+    private GameInput gameInput;
 
     private Rigidbody rb;
     private LayerMask groundLayer;
@@ -91,6 +92,7 @@ public class Player : MonoBehaviour
 
     private void Start()
     {
+        gameInput = GetComponent<GameInput>();
         movementSpeed = walkSpeed;
         startingPosition = transform.position;
         rb = GetComponent<Rigidbody>();
@@ -99,7 +101,7 @@ public class Player : MonoBehaviour
         WeaponOnBack = GameObject.Find("WeaponHolderOnBack");
         WeaponInHand = GameObject.Find("WeaponHolderOnHand");
         WeaponInHand.SetActive(false);
-        
+
 
         deathTimer = new Timer(this)
         {
@@ -114,7 +116,8 @@ public class Player : MonoBehaviour
 
                     ResetPlayer();
                     return null;
-                } else
+                }
+                else
                 {
                     IsFalling = FallingState.Transition;
                     return 4.0f;
@@ -151,7 +154,7 @@ public class Player : MonoBehaviour
         Debug.Assert(playerCollider != null, "Player collider not found");
         gameInput.OnAttack = (context) =>
         {
-            
+
             if (IsWeaponEquipped)
             {
                 OnPlayerAttack?.Invoke();
@@ -165,7 +168,7 @@ public class Player : MonoBehaviour
             {
                 IsAttacking = false;
             }
-                
+
         };
         gameInput.OnFire = (context) =>
         {
@@ -202,7 +205,7 @@ public class Player : MonoBehaviour
 
             canMove = false;
         };
-        
+
         gameInput.OnDash = (context) =>
         {
             Dash();
@@ -260,12 +263,12 @@ public class Player : MonoBehaviour
             }
         };
         dashCooldownTimer = new Timer(this)
-        { 
-            OnTimerElapsed = () => 
-            { 
+        {
+            OnTimerElapsed = () =>
+            {
                 canDash = true;
                 return null;
-            } 
+            }
         };
     }
 
@@ -295,7 +298,7 @@ public class Player : MonoBehaviour
 
     private void UpdateCollidedWalls(int hits)
     {
-        previousWallsCollided =  wallsCollided.Take(hits).Select(x => x.collider).Where(x => x != null).ToArray();
+        previousWallsCollided = wallsCollided.Take(hits).Select(x => x.collider).Where(x => x != null).ToArray();
     }
 
     private void CheckIfPlayerIsHidden()
@@ -404,7 +407,7 @@ public class Player : MonoBehaviour
 
     private void Dash()
     {
-        if(!canDash || !canMove)
+        if (!canDash || !canMove)
             return;
 
         var dashSpeed = 50f;

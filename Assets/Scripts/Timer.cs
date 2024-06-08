@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 public class Timer
 {
@@ -28,6 +29,7 @@ public class Timer
         {
             Duration = durationSeconds;
             timerCoroutine = TimerCoroutine();
+            Assert.IsNotNull(ownerObject, "Timer owner object is null");
             ownerObject.StartCoroutine(timerCoroutine);
         }
     }
@@ -37,12 +39,14 @@ public class Timer
         if (timerCoroutine != null)
         {
             Duration = 0f;
+            Assert.IsNotNull(ownerObject, "Timer owner object is null");
             ownerObject.StopCoroutine(timerCoroutine);
         }
     }
 
     private void OnElapsed()
     {
+        Assert.IsNotNull(ownerObject, "Timer owner object is null");
         var ret = OnTimerElapsed?.Invoke();
         ownerObject.StopCoroutine(timerCoroutine);
         if (ret != null)
