@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: f94172f4d9e2afb4f9b4c7b404b7c01e
+guid: 03710c3b060826b4fbc3511b18777d3e
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -7,33 +7,33 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Material
-    second: {fileID: 2100000, guid: 6aca0e4fe03b197498bd11d824f86b9b, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: body
-    second: {fileID: 2100000, guid: 6aca0e4fe03b197498bd11d824f86b9b, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: grip
-    second: {fileID: 2100000, guid: c678acc1f49d69e46beeeef2d119d4d9, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: lama
-    second: {fileID: 2100000, guid: 1e5fc83ee30f6334399de52c02c29b11, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: light
+      name: Tailight Led Tube
     second: {fileID: 2100000, guid: 78f2e4a57fe4e19469dc378c88d95087, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: lineArt
+      name: corpo
+    second: {fileID: 2100000, guid: 2ab8692f490918b4b8cced0fe3dc5ac6, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: giunto
+    second: {fileID: 2100000, guid: fced193657ccfa845a7f79e35118605c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: lente
+    second: {fileID: 2100000, guid: c678acc1f49d69e46beeeef2d119d4d9, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: linea
     second: {fileID: 2100000, guid: ca63b80f3998879469651c777f313721, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: visiera
+    second: {fileID: 2100000, guid: fced193657ccfa845a7f79e35118605c, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
