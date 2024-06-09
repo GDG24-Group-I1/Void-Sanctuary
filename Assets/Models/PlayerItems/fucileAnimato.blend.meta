@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: f94172f4d9e2afb4f9b4c7b404b7c01e
+guid: fe344d91236775547851492ce29864cb
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -7,33 +7,8 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Material
-    second: {fileID: 2100000, guid: 6aca0e4fe03b197498bd11d824f86b9b, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: body
-    second: {fileID: 2100000, guid: 6aca0e4fe03b197498bd11d824f86b9b, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: grip
-    second: {fileID: 2100000, guid: c678acc1f49d69e46beeeef2d119d4d9, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: lama
-    second: {fileID: 2100000, guid: 1e5fc83ee30f6334399de52c02c29b11, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: light
-    second: {fileID: 2100000, guid: 78f2e4a57fe4e19469dc378c88d95087, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
       name: lineArt
-    second: {fileID: 2100000, guid: ca63b80f3998879469651c777f313721, type: 2}
+    second: {fileID: 2100000, guid: c678acc1f49d69e46beeeef2d119d4d9, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
