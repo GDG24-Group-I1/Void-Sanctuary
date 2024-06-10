@@ -210,6 +210,17 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""5b318b34-2531-49fe-8c97-65847e874222"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Attack"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""93f29098-f95f-426b-b8bd-3228b5978786"",
                     ""path"": ""<Mouse>/rightButton"",
                     ""interactions"": """",

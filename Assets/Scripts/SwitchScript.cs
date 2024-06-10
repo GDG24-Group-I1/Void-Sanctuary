@@ -47,8 +47,13 @@ public class SwitchScript : MonoBehaviour
         var parentObject = transform.parent;
         if (parentObject != null)
         {
-            var platform = parentObject.transform.GetChild(0);
-            platform.gameObject.GetComponent<PlatformScript>().activeSwitches += 1;
+            var nChildren = parentObject.childCount;
+            for (int i = 0; i < nChildren; i++)
+            {
+                var child = parentObject.transform.GetChild(i);
+                if (child.gameObject.tag == "Platform")
+                    child.gameObject.GetComponent<PlatformScript>().activeSwitches += 1;
+            }
         }
     }
 
@@ -58,8 +63,13 @@ public class SwitchScript : MonoBehaviour
         var parentObject = transform.parent;
         if (parentObject != null)
         {
-            var platform = parentObject.transform.GetChild(0);
-            platform.gameObject.GetComponent<PlatformScript>().activeSwitches -= 1;
+            var nChildren = parentObject.childCount;
+            for (int i = 0; i < nChildren; i++)
+            {
+                var child = parentObject.transform.GetChild(i);
+                if (child.gameObject.tag == "Platform")
+                    child.gameObject.GetComponent<PlatformScript>().activeSwitches -= 1;
+            }
         }
     }
 

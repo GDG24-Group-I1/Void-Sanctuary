@@ -83,8 +83,10 @@ public class Player : MonoBehaviour
     private Timer firingStageCooldown;
     private Timer deathTimer;
     private Timer dashCooldownTimer;
+    private Timer dashTimer;
     private FiringStage firingStage = FiringStage.notFiring;
     private Vector3 startingPosition;
+    private Vector3 dashDirection;
 
 
     private void ResetPlayer()
@@ -270,6 +272,13 @@ public class Player : MonoBehaviour
             OnTimerElapsed = () =>
             {
                 canDash = true;
+                return null;
+            }
+        };
+        dashTimer = new Timer(this)
+        {
+            OnTimerElapsed = () =>
+            {
                 IsDashing = false;
                 return null;
             }
@@ -283,6 +292,7 @@ public class Player : MonoBehaviour
             frameNotGrounded++;
         }
         HandleMovement();
+        Dashing();
     }
 
     private void Update()
@@ -426,6 +436,22 @@ public class Player : MonoBehaviour
         if (!canDash || !canMove)
             return;
 
+        //temporary, I'll cleanup when it works
+        var dashCooldown = 3f;
+        var dashDuration = 0.2f;
+        var dashSpeed = 30f;
+
+        // Get input for movement
+        dashDirection = transform.forward * dashSpeed;
+
+        canDash = false;
+        dashCooldownTimer.Start(dashCooldown);
+        IsDashing = true;
+        dashTimer.Start(dashDuration);
+        canMove = false;
+        movementCooldownTimer.Start(dashDuration);
+
+        /*
         var dashSpeed = 25f;
         // Get input for movement
         Vector2 movementVector = gameInput.GetMovementVectorNormalized();
@@ -449,6 +475,7 @@ public class Player : MonoBehaviour
         canDash = false;
         IsDashing = true;
         dashCooldownTimer.Start(1.2f);
+        */
     }
 
     private void FiringSequence()
@@ -550,4 +577,27 @@ public class Player : MonoBehaviour
     }
 
     public Action OnPlayerAttack;
+
+    private void Dashing()
+    {
+        if (IsDashing)
+        {
+            RaycastHit hit;
+            if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, 1f))
+                return;
+
+            // Handle movement
+            Vector3 targetVelocity = dashDirection * movementSpeed;
+            Vector3 velocity = rb.velocity;
+            Vector3 velocityChange = targetVelocity - velocity;
+
+            // Clamp velocity change to prevent abrupt changes
+            velocityChange.y = 0;
+
+            rb.AddForce(velocityChange, ForceMode.VelocityChange);
+
+            // Apply drag if grounded
+            rb.drag = frameNotGrounded == 0 ? groundDrag : 0;
+        }
+    }
 }
