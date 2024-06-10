@@ -1265,6 +1265,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1845146765138933457, guid: 602c5e512c353fa4f9089894d785261b, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
+      objectReference: {fileID: 0}
     - target: {fileID: 3120664125272468870, guid: 602c5e512c353fa4f9089894d785261b, type: 3}
       propertyPath: m_Name
       value: Player
@@ -1290,8 +1294,16 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1218966244}
     - target: {fileID: 3619611160478188325, guid: 602c5e512c353fa4f9089894d785261b, type: 3}
+      propertyPath: groundLayer.m_Bits
+      value: 1024
+      objectReference: {fileID: 0}
+    - target: {fileID: 3619611160478188325, guid: 602c5e512c353fa4f9089894d785261b, type: 3}
       propertyPath: thresholdFrameGrounded
       value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 4344094862063477767, guid: 602c5e512c353fa4f9089894d785261b, type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4407350005302218948, guid: 602c5e512c353fa4f9089894d785261b, type: 3}
       propertyPath: m_Drag
@@ -1304,6 +1316,66 @@ PrefabInstance:
     - target: {fileID: 4407350005302218948, guid: 602c5e512c353fa4f9089894d785261b, type: 3}
       propertyPath: m_CollisionDetection
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5860041692090350623, guid: 602c5e512c353fa4f9089894d785261b, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 5860041692090350623, guid: 602c5e512c353fa4f9089894d785261b, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 5860041692090350623, guid: 602c5e512c353fa4f9089894d785261b, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 5860041692090350623, guid: 602c5e512c353fa4f9089894d785261b, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.339
+      objectReference: {fileID: 0}
+    - target: {fileID: 5860041692090350623, guid: 602c5e512c353fa4f9089894d785261b, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.173
+      objectReference: {fileID: 0}
+    - target: {fileID: 7447649834066131658, guid: 602c5e512c353fa4f9089894d785261b, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 7447649834066131658, guid: 602c5e512c353fa4f9089894d785261b, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 7447649834066131658, guid: 602c5e512c353fa4f9089894d785261b, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 7447649834066131658, guid: 602c5e512c353fa4f9089894d785261b, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.334
+      objectReference: {fileID: 0}
+    - target: {fileID: 7447649834066131658, guid: 602c5e512c353fa4f9089894d785261b, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.475
+      objectReference: {fileID: 0}
+    - target: {fileID: 7984704643920429147, guid: 602c5e512c353fa4f9089894d785261b, type: 3}
+      propertyPath: m_Size.y
+      value: 0.064910166
+      objectReference: {fileID: 0}
+    - target: {fileID: 7984704643920429147, guid: 602c5e512c353fa4f9089894d785261b, type: 3}
+      propertyPath: m_Size.z
+      value: 0.45333803
+      objectReference: {fileID: 0}
+    - target: {fileID: 7984704643920429147, guid: 602c5e512c353fa4f9089894d785261b, type: 3}
+      propertyPath: m_Center.x
+      value: -0.2978182
+      objectReference: {fileID: 0}
+    - target: {fileID: 7984704643920429147, guid: 602c5e512c353fa4f9089894d785261b, type: 3}
+      propertyPath: m_Center.y
+      value: -0.0040644775
+      objectReference: {fileID: 0}
+    - target: {fileID: 7984704643920429147, guid: 602c5e512c353fa4f9089894d785261b, type: 3}
+      propertyPath: m_Center.z
+      value: 0.39796677
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

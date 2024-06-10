@@ -1,13 +1,8 @@
-using Cinemachine;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.InputSystem;
-using UnityEngine.Windows;
 
 public enum ComboState
 {
@@ -38,6 +33,7 @@ public class Player : MonoBehaviour
     [SerializeField] public Transform cameraDirection;
     [SerializeField] public Transform cameraTransform;
     [SerializeField] public LayerMask wallLayer;
+    [SerializeField] public LayerMask groundLayer;
     [SerializeField] private int thresholdFrameGrounded = 1;
 
     private GameObject WeaponOnBack;
@@ -101,8 +97,9 @@ public class Player : MonoBehaviour
         movementSpeed = walkSpeed;
         startingPosition = transform.position;
         rb = GetComponent<Rigidbody>();
-        swordCollider = GetComponentInChildren<BoxCollider>();
+        //swordCollider = GetComponentInChildren<BoxCollider>();
 
+        swordCollider = GameObject.FindGameObjectWithTag("Sword").GetComponent<BoxCollider>();
         WeaponOnBack = GameObject.Find("WeaponHolderOnBack");
         WeaponInHand = GameObject.Find("WeaponHolderOnHand");
         WeaponInHand.SetActive(false);
@@ -349,10 +346,12 @@ public class Player : MonoBehaviour
     private void HandleMovement()
     {
         // Get input for movement
+        float previousPosY = transform.position.y;
         Vector2 movementVector = gameInput.GetMovementVectorNormalized();
         Vector3 moveDir = new Vector3(movementVector.x, 0, movementVector.y);
         Vector3 rotateDir;
         moveDir = cameraDirection.forward * moveDir.z + cameraDirection.right * moveDir.x;
+        moveDir.Normalize();
         moveDir.y = 0;
         rotateDir = moveDir;
 
@@ -372,6 +371,7 @@ public class Player : MonoBehaviour
 
         // Handle movement
         Vector3 targetVelocity = moveDir * movementSpeed;
+        
         Vector3 velocity = rb.velocity;
         Vector3 velocityChange = targetVelocity - velocity;
 
@@ -400,8 +400,8 @@ public class Player : MonoBehaviour
         // Smoothly rotate player towards movement direction
         if (canMove || firingStage == FiringStage.aiming)
         {
-            float rotationSpeed = 20f;
-            transform.forward = Vector3.Slerp(transform.forward, rotateDir, Time.deltaTime * rotationSpeed);
+            float rotationSpeed = 15f;
+            transform.forward = Vector3.Slerp(transform.forward, rotateDir, rotationSpeed * Time.deltaTime);
         }
     }
 
@@ -530,7 +530,19 @@ public class Player : MonoBehaviour
             //knockback
             case FiringStage.knockback:
                 float knockback = firingKnockbackSpeed * Time.deltaTime;
-                transform.position += new Vector3(knockback * -playerFacing.x, 0.0f, knockback * -playerFacing.z);
+                
+                int random_number = UnityEngine.Random.Range(0, 100);
+
+                //FIX THIS :) nice
+                if (random_number == 69)
+                {
+                    transform.position += new Vector3(knockback * -playerFacing.x, 0.0f, knockback * -playerFacing.z);
+                }
+                else
+                {
+                    rb.AddForce(-playerFacing * knockback * 75, ForceMode.VelocityChange);
+                }
+
                 break;
             default:
                 break;
