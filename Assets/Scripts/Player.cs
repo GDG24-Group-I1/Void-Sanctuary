@@ -24,6 +24,7 @@ public enum FallingState
     Falling
 }
 
+[RequireComponent(typeof(Rigidbody), typeof(GameInput), typeof(FloorCollider))]
 public class Player : MonoBehaviour
 {
     enum FiringStage { notFiring, aiming, startCharging, charging, firing, knockback }
@@ -46,10 +47,8 @@ public class Player : MonoBehaviour
     private GameInput gameInput;
 
     private Rigidbody rb;
-    private LayerMask groundLayer;
     private int frameNotGrounded;
     private bool isGrounded;
-    private CapsuleCollider playerCollider;
     private Collider[] previousWallsCollided = Array.Empty<Collider>();
     private RaycastHit[] wallsCollided = new RaycastHit[maxWallsCollided];
 
@@ -60,6 +59,8 @@ public class Player : MonoBehaviour
     public bool IsWeaponEquipped { get; private set; }
 
     public bool IsAttacking { get; private set; }
+
+    public bool IsDashing { get; private set; }
 
     public FallingState IsFalling { get; private set; } = FallingState.None;
 
@@ -154,8 +155,6 @@ public class Player : MonoBehaviour
         aimLaserRenderer.SetPosition(0, new Vector3(0, .1f, 0));
         aimLaserRenderer.enabled = false;
 
-        playerCollider = GetComponentInChildren<CapsuleCollider>();
-        Debug.Assert(playerCollider != null, "Player collider not found");
         gameInput.OnAttack = (context) =>
         {
 
@@ -271,6 +270,7 @@ public class Player : MonoBehaviour
             OnTimerElapsed = () =>
             {
                 canDash = true;
+                IsDashing = false;
                 return null;
             }
         };
@@ -388,7 +388,7 @@ public class Player : MonoBehaviour
         }
 
         // Smoothly rotate player towards movement direction
-        if (canMove)
+        if (canMove || firingStage == FiringStage.aiming)
         {
             float rotationSpeed = 20f;
             transform.forward = Vector3.Slerp(transform.forward, rotateDir, Time.deltaTime * rotationSpeed);
@@ -426,7 +426,7 @@ public class Player : MonoBehaviour
         if (!canDash || !canMove)
             return;
 
-        var dashSpeed = 50f;
+        var dashSpeed = 25f;
         // Get input for movement
         Vector2 movementVector = gameInput.GetMovementVectorNormalized();
         Vector3 moveDir = new Vector3(movementVector.x, 0, movementVector.y);
@@ -447,6 +447,7 @@ public class Player : MonoBehaviour
         rb.drag = frameNotGrounded == 0 ? groundDrag : 0;
 
         canDash = false;
+        IsDashing = true;
         dashCooldownTimer.Start(1.2f);
     }
 
