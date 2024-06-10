@@ -14,7 +14,8 @@ enum PlayerState
     Attacking = 7,
     FallingTransition = 8,
     Falling = 9,
-    Dashing = 10
+    DashingTransition = 10,
+    Dashing = 11,
 }
 
 public class PlayerAnimator : MonoBehaviour
@@ -58,10 +59,12 @@ public class PlayerAnimator : MonoBehaviour
         bool isWeaponEquipped = player.IsWeaponEquipped;
         bool isAttacking = player.IsAttacking;
 
-        if (player.IsFalling == FallingState.Transition) return PlayerState.FallingTransition;
+        if (player.IsFalling == AnimationState.Transition) return PlayerState.FallingTransition;
 
-        if (player.IsFalling == FallingState.Falling) return PlayerState.Falling;
-        if (player.IsDashing) return PlayerState.Dashing;
+        if (player.IsFalling == AnimationState.Playing) return PlayerState.Falling;
+
+        if (player.IsDashing == AnimationState.Transition) return PlayerState.DashingTransition;
+        if (player.IsDashing == AnimationState.Playing) return PlayerState.Dashing;
         if (isWeaponEquipped)
         {
             if(isAttacking)

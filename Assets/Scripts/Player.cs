@@ -17,11 +17,11 @@ public enum ComboState
     Pressed
 }
 
-public enum FallingState
+public enum AnimationState
 {
     None,
     Transition,
-    Falling
+    Playing
 }
 
 [RequireComponent(typeof(Rigidbody), typeof(GameInput), typeof(FloorCollider))]
@@ -60,9 +60,9 @@ public class Player : MonoBehaviour
 
     public bool IsAttacking { get; private set; }
 
-    public bool IsDashing { get; private set; }
+    public AnimationState IsDashing { get; private set; } = AnimationState.None;
 
-    public FallingState IsFalling { get; private set; } = FallingState.None;
+    public AnimationState IsFalling { get; private set; } = AnimationState.None;
 
     public ComboState CanCombo { get; set; } = ComboState.NotPressed;
 
@@ -114,7 +114,7 @@ public class Player : MonoBehaviour
             {
                 // Reset player position, for now
                 // Later, add death logic here
-                if (IsFalling != FallingState.None)
+                if (IsFalling != AnimationState.None)
                 {
                     Debug.Log("Player died");
 
@@ -124,7 +124,7 @@ public class Player : MonoBehaviour
                 }
                 else
                 {
-                    IsFalling = FallingState.Transition;
+                    IsFalling = AnimationState.Transition;
                     return 4.0f;
                 }
             }
@@ -133,7 +133,7 @@ public class Player : MonoBehaviour
         floorCollider.CollisionEnterCallback = () =>
         {
             deathTimer?.Stop();
-            IsFalling = FallingState.None;
+            IsFalling = AnimationState.None;
             frameNotGrounded = 0;
             isGrounded = true;
         };
@@ -145,7 +145,7 @@ public class Player : MonoBehaviour
         floorCollider.CollisionStayCallback = () =>
         {
             deathTimer?.Stop();
-            IsFalling = FallingState.None;
+            IsFalling = AnimationState.None;
             frameNotGrounded = 0;
             isGrounded = true;
         };
@@ -279,7 +279,7 @@ public class Player : MonoBehaviour
         {
             OnTimerElapsed = () =>
             {
-                IsDashing = false;
+                IsDashing = AnimationState.None;
                 return null;
             }
         };
@@ -446,7 +446,7 @@ public class Player : MonoBehaviour
 
         canDash = false;
         dashCooldownTimer.Start(dashCooldown);
-        IsDashing = true;
+        IsDashing = AnimationState.Transition;
         dashTimer.Start(dashDuration);
         canMove = false;
         movementCooldownTimer.Start(dashDuration);
@@ -573,14 +573,19 @@ public class Player : MonoBehaviour
 
     public void StartFalling()
     {
-        IsFalling = FallingState.Falling;
+        IsFalling = AnimationState.Playing;
+    }
+
+    public void StartDashing()
+    {
+        IsDashing = AnimationState.Playing;
     }
 
     public Action OnPlayerAttack;
 
     private void Dashing()
     {
-        if (IsDashing)
+        if (IsDashing != AnimationState.None)
         {
             RaycastHit hit;
             if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, 1f))
