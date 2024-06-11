@@ -35,6 +35,8 @@ public class Player : MonoBehaviour
     [SerializeField] public LayerMask wallLayer;
     [SerializeField] public LayerMask groundLayer;
     [SerializeField] private int thresholdFrameGrounded = 1;
+    [SerializeField] private float dashDistance = 5f;
+    [SerializeField] private float stopDistance = 1f;
 
     private GameObject WeaponOnBack;
     private GameObject WeaponInHand;
@@ -56,7 +58,7 @@ public class Player : MonoBehaviour
 
     public bool IsAttacking { get; private set; }
 
-    public AnimationState IsDashing { get; private set; } = AnimationState.None;
+    public bool IsDashing { get; private set; }
 
     public AnimationState IsFalling { get; private set; } = AnimationState.None;
 
@@ -79,7 +81,6 @@ public class Player : MonoBehaviour
     private Timer firingStageCooldown;
     private Timer deathTimer;
     private Timer dashCooldownTimer;
-    private Timer dashTimer;
     private FiringStage firingStage = FiringStage.notFiring;
     private Vector3 startingPosition;
     private Vector3 dashDirection;
@@ -272,14 +273,6 @@ public class Player : MonoBehaviour
                 return null;
             }
         };
-        dashTimer = new Timer(this)
-        {
-            OnTimerElapsed = () =>
-            {
-                IsDashing = AnimationState.None;
-                return null;
-            }
-        };
     }
 
     private void FixedUpdate()
@@ -436,46 +429,13 @@ public class Player : MonoBehaviour
         if (!canDash || !canMove)
             return;
 
-        //temporary, I'll cleanup when it works
-        var dashCooldown = 3f;
-        var dashDuration = 0.2f;
-        var dashSpeed = 30f;
-
-        // Get input for movement
-        dashDirection = transform.forward * dashSpeed;
+        //FIX THIS 
+        var dashCooldown = 1f;
 
         canDash = false;
         dashCooldownTimer.Start(dashCooldown);
-        IsDashing = AnimationState.Transition;
-        dashTimer.Start(dashDuration);
-        canMove = false;
-        movementCooldownTimer.Start(dashDuration);
-
-        /*
-        var dashSpeed = 25f;
-        // Get input for movement
-        Vector2 movementVector = gameInput.GetMovementVectorNormalized();
-        Vector3 moveDir = new Vector3(movementVector.x, 0, movementVector.y);
-        moveDir = dashSpeed * moveDir.z * cameraDirection.forward + dashSpeed * moveDir.x * cameraDirection.right;
-        moveDir.y = 0;
-
-        // Handle movement
-        Vector3 targetVelocity = moveDir * movementSpeed;
-        Vector3 velocity = rb.velocity;
-        Vector3 velocityChange = targetVelocity - velocity;
-
-        // Clamp velocity change to prevent abrupt changes
-        velocityChange.y = 0;
-
-        rb.AddForce(velocityChange, ForceMode.VelocityChange);
-
-        // Apply drag if grounded
-        rb.drag = frameNotGrounded == 0 ? groundDrag : 0;
-
-        canDash = false;
         IsDashing = true;
-        dashCooldownTimer.Start(1.2f);
-        */
+        canMove = false;
     }
 
     private void FiringSequence()
@@ -588,33 +548,29 @@ public class Player : MonoBehaviour
         IsFalling = AnimationState.Playing;
     }
 
-    public void StartDashing()
+    public void StopDashing()
     {
-        IsDashing = AnimationState.Playing;
+        IsDashing = false;
+        canMove = true;
     }
 
     public Action OnPlayerAttack;
 
     private void Dashing()
     {
-        if (IsDashing != AnimationState.None)
+        if (IsDashing)
         {
+            Vector3 dashDirection = transform.forward;
+            Vector3 targetPosition = transform.position + dashDirection * dashDistance;
+
             RaycastHit hit;
-            if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, 1f))
-                return;
+            if (Physics.Raycast(transform.position + dashDirection * 0.1f, dashDirection, out hit, dashDistance))
+            {
+               targetPosition = hit.point - dashDirection * stopDistance;
+            }
 
-            // Handle movement
-            Vector3 targetVelocity = dashDirection * movementSpeed;
-            Vector3 velocity = rb.velocity;
-            Vector3 velocityChange = targetVelocity - velocity;
+            rb.AddForce(dashDirection * 40, ForceMode.VelocityChange);
 
-            // Clamp velocity change to prevent abrupt changes
-            velocityChange.y = 0;
-
-            rb.AddForce(velocityChange, ForceMode.VelocityChange);
-
-            // Apply drag if grounded
-            rb.drag = frameNotGrounded == 0 ? groundDrag : 0;
         }
     }
 }

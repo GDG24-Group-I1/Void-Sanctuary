@@ -1286,6 +1286,14 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3619611160478188325, guid: 602c5e512c353fa4f9089894d785261b, type: 3}
+      propertyPath: dashDistance
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 3619611160478188325, guid: 602c5e512c353fa4f9089894d785261b, type: 3}
+      propertyPath: stopDistance
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3619611160478188325, guid: 602c5e512c353fa4f9089894d785261b, type: 3}
       propertyPath: cameraDirection
       value: 
       objectReference: {fileID: 1218966244}
