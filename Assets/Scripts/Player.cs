@@ -569,7 +569,7 @@ public class Player : MonoBehaviour
                targetPosition = hit.point - dashDirection * stopDistance;
             }
 
-            rb.AddForce(dashDirection * 40, ForceMode.VelocityChange);
+            rb.AddForce(dashDirection * 20, ForceMode.VelocityChange);
 
         }
     }

@@ -66,6 +66,7 @@ public class PlayerAnimator : MonoBehaviour
 
         if (isWeaponEquipped)
         {
+            animator.SetBool("WeaponEquipped", true);
             if(isAttacking)
             {
                 return PlayerState.Attacking;
@@ -85,6 +86,7 @@ public class PlayerAnimator : MonoBehaviour
         }
         else
         {
+            animator.SetBool("WeaponEquipped", false);
             if(isRunning)
             {
                 return PlayerState.Running;
