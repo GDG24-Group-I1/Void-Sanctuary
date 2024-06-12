@@ -9,8 +9,10 @@ public class ComboScript : StateMachineBehaviour
     private bool attackClicked = false;
     private float comboWindow = 0f;
 
-    [SerializeField] private float exitTransitionDuration;
-    [SerializeField] private float exitTime;
+    /// <summary>
+    /// Adjustment to the combo window in seconds, this is to account for the time it takes for the animation to transition
+    /// </summary>
+    [SerializeField] private float windowAdjustment;
 
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -23,28 +25,30 @@ public class ComboScript : StateMachineBehaviour
             attackClicked = true;
         };
         // var duration
-        var actualDuration = stateInfo.length - exitTransitionDuration - exitTime;
-        comboWindow = (actualDuration * 0.25f) / stateInfo.length;
-        Debug.Log($"Combo window is {comboWindow}");
+        var actualDuration = stateInfo.length - windowAdjustment;
+        comboWindow = (actualDuration * 0.75f) / stateInfo.length;
+        DebugExt.LogCombo($"Window is {comboWindow * stateInfo.length} seconds");
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        if (animator.IsInTransition(layerIndex)) return;
+        if (animator.IsInTransition(layerIndex)) { player.StopSwordGlowing(); return; };
         if (player.CanCombo == ComboState.PressedEarly || player.CanCombo == ComboState.Pressed) return;
-        if (stateInfo.normalizedTime >= comboWindow && player.CanCombo == ComboState.NotPressed) player.CanCombo = ComboState.CanCombo;
+        if (stateInfo.normalizedTime >= comboWindow && player.CanCombo == ComboState.NotPressed) {
+            player.SetCanCombo();
+        }
         if (attackClicked && player.CanCombo == ComboState.CanCombo)
         {
             player.AttackNumber++;
             player.CanCombo = ComboState.Pressed;
             attackClicked = false;
-            Debug.Log($"Combo from {player.AttackNumber - 1} to {player.AttackNumber}");
+            DebugExt.LogCombo($"Combo from {player.AttackNumber - 1} to {player.AttackNumber}: hit", always: true);
         } else if (attackClicked)
         {
             player.CanCombo = ComboState.PressedEarly;
             attackClicked = false;
-            Debug.Log("Aww too early!");
+            DebugExt.LogCombo($"Combo from {player.AttackNumber} to {player.AttackNumber + 1}: too early!", always: true);
         }
     }
 

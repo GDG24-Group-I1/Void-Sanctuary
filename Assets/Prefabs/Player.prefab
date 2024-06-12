@@ -45,6 +45,7 @@ GameObject:
   - component: {fileID: 3619611160478188325}
   - component: {fileID: 2916950646172925459}
   - component: {fileID: 540350638679568032}
+  - component: {fileID: 4578832250119514008}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -120,6 +121,10 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1024
   thresholdFrameGrounded: 8
+  dashDistance: 10
+  stopDistance: 0.1
+  glowMaterial: {fileID: 2100000, guid: 24903d27a52b1fc41add8dedfe46fff8, type: 2}
+  swordBaseMaterial: {fileID: 6719245597448002910, guid: f94172f4d9e2afb4f9b4c7b404b7c01e, type: 3}
 --- !u!114 &2916950646172925459
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -144,6 +149,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55d9b74648cff234180050b707985cac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!136 &4578832250119514008
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3120664125272468870}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 3.0995457
+  m_Height: 17.272865
+  m_Direction: 1
+  m_Center: {x: 0.065528154, y: 7.124525, z: -0.057531}
 --- !u!1 &5388656467321073202
 GameObject:
   m_ObjectHideFlags: 0

@@ -37,10 +37,14 @@ public class Player : MonoBehaviour
     [SerializeField] private int thresholdFrameGrounded = 1;
     [SerializeField] private float dashDistance = 5f;
     [SerializeField] private float stopDistance = 1f;
+    [SerializeField] private Material glowMaterial;
+    [SerializeField] private Material swordBaseMaterial;
 
+    private bool IsSwordGlowing = false;
     private GameObject WeaponOnBack;
     private GameObject WeaponInHand;
     private LineRenderer aimLaserRenderer;
+    private GameObject sword;
     private BoxCollider swordCollider;
     private GameInput gameInput;
 
@@ -100,7 +104,8 @@ public class Player : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         //swordCollider = GetComponentInChildren<BoxCollider>();
 
-        swordCollider = GameObject.FindGameObjectWithTag("Sword").GetComponent<BoxCollider>();
+        sword = GameObject.FindGameObjectWithTag("Sword");
+        swordCollider = sword.GetComponent<BoxCollider>();
         WeaponOnBack = GameObject.Find("WeaponHolderOnBack");
         WeaponInHand = GameObject.Find("WeaponHolderOnHand");
         WeaponInHand.SetActive(false);
@@ -540,7 +545,18 @@ public class Player : MonoBehaviour
             canMove = true;
         }
         CanCombo = ComboState.NotPressed;
+    }
 
+    public void StopSwordGlowing()
+    {
+        if (IsSwordGlowing)
+        {
+            DebugExt.LogCombo($"Can't combo anymore at time {Time.time} for {AttackNumber}");
+            var renderer = sword.GetComponent<SkinnedMeshRenderer>();
+            var newMaterials = renderer.sharedMaterials.Select(x => x == glowMaterial ? swordBaseMaterial : x).ToList();
+            renderer.SetSharedMaterials(newMaterials);
+            IsSwordGlowing = false;
+        }
     }
 
     public void StartFalling()
@@ -572,5 +588,15 @@ public class Player : MonoBehaviour
             rb.AddForce(dashDirection * 20, ForceMode.VelocityChange);
 
         }
+    }
+
+    public void SetCanCombo()
+    {
+        CanCombo = ComboState.CanCombo;
+        var renderer = sword.GetComponent<SkinnedMeshRenderer>();
+        var newMaterials = renderer.sharedMaterials.Select(x => x == swordBaseMaterial ? glowMaterial : x).ToList();
+        renderer.SetSharedMaterials(newMaterials);
+        IsSwordGlowing = true;
+        DebugExt.LogCombo($"Can combo at time {Time.time} for {AttackNumber}");
     }
 }

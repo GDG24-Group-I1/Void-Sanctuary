@@ -44,18 +44,18 @@ public class PlatformScript : MonoBehaviour
         }
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider collision)
     {
-        if (collision.gameObject.name == "Player")
+        if (collision.gameObject.CompareTag("Player"))
         {
             Debug.Log($"{collision.gameObject.name} is now child of platform");
             collision.gameObject.transform.parent = transform;
         }
     }
 
-    private void OnCollisionExit(Collision collision)
+    private void OnTriggerExit(Collider collision)
     {
-        if (collision.gameObject.name == "Player")
+        if (collision.gameObject.CompareTag("Player"))
         {
             Debug.Log($"{collision.gameObject.name} is no longer child of platform");
             collision.gameObject.transform.parent = null;
