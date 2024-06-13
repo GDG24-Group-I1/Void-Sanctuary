@@ -15,6 +15,7 @@ public class GameInput : MonoBehaviour
     private InputAction _runAction;
     private InputAction _drawWeaponAction;
     private InputAction _dashAction;
+    private InputAction _fakeHitAction;
 
 
     private void Awake()
@@ -37,6 +38,7 @@ public class GameInput : MonoBehaviour
            
         _drawWeaponAction = playerInputActions.Player.DrawWeapon;
         _dashAction = playerInputActions.Player.Dash;
+        _fakeHitAction = playerInputActions.Player.FakeHit;
 
     }
     public Vector2 GetMovementVectorNormalized()
@@ -80,6 +82,10 @@ public class GameInput : MonoBehaviour
     public Action<CallbackContext> OnDash
     {
         set { _dashAction.performed += value; }
+    }
+    public Action<CallbackContext> OnFakeHit
+    {
+        set { _fakeHitAction.performed += value; }
     }
 
     private void OnDestroy()

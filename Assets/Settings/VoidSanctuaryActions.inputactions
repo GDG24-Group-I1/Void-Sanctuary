@@ -106,6 +106,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "FakeHit",
+                    "type": "Button",
+                    "id": "d3f3c4e0-bb56-4eac-8040-8721091e2fe0",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -315,6 +324,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Dash",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "4fdafc83-49f3-4080-a6d1-2a37336f6650",
+                    "path": "<Keyboard>/h",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "FakeHit",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

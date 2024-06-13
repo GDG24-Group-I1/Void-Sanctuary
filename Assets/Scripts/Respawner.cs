@@ -7,18 +7,23 @@ public class Respawner : MonoBehaviour
 {
 
     [SerializeField] private GameObject playerPrefab;
+    [SerializeField] private GameObject youDiedText;
     private Transform cameraDirection;
     private Transform cameraTransform;
+    private GameObject healthBar;
     private GameObject playerObject;
     private CinemachineVirtualCamera virtualCamera;
+    private Animator animator;
     // Start is called before the first frame update
     void Start()
     {
+        animator = youDiedText.GetComponent<Animator>();
         playerObject = GameObject.FindGameObjectWithTag("Player");
         virtualCamera = GameObject.Find("TopDownCamera").GetComponent<CinemachineVirtualCamera>();
         var player = playerObject.GetComponent<Player>();
         cameraDirection = player.cameraDirection;
         cameraTransform = player.cameraTransform;
+        healthBar = player.healthBar;
     }
 
     // Update is called once per frame
@@ -26,12 +31,20 @@ public class Respawner : MonoBehaviour
     {
         if (playerObject == null)
         {
-            playerObject = Instantiate(playerPrefab, Vector3.zero, Quaternion.identity);
-            var player = playerObject.GetComponent<Player>();
-            player.cameraDirection = cameraDirection;
-            player.cameraTransform = cameraTransform;
-            virtualCamera.Follow = playerObject.transform;
-            virtualCamera.LookAt = playerObject.transform;
+            youDiedText.SetActive(true);
+            animator.SetTrigger("PlayerDied");
         }
     }
+
+    public void RespawnPlayer()
+    {
+        youDiedText.SetActive(false);
+        playerObject = Instantiate(playerPrefab, Vector3.zero, Quaternion.identity);
+        var player = playerObject.GetComponent<Player>();
+        player.cameraDirection = cameraDirection;
+        player.cameraTransform = cameraTransform;
+        player.healthBar = healthBar;
+        virtualCamera.Follow = playerObject.transform;
+        virtualCamera.LookAt = playerObject.transform;
+    } 
 }

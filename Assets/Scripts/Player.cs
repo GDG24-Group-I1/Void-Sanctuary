@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public enum ComboState
 {
@@ -29,16 +30,20 @@ public class Player : MonoBehaviour
     [SerializeField] private float walkSpeed = 5f;
     [SerializeField] private float runSpeed = 10f;
     [SerializeField] private float groundDrag = 6f;
-    [SerializeField] public GameObject projectilePrefab;
-    [SerializeField] public Transform cameraDirection;
-    [SerializeField] public Transform cameraTransform;
-    [SerializeField] public LayerMask wallLayer;
-    [SerializeField] public LayerMask groundLayer;
+    [SerializeField] private GameObject projectilePrefab;
+    [SerializeField] private LayerMask wallLayer;
+    [SerializeField] private LayerMask groundLayer;
     [SerializeField] private int thresholdFrameGrounded = 1;
     [SerializeField] private float dashDistance = 5f;
     [SerializeField] private float stopDistance = 1f;
     [SerializeField] private Material glowMaterial;
     [SerializeField] private Material swordBaseMaterial;
+
+
+    // these need to be public because they are set by the respawner script since they can't be set in the prefab
+    [SerializeField] public Transform cameraDirection;
+    [SerializeField] public Transform cameraTransform;
+    [SerializeField] public GameObject healthBar;
 
     private bool IsSwordGlowing = false;
     private GameObject WeaponOnBack;
@@ -47,6 +52,7 @@ public class Player : MonoBehaviour
     private GameObject sword;
     private BoxCollider swordCollider;
     private GameInput gameInput;
+    private Slider healthSlider;
 
     private Rigidbody rb;
     private int frameNotGrounded;
@@ -102,6 +108,15 @@ public class Player : MonoBehaviour
         movementSpeed = walkSpeed;
         startingPosition = transform.position;
         rb = GetComponent<Rigidbody>();
+        healthSlider = healthBar.GetComponent<Slider>();
+        healthSlider.value = healthSlider.maxValue;
+        healthSlider.onValueChanged.AddListener((value) =>
+        {
+            if (value == healthSlider.minValue)
+            {
+                ResetPlayer();
+            }
+        });
         //swordCollider = GetComponentInChildren<BoxCollider>();
 
         sword = GameObject.FindGameObjectWithTag("Sword");
@@ -120,8 +135,6 @@ public class Player : MonoBehaviour
                 if (IsFalling != AnimationState.None)
                 {
                     Debug.Log("Player died");
-
-
                     ResetPlayer();
                     return null;
                 }
@@ -218,7 +231,18 @@ public class Player : MonoBehaviour
         {
             Dash();
         };
-        movementCooldownTimer = new Timer(this)
+        gameInput.OnFakeHit = (context) =>
+        {
+            if (healthSlider.value == healthSlider.minValue)
+            {
+                healthSlider.value = healthSlider.maxValue;
+            }
+            else
+            {
+                healthSlider.value--;
+            }
+        };
+            movementCooldownTimer = new Timer(this)
         {
             OnTimerElapsed = () =>
             {

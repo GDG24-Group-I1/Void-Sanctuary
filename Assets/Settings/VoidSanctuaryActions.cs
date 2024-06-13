@@ -128,6 +128,15 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""FakeHit"",
+                    ""type"": ""Button"",
+                    ""id"": ""d3f3c4e0-bb56-4eac-8040-8721091e2fe0"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -339,6 +348,17 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
                     ""action"": ""Dash"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4fdafc83-49f3-4080-a6d1-2a37336f6650"",
+                    ""path"": ""<Keyboard>/h"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""FakeHit"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -357,6 +377,7 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
         m_Player_Run = m_Player.FindAction("Run", throwIfNotFound: true);
         m_Player_DrawWeapon = m_Player.FindAction("DrawWeapon", throwIfNotFound: true);
         m_Player_Dash = m_Player.FindAction("Dash", throwIfNotFound: true);
+        m_Player_FakeHit = m_Player.FindAction("FakeHit", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -471,6 +492,7 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Run;
     private readonly InputAction m_Player_DrawWeapon;
     private readonly InputAction m_Player_Dash;
+    private readonly InputAction m_Player_FakeHit;
     public struct PlayerActions
     {
         private @VoidSanctuaryActions m_Wrapper;
@@ -482,6 +504,7 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
         public InputAction @Run => m_Wrapper.m_Player_Run;
         public InputAction @DrawWeapon => m_Wrapper.m_Player_DrawWeapon;
         public InputAction @Dash => m_Wrapper.m_Player_Dash;
+        public InputAction @FakeHit => m_Wrapper.m_Player_FakeHit;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -512,6 +535,9 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
             @Dash.started += instance.OnDash;
             @Dash.performed += instance.OnDash;
             @Dash.canceled += instance.OnDash;
+            @FakeHit.started += instance.OnFakeHit;
+            @FakeHit.performed += instance.OnFakeHit;
+            @FakeHit.canceled += instance.OnFakeHit;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -537,6 +563,9 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
             @Dash.started -= instance.OnDash;
             @Dash.performed -= instance.OnDash;
             @Dash.canceled -= instance.OnDash;
+            @FakeHit.started -= instance.OnFakeHit;
+            @FakeHit.performed -= instance.OnFakeHit;
+            @FakeHit.canceled -= instance.OnFakeHit;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -567,5 +596,6 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
         void OnRun(InputAction.CallbackContext context);
         void OnDrawWeapon(InputAction.CallbackContext context);
         void OnDash(InputAction.CallbackContext context);
+        void OnFakeHit(InputAction.CallbackContext context);
     }
 }
