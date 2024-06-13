@@ -8,6 +8,7 @@ TagManager:
   - Sword
   - Platform
   - Respawner
+  - SwordInternal
   layers:
   - Default
   - TransparentFX

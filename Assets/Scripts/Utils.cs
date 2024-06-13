@@ -1,4 +1,5 @@
 // #define COMBO_DEBUG
+using System.Linq;
 using UnityEngine;
 
 public static class DebugExt
@@ -15,5 +16,14 @@ public static class DebugExt
         Debug.Log($"[COMBO]: {message}");
 #endif
         }
+    }
+}
+
+public static class RendererExtensions
+{
+    public static void SwitchMaterial(this Renderer renderer, Material originalMaterial, Material newMaterial)
+    {
+        var newMaterials = renderer.sharedMaterials.Select(x => x == originalMaterial ? newMaterial : x).ToList();
+        renderer.SetSharedMaterials(newMaterials);
     }
 }

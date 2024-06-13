@@ -29,7 +29,7 @@ Transform:
   m_LocalScale: {x: 0.7, y: 0.7, z: 0.7}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 7700421461562790111}
+  - {fileID: 2620401782517460906}
   m_Father: {fileID: 8323252435620837806}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3120664125272468870
@@ -112,8 +112,6 @@ MonoBehaviour:
   runSpeed: 20
   groundDrag: 10
   projectilePrefab: {fileID: 2225220425910028821, guid: d648b877a1539bf43864fdddf250861d, type: 3}
-  cameraDirection: {fileID: 0}
-  cameraTransform: {fileID: 0}
   wallLayer:
     serializedVersion: 2
     m_Bits: 512
@@ -125,6 +123,10 @@ MonoBehaviour:
   stopDistance: 0.1
   glowMaterial: {fileID: 2100000, guid: 24903d27a52b1fc41add8dedfe46fff8, type: 2}
   swordBaseMaterial: {fileID: 6719245597448002910, guid: f94172f4d9e2afb4f9b4c7b404b7c01e, type: 3}
+  swordBackBaseMaterial: {fileID: 0}
+  cameraDirection: {fileID: 0}
+  cameraTransform: {fileID: 0}
+  healthBar: {fileID: 0}
 --- !u!114 &2916950646172925459
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -201,7 +203,7 @@ Transform:
   m_LocalScale: {x: 0.7, y: 0.7, z: 0.7}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 4060955308159153283}
+  - {fileID: 8564584642037828598}
   m_Father: {fileID: 4827471232639144905}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1738707865759800798
@@ -379,9 +381,9 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: af4af9c70b7f6db4ea6b37947498c579, type: 3}
---- !u!4 &7700421461562790111 stripped
+--- !u!4 &2620401782517460906 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 5924111209648972329, guid: af4af9c70b7f6db4ea6b37947498c579, type: 3}
+  m_CorrespondingSourceObject: {fileID: 2068918933426478428, guid: af4af9c70b7f6db4ea6b37947498c579, type: 3}
   m_PrefabInstance: {fileID: 4101599790712222454}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7668999682375898794
@@ -444,13 +446,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: fucileAnimato
       objectReference: {fileID: 0}
+    - target: {fileID: 7199721115292088999, guid: af4af9c70b7f6db4ea6b37947498c579, type: 3}
+      propertyPath: m_TagString
+      value: SwordInternal
+      objectReference: {fileID: 0}
+    - target: {fileID: 8066058530170911570, guid: af4af9c70b7f6db4ea6b37947498c579, type: 3}
+      propertyPath: m_TagString
+      value: Sword
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: af4af9c70b7f6db4ea6b37947498c579, type: 3}
---- !u!4 &4060955308159153283 stripped
+--- !u!4 &8564584642037828598 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 5924111209648972329, guid: af4af9c70b7f6db4ea6b37947498c579, type: 3}
+  m_CorrespondingSourceObject: {fileID: 2068918933426478428, guid: af4af9c70b7f6db4ea6b37947498c579, type: 3}
   m_PrefabInstance: {fileID: 7668999682375898794}
   m_PrefabAsset: {fileID: 0}
