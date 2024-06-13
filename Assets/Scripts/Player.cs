@@ -290,6 +290,13 @@ public class Player : MonoBehaviour
         Dashing();
     }
 
+
+    void OnGUI()
+    {
+        float fps = 1.0f / Time.deltaTime;
+        GUI.Label(new Rect(0, 0, 100, 100), "FPS: " + ((int)fps).ToString());
+    }
+
     private void Update()
     {
         FiringSequence();

@@ -36,7 +36,7 @@ public class PlatformScript : MonoBehaviour
             SetSingleUseSwitches();
     }
 
-    void Update()
+    void FixedUpdate()
     {
         if (activeSwitches >= requiredSwitches && canMove)
         {
@@ -48,7 +48,7 @@ public class PlatformScript : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            Debug.Log($"{collision.gameObject.name} is now child of platform");
+            Debug.Log($"{collision.gameObject.name} is now child of {gameObject.name}");
             collision.gameObject.transform.parent = transform;
         }
     }
@@ -57,8 +57,12 @@ public class PlatformScript : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            Debug.Log($"{collision.gameObject.name} is no longer child of platform");
-            collision.gameObject.transform.parent = null;
+            Debug.Log($"{collision.gameObject.name} is no longer child of {gameObject.name}");
+            // only remove parent if it is the current parent
+            if (collision.gameObject.transform.parent == transform)
+            {
+                collision.gameObject.transform.parent = null;
+            }
         }
     }
 
@@ -69,10 +73,9 @@ public class PlatformScript : MonoBehaviour
 
     private void movePlatform()
     {
-        transform.position += movements[movementStage] * Time.deltaTime;
+        transform.position = Vector3.MoveTowards(transform.position, transform.position + movements[movementStage], travelDistance[movementStage] * Time.fixedDeltaTime * 0.25f);
 
-        var horizontalDistance = Mathf.Sqrt(Mathf.Pow(transform.position.x - startingPosition.x, 2) + Mathf.Pow(transform.position.z - startingPosition.z, 2));
-        var distance = Mathf.Sqrt(Mathf.Pow(transform.position.y - startingPosition.y, 2) + Mathf.Pow(horizontalDistance, 2));
+        var distance = Vector3.Distance(transform.position, startingPosition);
         
         if (distance > travelDistance[movementStage])
         {
