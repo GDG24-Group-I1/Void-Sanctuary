@@ -1,3 +1,4 @@
+// #define DRAW_DEBUG_RAYS
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,8 +32,9 @@ public class Player : MonoBehaviour
     [SerializeField] private float runSpeed = 10f;
     [SerializeField] private float groundDrag = 6f;
     [SerializeField] private GameObject projectilePrefab;
-    [SerializeField] private LayerMask wallLayer;
-    [SerializeField] private LayerMask groundLayer;
+    [SerializeField] private GameObject trailPrefab;
+    [SerializeField] private LayerMask wallLayerMask;
+    [SerializeField] private LayerMask groundLayerMask;
     [SerializeField] private int thresholdFrameGrounded = 1;
     [SerializeField] private float dashDistance = 5f;
     [SerializeField] private float stopDistance = 1f;
@@ -42,9 +44,9 @@ public class Player : MonoBehaviour
 
 
     // these need to be public because they are set by the respawner script since they can't be set in the prefab
-    [SerializeField] public Transform cameraDirection;
-    [SerializeField] public Transform cameraTransform;
-    [SerializeField] public GameObject healthBar;
+    public Transform cameraDirection;
+    public Transform cameraTransform;
+    public GameObject healthBar;
 
     private bool IsSwordGlowing = false;
     private GameObject WeaponOnBack;
@@ -60,7 +62,7 @@ public class Player : MonoBehaviour
     private int frameNotGrounded;
     private bool isGrounded;
     private Collider[] previousWallsCollided = Array.Empty<Collider>();
-    private RaycastHit[] wallsCollided = new RaycastHit[maxWallsCollided];
+    private readonly RaycastHit[] wallsCollided = new RaycastHit[maxWallsCollided];
 
     public bool IsWalking { get; private set; }
 
@@ -70,7 +72,7 @@ public class Player : MonoBehaviour
 
     public bool IsAttacking { get; private set; }
 
-    public bool IsDashing { get; private set; }
+    public bool DashClicked { get; private set; }
 
     public AnimationState IsFalling { get; private set; } = AnimationState.None;
 
@@ -89,13 +91,10 @@ public class Player : MonoBehaviour
     private Timer turningCooldownTimer;
     private Timer actionCooldownTimer;
     private Timer fireCooldownTimer;
-    private Timer attackCooldownTimer;
     private Timer firingStageCooldown;
     private Timer deathTimer;
     private Timer dashCooldownTimer;
     private FiringStage firingStage = FiringStage.notFiring;
-    private Vector3 startingPosition;
-    private Vector3 dashDirection;
 
 
     private void ResetPlayer()
@@ -108,7 +107,6 @@ public class Player : MonoBehaviour
     {
         gameInput = GetComponent<GameInput>();
         movementSpeed = walkSpeed;
-        startingPosition = transform.position;
         rb = GetComponent<Rigidbody>();
         healthSlider = healthBar.GetComponent<Slider>();
         healthSlider.value = healthSlider.maxValue;
@@ -188,7 +186,6 @@ public class Player : MonoBehaviour
                 canMove = false;
                 Attack();
                 swordCollider.enabled = true;
-                // attackCooldownTimer.Start(1.5f);
             }
             else
             {
@@ -247,7 +244,7 @@ public class Player : MonoBehaviour
                 healthSlider.value--;
             }
         };
-            movementCooldownTimer = new Timer(this)
+        movementCooldownTimer = new Timer(this)
         {
             OnTimerElapsed = () =>
             {
@@ -276,16 +273,6 @@ public class Player : MonoBehaviour
             OnTimerElapsed = () =>
             {
                 canFire = true;
-                return null;
-            }
-        };
-        attackCooldownTimer = new Timer(this)
-        {
-            OnTimerElapsed = () =>
-            {
-                IsAttacking = false;
-                canAttack = true;
-                canMove = true;
                 return null;
             }
         };
@@ -328,6 +315,7 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
+        DrawDebugRays();
         FiringSequence();
         CheckIfPlayerIsHidden();
     }
@@ -359,7 +347,7 @@ public class Player : MonoBehaviour
 
         // Debug.DrawRay(cameraPosition, directionToPlayer, Color.red);
 
-        var hits = Physics.RaycastNonAlloc(cameraPosition, directionToPlayer, wallsCollided, distanceToPlayer, wallLayer);
+        var hits = Physics.RaycastNonAlloc(cameraPosition, directionToPlayer, wallsCollided, distanceToPlayer, wallLayerMask);
         for (int i = 0; i < hits; ++i)
         {
             var hit = wallsCollided[i];
@@ -380,9 +368,8 @@ public class Player : MonoBehaviour
     private void HandleMovement()
     {
         // Get input for movement
-        float previousPosY = transform.position.y;
         Vector2 movementVector = gameInput.GetMovementVectorNormalized();
-        Vector3 moveDir = new Vector3(movementVector.x, 0, movementVector.y);
+        Vector3 moveDir = new(movementVector.x, 0, movementVector.y);
         Vector3 rotateDir;
         moveDir = cameraDirection.forward * moveDir.z + cameraDirection.right * moveDir.x;
         moveDir.Normalize();
@@ -405,7 +392,7 @@ public class Player : MonoBehaviour
 
         // Handle movement
         Vector3 targetVelocity = moveDir * movementSpeed;
-        
+
         Vector3 velocity = rb.velocity;
         Vector3 velocityChange = targetVelocity - velocity;
 
@@ -475,8 +462,17 @@ public class Player : MonoBehaviour
 
         canDash = false;
         dashCooldownTimer.Start(dashCooldown);
-        IsDashing = true;
-        canMove = false;
+        DashClicked = true;
+    }
+
+    private void DrawDebugRays()
+    {
+#if DRAW_DEBUG_RAYS
+        #region Debug rays for dashing
+        Debug.DrawRay(transform.position + (Vector3.up * 2), transform.forward * dashDistance, Color.red);
+        Debug.DrawRay(transform.position + (Vector3.up * 2) + transform.forward * dashDistance, Vector3.down * 5, Color.red);
+        #endregion
+#endif
     }
 
     private void FiringSequence()
@@ -531,7 +527,7 @@ public class Player : MonoBehaviour
             //knockback
             case FiringStage.knockback:
                 float knockback = firingKnockbackSpeed * Time.deltaTime;
-                
+
                 int random_number = UnityEngine.Random.Range(0, 100);
 
                 //FIX THIS :) nice
@@ -541,7 +537,7 @@ public class Player : MonoBehaviour
                 }
                 else
                 {
-                    rb.AddForce(-playerFacing * knockback * 75, ForceMode.VelocityChange);
+                    rb.AddForce(75 * knockback * -playerFacing, ForceMode.VelocityChange);
                 }
 
                 break;
@@ -599,29 +595,66 @@ public class Player : MonoBehaviour
         IsFalling = AnimationState.Playing;
     }
 
-    public void StopDashing()
-    {
-        IsDashing = false;
-        canMove = true;
-    }
-
     public Action OnPlayerAttack;
 
     private void Dashing()
     {
-        if (IsDashing)
+        if (DashClicked)
         {
-            Vector3 dashDirection = transform.forward;
-            Vector3 targetPosition = transform.position + dashDirection * dashDistance;
-
-            RaycastHit hit;
-            if (Physics.Raycast(transform.position + dashDirection * 0.1f, dashDirection, out hit, dashDistance))
+            DashClicked = false;
+            var notPlayerLayer = ~LayerMask.GetMask("playerLayer");
+            var hasHit = Physics.Raycast(transform.position + (Vector3.up * 2), transform.forward, out RaycastHit hit, dashDistance, notPlayerLayer);
+            var groundLayer = LayerMask.NameToLayer("groundLayer");
+            Vector3 newPosition;
+            if (hasHit)
             {
-               targetPosition = hit.point - dashDirection * stopDistance;
+                if (hit.collider.gameObject.layer == groundLayer)
+                {
+                    // if we hit the ground, move to the hit point
+                    newPosition = hit.point;
+                }
+                else
+                {
+                    // if we hit something else (e.g. wall or enemy), adjust the position so we don't go through it
+                    var realDashDistance = hit.distance - stopDistance;
+                    newPosition = transform.position + transform.forward * realDashDistance;
+                }
+            }
+            else
+            {
+                var destination = transform.position + (Vector3.up * 2) + transform.forward * dashDistance;
+                // we haven't hit anything, check if the ground is the same Y level as the player
+                var groundHit = Physics.Raycast(destination, Vector3.down, out RaycastHit groundHeightHit, Mathf.Infinity, groundLayerMask);
+                if (groundHit)
+                {
+                    // if we hit the ground, move to the hit point
+                    newPosition = groundHeightHit.point;
+                }
+                else
+                {
+                    // if we didn't hit the ground, move to the destinationawwww
+                    newPosition = transform.position + transform.forward * dashDistance;
+                }
             }
 
-            rb.AddForce(dashDirection * 20, ForceMode.VelocityChange);
-
+            rb.isKinematic = true;
+            var Xoffsets = new float[] { -.5f, .5f };
+            for (int i = 1; i < 5; i++)
+            {
+                var startingPosition = transform.position + (0.5f * i * Vector3.up);
+                var endingPosition = newPosition + (0.5f * i * Vector3.up);
+                for (int j = 0; j < Xoffsets.Length; j++)
+                {
+                    var trail = Instantiate(trailPrefab, startingPosition + Xoffsets[j] * Vector3.right, transform.rotation);
+                    var trailScript = trail.GetComponent<TrailScript>();
+                    trailScript.EndingPosition = endingPosition + Xoffsets[j] * Vector3.right;
+                }
+            }
+            transform.position = newPosition;
+        }
+        else
+        {
+            rb.isKinematic = false;
         }
     }
 
