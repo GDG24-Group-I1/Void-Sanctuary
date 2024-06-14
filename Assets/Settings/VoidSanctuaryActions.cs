@@ -137,6 +137,15 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""MousePosition"",
+                    ""type"": ""Value"",
+                    ""id"": ""e9262a50-cde7-46cd-b005-9ba9fead306e"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -359,6 +368,17 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
                     ""action"": ""FakeHit"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b486fd9c-2253-40e6-ae50-a63cf8201f68"",
+                    ""path"": ""<Mouse>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MousePosition"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -378,6 +398,7 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
         m_Player_DrawWeapon = m_Player.FindAction("DrawWeapon", throwIfNotFound: true);
         m_Player_Dash = m_Player.FindAction("Dash", throwIfNotFound: true);
         m_Player_FakeHit = m_Player.FindAction("FakeHit", throwIfNotFound: true);
+        m_Player_MousePosition = m_Player.FindAction("MousePosition", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -493,6 +514,7 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_DrawWeapon;
     private readonly InputAction m_Player_Dash;
     private readonly InputAction m_Player_FakeHit;
+    private readonly InputAction m_Player_MousePosition;
     public struct PlayerActions
     {
         private @VoidSanctuaryActions m_Wrapper;
@@ -505,6 +527,7 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
         public InputAction @DrawWeapon => m_Wrapper.m_Player_DrawWeapon;
         public InputAction @Dash => m_Wrapper.m_Player_Dash;
         public InputAction @FakeHit => m_Wrapper.m_Player_FakeHit;
+        public InputAction @MousePosition => m_Wrapper.m_Player_MousePosition;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -538,6 +561,9 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
             @FakeHit.started += instance.OnFakeHit;
             @FakeHit.performed += instance.OnFakeHit;
             @FakeHit.canceled += instance.OnFakeHit;
+            @MousePosition.started += instance.OnMousePosition;
+            @MousePosition.performed += instance.OnMousePosition;
+            @MousePosition.canceled += instance.OnMousePosition;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -566,6 +592,9 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
             @FakeHit.started -= instance.OnFakeHit;
             @FakeHit.performed -= instance.OnFakeHit;
             @FakeHit.canceled -= instance.OnFakeHit;
+            @MousePosition.started -= instance.OnMousePosition;
+            @MousePosition.performed -= instance.OnMousePosition;
+            @MousePosition.canceled -= instance.OnMousePosition;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -597,5 +626,6 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
         void OnDrawWeapon(InputAction.CallbackContext context);
         void OnDash(InputAction.CallbackContext context);
         void OnFakeHit(InputAction.CallbackContext context);
+        void OnMousePosition(InputAction.CallbackContext context);
     }
 }

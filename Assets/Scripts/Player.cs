@@ -419,10 +419,18 @@ public class Player : MonoBehaviour
         }
 
         // Smoothly rotate player towards movement direction
-        if (canMove || firingStage == FiringStage.aiming)
+        if (canMove || (!gameInput.IsKeyboardMovement && firingStage == FiringStage.aiming))
         {
             float rotationSpeed = 15f;
             transform.forward = Vector3.Slerp(transform.forward, rotateDir, rotationSpeed * Time.deltaTime);
+        } else if (firingStage == FiringStage.aiming)
+        {
+            Vector3 mousePosition = gameInput.GetMousePosition();
+            Ray ray = Camera.main.ScreenPointToRay(mousePosition);
+            if (Physics.Raycast(ray, out RaycastHit hit))
+            {
+                transform.LookAt(new Vector3(hit.point.x, transform.position.y, hit.point.z));
+            }
         }
     }
 
