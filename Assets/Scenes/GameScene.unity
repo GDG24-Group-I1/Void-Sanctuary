@@ -1913,14 +1913,6 @@ PrefabInstance:
       propertyPath: cameraTransform
       value: 
       objectReference: {fileID: 1218966244}
-    - target: {fileID: 3619611160478188325, guid: 602c5e512c353fa4f9089894d785261b, type: 3}
-      propertyPath: swordBaseMaterial
-      value: 
-      objectReference: {fileID: 6719245597448002910, guid: fe344d91236775547851492ce29864cb, type: 3}
-    - target: {fileID: 3619611160478188325, guid: 602c5e512c353fa4f9089894d785261b, type: 3}
-      propertyPath: swordBackBaseMaterial
-      value: 
-      objectReference: {fileID: 2100000, guid: c678acc1f49d69e46beeeef2d119d4d9, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

@@ -123,8 +123,8 @@ MonoBehaviour:
   dashDistance: 10
   stopDistance: 1
   glowMaterial: {fileID: 2100000, guid: 24903d27a52b1fc41add8dedfe46fff8, type: 2}
-  swordBaseMaterial: {fileID: 6719245597448002910, guid: f94172f4d9e2afb4f9b4c7b404b7c01e, type: 3}
-  swordBackBaseMaterial: {fileID: 0}
+  swordBaseMaterial: {fileID: 6719245597448002910, guid: fe344d91236775547851492ce29864cb, type: 3}
+  swordBackBaseMaterial: {fileID: 2100000, guid: c678acc1f49d69e46beeeef2d119d4d9, type: 2}
   cameraDirection: {fileID: 0}
   cameraTransform: {fileID: 0}
   healthBar: {fileID: 0}

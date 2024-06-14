@@ -656,6 +656,7 @@ public class Player : MonoBehaviour
                     var trail = Instantiate(trailPrefab, startingPosition + Xoffsets[j] * Vector3.right, transform.rotation);
                     var trailScript = trail.GetComponent<TrailScript>();
                     trailScript.EndingPosition = endingPosition + Xoffsets[j] * Vector3.right;
+                    trailScript.PlayerTransform = transform;
                 }
             }
             transform.position = newPosition;
