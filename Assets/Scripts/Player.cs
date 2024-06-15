@@ -64,6 +64,8 @@ public class Player : MonoBehaviour
     private Collider[] previousWallsCollided = Array.Empty<Collider>();
     private readonly RaycastHit[] wallsCollided = new RaycastHit[maxWallsCollided];
 
+    private float fixedDeltaTime;
+
     public bool IsWalking { get; private set; }
 
     public bool IsRunning { get; private set; }
@@ -100,6 +102,12 @@ public class Player : MonoBehaviour
     private void ResetPlayer()
     {
         Destroy(gameObject);
+    }
+
+
+    private void Awake()
+    {
+        fixedDeltaTime = Time.fixedDeltaTime;
     }
 
 
@@ -541,6 +549,7 @@ public class Player : MonoBehaviour
                 //FIX THIS :) nice
                 if (random_number == 69)
                 {
+                    Debug.Log("Nice");
                     transform.position += new Vector3(knockback * -playerFacing.x, 0.0f, knockback * -playerFacing.z);
                 }
                 else
@@ -595,6 +604,8 @@ public class Player : MonoBehaviour
             sword.GetComponent<SkinnedMeshRenderer>().SwitchMaterial(glowMaterial, swordBaseMaterial);
             swordBack.GetComponent<SkinnedMeshRenderer>().SwitchMaterial(glowMaterial, swordBackBaseMaterial);
             IsSwordGlowing = false;
+            Time.timeScale = 1.0f;
+            Time.fixedDeltaTime = fixedDeltaTime;
         }
     }
 
@@ -672,6 +683,8 @@ public class Player : MonoBehaviour
         CanCombo = ComboState.CanCombo;
         sword.GetComponent<SkinnedMeshRenderer>().SwitchMaterial(swordBaseMaterial, glowMaterial);
         swordBack.GetComponent<SkinnedMeshRenderer>().SwitchMaterial(swordBackBaseMaterial, glowMaterial);
+        Time.timeScale = 0.25f;
+        Time.fixedDeltaTime = fixedDeltaTime * Time.timeScale;
         IsSwordGlowing = true;
         DebugExt.LogCombo($"Can combo at time {Time.time} for {AttackNumber}");
     }
