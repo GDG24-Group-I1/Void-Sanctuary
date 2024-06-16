@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3315056}
   - component: {fileID: 2357992}
   - component: {fileID: 6567902}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: floor_7
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -161,6 +161,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: giallonero
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 3d707ca414f53d047bf57b2c6d573933, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -222,6 +226,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 3d707ca414f53d047bf57b2c6d573933, type: 3}
       propertyPath: m_Name
       value: giallonero (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 3d707ca414f53d047bf57b2c6d573933, type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -285,6 +293,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: giallonero (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 3d707ca414f53d047bf57b2c6d573933, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -346,6 +358,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 3d707ca414f53d047bf57b2c6d573933, type: 3}
       propertyPath: m_Name
       value: giallonero (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 3d707ca414f53d047bf57b2c6d573933, type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
