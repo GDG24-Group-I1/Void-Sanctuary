@@ -131,7 +131,6 @@ public class Player : MonoBehaviour
                 ResetPlayer();
             }
         });
-        //swordCollider = GetComponentInChildren<BoxCollider>();
 
         var swords = GameObject.FindGameObjectsWithTag("Sword");
         Debug.Assert(swords.Length == 1, "There should be exactly one sword in the scene");
