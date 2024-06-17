@@ -412,7 +412,7 @@ public class Player : MonoBehaviour
         // Clamp velocity change to prevent abrupt changes
         velocityChange.y = 0;
 
-        if (frameNotGrounded > thresholdFrameGrounded)
+        if (frameNotGrounded == thresholdFrameGrounded)
         {
             velocityChange.y = -9.8f;
         }
@@ -420,7 +420,7 @@ public class Player : MonoBehaviour
         rb.AddForce(velocityChange, ForceMode.VelocityChange);
 
         // Apply drag if grounded
-        rb.drag = frameNotGrounded == 0 ? groundDrag : 0.1f;
+        rb.drag = frameNotGrounded < thresholdFrameGrounded ? groundDrag : 0.1f;
 
         // Check if the player is walking
         IsWalking = moveDir != Vector3.zero;
