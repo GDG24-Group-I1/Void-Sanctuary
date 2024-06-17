@@ -1,4 +1,5 @@
 // #define DRAW_DEBUG_RAYS
+// #define SLOW_DOWN_ATTACK
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,7 +42,9 @@ public class Player : MonoBehaviour
     [SerializeField] private Material glowMaterial;
     [SerializeField] private Material swordBaseMaterial;
     [SerializeField] private Material swordBackBaseMaterial;
-
+#if SLOW_DOWN_ATTACK
+    [SerializeField] private float slowDownFactor = 0.25f;
+#endif
 
     // these need to be public because they are set by the respawner script since they can't be set in the prefab
     public Transform cameraDirection;
@@ -64,8 +67,9 @@ public class Player : MonoBehaviour
     private Collider[] previousWallsCollided = Array.Empty<Collider>();
     private readonly RaycastHit[] wallsCollided = new RaycastHit[maxWallsCollided];
 
+#if SLOW_DOWN_ATTACK
     private float fixedDeltaTime;
-
+#endif
     public bool IsWalking { get; private set; }
 
     public bool IsRunning { get; private set; }
@@ -105,10 +109,12 @@ public class Player : MonoBehaviour
     }
 
 
+#if SLOW_DOWN_ATTACK
     private void Awake()
     {
         fixedDeltaTime = Time.fixedDeltaTime;
     }
+#endif
 
 
     private void Start()
@@ -604,8 +610,10 @@ public class Player : MonoBehaviour
             sword.GetComponent<SkinnedMeshRenderer>().SwitchMaterial(glowMaterial, swordBaseMaterial);
             swordBack.GetComponent<SkinnedMeshRenderer>().SwitchMaterial(glowMaterial, swordBackBaseMaterial);
             IsSwordGlowing = false;
+#if SLOW_DOWN_ATTACK
             Time.timeScale = 1.0f;
             Time.fixedDeltaTime = fixedDeltaTime;
+#endif
         }
     }
 
@@ -683,8 +691,10 @@ public class Player : MonoBehaviour
         CanCombo = ComboState.CanCombo;
         sword.GetComponent<SkinnedMeshRenderer>().SwitchMaterial(swordBaseMaterial, glowMaterial);
         swordBack.GetComponent<SkinnedMeshRenderer>().SwitchMaterial(swordBackBaseMaterial, glowMaterial);
-        Time.timeScale = 0.25f;
+#if SLOW_DOWN_ATTACK
+        Time.timeScale = slowDownFactor;
         Time.fixedDeltaTime = fixedDeltaTime * Time.timeScale;
+#endif
         IsSwordGlowing = true;
         DebugExt.LogCombo($"Can combo at time {Time.time} for {AttackNumber}");
     }
