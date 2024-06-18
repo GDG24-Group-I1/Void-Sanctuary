@@ -34,6 +34,7 @@ public class MovingPlatform : MonoBehaviour
         }
     }
 
+
     // Funzione per visualizzare le posizioni in cui la piattaforma si muove nell'editor
     private void OnDrawGizmos()
     {

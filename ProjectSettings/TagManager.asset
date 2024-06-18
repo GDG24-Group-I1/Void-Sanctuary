@@ -9,6 +9,7 @@ TagManager:
   - Platform
   - Respawner
   - SwordInternal
+  - DraggableCube
   layers:
   - Default
   - TransparentFX
