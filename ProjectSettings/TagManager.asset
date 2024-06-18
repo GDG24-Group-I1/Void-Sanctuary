@@ -10,6 +10,9 @@ TagManager:
   - Respawner
   - SwordInternal
   - DraggableCube
+  - Allarm
+  - SwordSwitch
+  - CubeSwitch
   layers:
   - Default
   - TransparentFX
