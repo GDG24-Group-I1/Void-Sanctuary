@@ -150,7 +150,6 @@ GameObject:
   - component: {fileID: 5831599463137523743}
   - component: {fileID: 5831599463136702795}
   - component: {fileID: 5831599463135297113}
-  - component: {fileID: 5831599463139652507}
   m_Layer: 10
   m_Name: stairs_small
   m_TagString: Untagged
@@ -225,28 +224,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &5831599463139652507
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 7092445112480234649, guid: 2da8839829ccd4d43aacdec5291487b9, type: 3}
-  m_PrefabInstance: {fileID: 3639873389467455234}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5831599463137781423}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 6245205073952570836, guid: 60169db88987c704f890a41238d90185, type: 3}
 --- !u!1001 &3639873389467455234
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -303,7 +280,8 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 0}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

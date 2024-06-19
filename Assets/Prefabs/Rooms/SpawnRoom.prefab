@@ -151,9 +151,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2697657399250429576}
+  - component: {fileID: 367597036267912759}
+  - component: {fileID: -5748205298236840265}
   m_Layer: 0
   m_Name: SpawnRoom
-  m_TagString: Untagged
+  m_TagString: rooms
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -193,6 +195,40 @@ Transform:
   - {fileID: 784187842604245198}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &367597036267912759
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9087818826114105233}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 41.360077, y: 8.767276, z: 40.836792}
+  m_Center: {x: -4.8994007, y: 3.8836389, z: -0.07946396}
+--- !u!114 &-5748205298236840265
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9087818826114105233}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26122340b513a024a8ba90083ef7b219, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rooms: []
 --- !u!1001 &215219173721531498
 PrefabInstance:
   m_ObjectHideFlags: 0

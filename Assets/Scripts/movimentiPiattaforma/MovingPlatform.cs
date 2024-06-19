@@ -8,6 +8,7 @@ public class MovingPlatform : MonoBehaviour
     public float speed = 2.0f; // Velocità di movimento della piattaforma
     private int targetIndex = 0; // Indice del punto target attuale
 
+
     void Start()
     {
         if (points.Count > 0)
@@ -20,6 +21,7 @@ public class MovingPlatform : MonoBehaviour
 
     void Update()
     {
+
         if (points.Count > 1)
         {
             // Muovi la piattaforma verso la posizione target attuale
@@ -32,7 +34,9 @@ public class MovingPlatform : MonoBehaviour
                 targetIndex = (targetIndex + 1) % points.Count;
             }
         }
+        
     }
+
 
 
     // Funzione per visualizzare le posizioni in cui la piattaforma si muove nell'editor
