@@ -16,7 +16,6 @@ public class Respawner : MonoBehaviour
         animator = youDiedText.GetComponent<Animator>();
         playerObject = GameObject.FindGameObjectWithTag("Player");
         var player = playerObject.GetComponent<Player>();
-        cameraDirection = player.cameraDirection;
         cameraTransform = player.cameraTransform;
         healthBar = player.healthBar;
     }
@@ -40,7 +39,6 @@ public class Respawner : MonoBehaviour
         followPlayer.Player = playerObject;
         followPlayer.PlayerScript = player;
         playerFollower.transform.position = playerObject.transform.position;
-        player.cameraDirection = cameraDirection;
         player.cameraTransform = cameraTransform;
         player.healthBar = healthBar;
     } 

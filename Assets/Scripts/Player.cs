@@ -47,7 +47,6 @@ public class Player : MonoBehaviour
 #endif
 
     // these need to be public because they are set by the respawner script since they can't be set in the prefab
-    public Transform cameraDirection;
     public Transform cameraTransform;
     public GameObject healthBar;
 
@@ -119,6 +118,8 @@ public class Player : MonoBehaviour
 
     private void Start()
     {
+        Debug.Assert(cameraTransform != null, "CAMERA TRANSFORM IS NOT SET IN THE PLAYER OBJECT IN THE SCENE, PUT THE TopDownCamera IN THE CameraTrasform SLOT ON THIS GAMEOBJECT");        
+        Debug.Assert(healthBar != null, "HEALTH BAR IS NOT SET IN THE PLAYER OBJECT IN THE SCENE, PUT THE Canvas->HealthBar OBJECT IN THE Health Bar SLOT ON THIS GAME OBJECT");
         gameInput = GetComponent<GameInput>();
         movementSpeed = walkSpeed;
         rb = GetComponent<Rigidbody>();
@@ -384,7 +385,7 @@ public class Player : MonoBehaviour
         Vector2 movementVector = gameInput.GetMovementVectorNormalized();
         Vector3 moveDir = new(movementVector.x, 0, movementVector.y);
         Vector3 rotateDir;
-        moveDir = cameraDirection.forward * moveDir.z + cameraDirection.right * moveDir.x;
+        moveDir = cameraTransform.forward * moveDir.z + cameraTransform.right * moveDir.x;
         moveDir.Normalize();
         moveDir.y = 0;
         rotateDir = moveDir;
