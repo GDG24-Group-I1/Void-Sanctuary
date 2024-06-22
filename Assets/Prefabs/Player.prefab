@@ -77,7 +77,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3120664125272468870}
   serializedVersion: 4
-  m_Mass: 10
+  m_Mass: 80
   m_Drag: 10
   m_AngularDrag: 0.1
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -120,7 +120,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1024
   thresholdFrameGrounded: 8
-  dashDistance: 10
+  dashDistance: 5
   stopDistance: 1
   glowMaterial: {fileID: 2100000, guid: 24903d27a52b1fc41add8dedfe46fff8, type: 2}
   swordBaseMaterial: {fileID: 6719245597448002910, guid: fe344d91236775547851492ce29864cb, type: 3}

@@ -490,8 +490,8 @@ public class Player : MonoBehaviour
     {
 #if DRAW_DEBUG_RAYS
         #region Debug rays for dashing
-        Debug.DrawRay(transform.position + (Vector3.up * 2), transform.forward * dashDistance, Color.red);
-        Debug.DrawRay(transform.position + (Vector3.up * 2) + transform.forward * dashDistance, Vector3.down * 5, Color.red);
+        Debug.DrawRay(transform.position + Vector3.up, transform.forward * dashDistance, Color.red);
+        Debug.DrawRay(transform.position + Vector3.up + transform.forward * dashDistance, Vector3.down * 5, Color.red);
         #endregion
 #endif
     }
@@ -629,7 +629,7 @@ public class Player : MonoBehaviour
         {
             DashClicked = false;
             var notPlayerLayer = ~LayerMask.GetMask("playerLayer");
-            var hasHit = Physics.Raycast(transform.position + (Vector3.up * 2), transform.forward, out RaycastHit hit, dashDistance, notPlayerLayer);
+            var hasHit = Physics.Raycast(transform.position + Vector3.up, transform.forward, out RaycastHit hit, dashDistance, notPlayerLayer);
             var groundLayer = LayerMask.NameToLayer("groundLayer");
             Vector3 newPosition;
             if (hasHit)

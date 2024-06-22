@@ -1322,7 +1322,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1218966243}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.30742696, y: 0.36087537, z: -0.12734044, w: 0.8712302}
+  m_LocalRotation: {x: 0.30742696, y: 0.3608753, z: -0.1273404, w: 0.87123024}
   m_LocalPosition: {x: -25, y: 30, z: -25}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -2009,7 +2009,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2063824672}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.30742696, y: 0.36087537, z: -0.12734044, w: 0.8712302}
+  m_LocalRotation: {x: 0.30742696, y: 0.3608753, z: -0.1273404, w: 0.87123024}
   m_LocalPosition: {x: -25, y: 30, z: -25}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -2236,22 +2236,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
-    - target: {fileID: 3619611160478188325, guid: 602c5e512c353fa4f9089894d785261b, type: 3}
-      propertyPath: healthBar
-      value: 
-      objectReference: {fileID: 948766528}
-    - target: {fileID: 3619611160478188325, guid: 602c5e512c353fa4f9089894d785261b, type: 3}
-      propertyPath: cameraDirection
-      value: 
-      objectReference: {fileID: 1218966244}
-    - target: {fileID: 3619611160478188325, guid: 602c5e512c353fa4f9089894d785261b, type: 3}
-      propertyPath: cameraTransform
-      value: 
-      objectReference: {fileID: 1218966244}
-    - target: {fileID: 4407350005302218948, guid: 602c5e512c353fa4f9089894d785261b, type: 3}
-      propertyPath: m_Mass
-      value: 80
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2279,3 +2263,4 @@ SceneRoots:
   - {fileID: 1598363239}
   - {fileID: 2011407465}
   - {fileID: 2030091120}
+  - {fileID: 1084635028}
