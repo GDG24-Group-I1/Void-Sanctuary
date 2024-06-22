@@ -62,7 +62,7 @@ public class PlayerAnimator : MonoBehaviour
 
         if (player.IsFalling == AnimationState.Playing) return PlayerState.Falling;
 
-        if (player.IsDashing) return PlayerState.Dashing;
+        // if (player.IsDashing) return PlayerState.Dashing;
 
         if (isWeaponEquipped)
         {

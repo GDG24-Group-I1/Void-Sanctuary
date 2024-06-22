@@ -16,6 +16,7 @@ public class GameInput : MonoBehaviour
     private InputAction _drawWeaponAction;
     private InputAction _dashAction;
     private InputAction _fakeHitAction;
+    public bool IsKeyboardMovement { get; private set; }
 
 
     private void Awake()
@@ -26,6 +27,11 @@ public class GameInput : MonoBehaviour
         playerInputActions.ControlsActionMap.ExitGameAction.performed += (context) =>
         {
             Application.Quit();
+        };
+        playerInputActions.Player.Move.performed += (context) =>
+        {
+            if (context.control.device is Keyboard or Mouse) IsKeyboardMovement = true;
+            else IsKeyboardMovement = false;
         };
 
         _attackAction = playerInputActions.Player.Attack;
@@ -48,6 +54,13 @@ public class GameInput : MonoBehaviour
         inputVector = inputVector.normalized;
 
         return inputVector;
+    }
+
+    public Vector2 GetMousePosition()
+    {
+        Vector2 mousePosition = playerInputActions.Player.MousePosition.ReadValue<Vector2>();
+
+        return mousePosition;
     }
 
     public Action<CallbackContext> OnAttack

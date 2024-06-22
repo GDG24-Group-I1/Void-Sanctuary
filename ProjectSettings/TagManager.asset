@@ -28,6 +28,7 @@ TagManager:
   - wallLayer
   - groundLayer
   - ligthLayer
+  - playerLayer
   - 
   - 
   - 

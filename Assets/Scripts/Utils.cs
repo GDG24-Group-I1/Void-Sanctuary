@@ -1,4 +1,5 @@
 // #define COMBO_DEBUG
+// #define CAMERA_DEBUG
 using System.Linq;
 using UnityEngine;
 
@@ -14,6 +15,20 @@ public static class DebugExt
         {
 #if COMBO_DEBUG
         Debug.Log($"[COMBO]: {message}");
+#endif
+        }
+    }
+
+    public static void LogCamera(string message, bool always = false)
+    {
+        if (always)
+        {
+            Debug.Log($"[CAMERA]: {message}");
+        }
+        else
+        {
+#if CAMERA_DEBUG
+            Debug.Log($"[CAMERA]: {message}");
 #endif
         }
     }
