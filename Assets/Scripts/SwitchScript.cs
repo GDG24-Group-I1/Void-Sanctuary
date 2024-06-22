@@ -54,6 +54,7 @@ public class SwitchScript : MonoBehaviour
     public void ActivateSwitch()
     {
         gameObject.GetComponent<MeshRenderer>().material.color = Color.green;
+
         var parentObject = transform.parent;
         if (parentObject != null)
         {
