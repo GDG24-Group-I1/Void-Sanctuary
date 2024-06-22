@@ -935,7 +935,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26122340b513a024a8ba90083ef7b219, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rooms: []
+  rooms:
+  - {fileID: 9087818826114105233}
 --- !u!65 &321317852273940527
 BoxCollider:
   m_ObjectHideFlags: 0
