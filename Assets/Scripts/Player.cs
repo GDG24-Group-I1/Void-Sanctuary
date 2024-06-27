@@ -675,7 +675,7 @@ public class Player : MonoBehaviour
 
             rb.isKinematic = true;
             var Xoffsets = new float[] { -.5f, .5f };
-            for (int i = 1; i < 5; i++)
+            for (int i = 1; i < 4; i++)
             {
                 var startingPosition = transform.position + (0.5f * i * Vector3.up);
                 var endingPosition = newPosition + (0.5f * i * Vector3.up);
