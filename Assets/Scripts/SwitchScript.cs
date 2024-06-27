@@ -53,7 +53,17 @@ public class SwitchScript : MonoBehaviour
 
     public void ActivateSwitch()
     {
-        gameObject.GetComponent<MeshRenderer>().material.color = Color.green;
+        //gameObject.GetComponent<MeshRenderer>().material.color = Color.green;
+        gameObject.GetComponent<MeshRenderer>().materials[0].color = Color.green;
+
+            // Ottieni il materiale del MeshRenderer
+             Material material = gameObject.GetComponent<MeshRenderer>().materials[0];
+
+            // Abilita l'emissione sul materiale
+             material.EnableKeyword("_EMISSION");
+
+             // Cambia il colore dell'emissione
+            material.SetColor("_EmissionColor", Color.green);
         var parentObject = transform.parent;
         if (parentObject != null)
         {
