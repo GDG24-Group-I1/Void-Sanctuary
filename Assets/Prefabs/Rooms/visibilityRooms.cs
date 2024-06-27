@@ -2,25 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class visibilityRooms : MonoBehaviour
-{
-    private GameObject[] rooms; // Array contenente tutte le stanze
+public class visibilityRooms : MonoBehaviour {
+    // FIXME: this trigger is very small so you need to be very close to the door to trigger it
+    //        make it bigger
 
     private void Start()
     {
-        rooms = GameObject.FindGameObjectsWithTag("rooms");
-        // Assicurati che solo la stanza iniziale sia visibile all'inizio
-        UpdateRoomVisibility(null);
+        SetRoomVisibility(gameObject, false);
     }
-
-    // FIXME: this trigger is very small so you need to be very close to the door to trigger it
-    //        make it bigger
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
-            UpdateRoomVisibility(gameObject);
+            SetRoomVisibility(gameObject, true);
         }
     }
 
@@ -28,16 +23,7 @@ public class visibilityRooms : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            UpdateRoomVisibility(null);
-        }
-    }
-
-    private void UpdateRoomVisibility(GameObject currentRoom)
-    {
-        foreach (GameObject room in rooms)
-        {
-            bool isActive = room == currentRoom;
-            SetRoomVisibility(room, isActive);
+           SetRoomVisibility(gameObject, false);
         }
     }
 
