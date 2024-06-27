@@ -1158,9 +1158,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1639391105030820486, guid: 34a83b935b80352499e60b0cae9f0d9e, type: 3}
+      propertyPath: m_Size.x
+      value: 71.10331
+      objectReference: {fileID: 0}
+    - target: {fileID: 1639391105030820486, guid: 34a83b935b80352499e60b0cae9f0d9e, type: 3}
+      propertyPath: m_Center.x
+      value: 0.73441696
+      objectReference: {fileID: 0}
     - target: {fileID: 1759496726002701636, guid: 34a83b935b80352499e60b0cae9f0d9e, type: 3}
       propertyPath: m_Name
       value: Room2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4864417443153207776, guid: 34a83b935b80352499e60b0cae9f0d9e, type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8662672477907036730, guid: 34a83b935b80352499e60b0cae9f0d9e, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1322,7 +1334,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1218966243}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.30742702, y: 0.36087537, z: -0.12734042, w: 0.87123024}
+  m_LocalRotation: {x: 0.30742696, y: 0.3608753, z: -0.1273404, w: 0.87123024}
   m_LocalPosition: {x: -25, y: 30, z: -25}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1351,7 +1363,7 @@ MonoBehaviour:
   m_LookAt: {fileID: 2030091120}
   m_Follow: {fileID: 2030091120}
   m_Lens:
-    FieldOfView: 20
+    FieldOfView: 10
     OrthographicSize: 10
     NearClipPlane: 0.1
     FarClipPlane: 5000
@@ -1983,7 +1995,7 @@ Camera:
     height: 1
   near clip plane: 0.1
   far clip plane: 5000
-  field of view: 20
+  field of view: 10
   orthographic: 0
   orthographic size: 10
   m_Depth: 0
@@ -2009,7 +2021,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2063824672}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.30742702, y: 0.36087537, z: -0.12734042, w: 0.87123024}
+  m_LocalRotation: {x: 0.30742696, y: 0.3608753, z: -0.1273404, w: 0.87123024}
   m_LocalPosition: {x: -25, y: 30, z: -25}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0

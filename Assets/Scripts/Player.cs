@@ -22,12 +22,20 @@ public enum AnimationState
     Playing
 }
 
+public enum FiringStage
+{
+    notFiring,
+    aiming,
+    startCharging,
+    charging,
+    firing,
+    knockback
+}
+
 [RequireComponent(typeof(Rigidbody), typeof(GameInput), typeof(FloorCollider))]
 public class Player : MonoBehaviour
 {
-    enum FiringStage { notFiring, aiming, startCharging, charging, firing, knockback }
-
-    private const float firingKnockbackSpeed = 50f;
+    private const float firingKnockbackSpeed = 0f;
     private const int maxWallsCollided = 10;
     [SerializeField] private float walkSpeed = 5f;
     [SerializeField] private float runSpeed = 10f;
@@ -85,6 +93,8 @@ public class Player : MonoBehaviour
 
     public int AttackNumber { get; set; } = 0;
 
+    public FiringStage firingStage { get; private set; } = FiringStage.notFiring;
+
     private float movementSpeed;
     private bool canMove = true;
     private bool canTurn = true;
@@ -99,7 +109,6 @@ public class Player : MonoBehaviour
     private Timer firingStageCooldown;
     private Timer deathTimer;
     private Timer dashCooldownTimer;
-    private FiringStage firingStage = FiringStage.notFiring;
 
 
     private void ResetPlayer()
@@ -460,7 +469,7 @@ public class Player : MonoBehaviour
 
     private void Aim()
     {
-        if (!canFire || !canAct)
+        if (!canFire || !canAct || !IsWeaponEquipped)
             return;
         aimLaserRenderer.enabled = true;
         firingStage = FiringStage.aiming;
