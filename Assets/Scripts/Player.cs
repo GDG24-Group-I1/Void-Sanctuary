@@ -193,12 +193,6 @@ public class Player : MonoBehaviour
         };
         rb.freezeRotation = true;
 
-        //setting up the aim laser
-        aimLaserRenderer = GetComponentInChildren<LineRenderer>();
-        aimLaserRenderer.positionCount = 2;
-        aimLaserRenderer.SetPosition(0, new Vector3(0, .1f, 0));
-        aimLaserRenderer.enabled = false;
-
         gameInput.OnAttack = (context) =>
         {
 
@@ -513,7 +507,7 @@ public class Player : MonoBehaviour
         {
             //stop movement while aiming projectile
             case FiringStage.aiming:
-                aimLaserRenderer.SetPosition(1, new Vector3(0, .1f, 100));
+                aimLaserRenderer.SetPosition(1, new Vector3(0.05f, .5f, -100));
                 canMove = false;
                 break;
             //hold still while charging projectile
@@ -531,12 +525,11 @@ public class Player : MonoBehaviour
                 break;
             //fire projectile
             case FiringStage.firing:
-                var projectileSpawnDistance = 2f;
                 var startingPosition = aimLaserRenderer.GetPosition(0);
                 var endingPosition = aimLaserRenderer.GetPosition(1);
-                Vector3 projectilePosition = aimLaserRenderer.transform.TransformPoint(startingPosition) + (transform.forward * projectileSpawnDistance);
-
-                GameObject projectile = Instantiate(projectilePrefab, projectilePosition, transform.rotation);
+                Vector3 projectilePosition = aimLaserRenderer.transform.TransformPoint(startingPosition) + transform.forward;
+                var rotation = transform.rotation;
+                GameObject projectile = Instantiate(projectilePrefab, projectilePosition, rotation * Quaternion.Euler(90, 0, 0));
                 var projectileScript = projectile.GetComponent<ProjectileScript>();
                 projectileScript.endingPosition = aimLaserRenderer.transform.TransformPoint(endingPosition);
 
@@ -558,20 +551,7 @@ public class Player : MonoBehaviour
             //knockback
             case FiringStage.knockback:
                 float knockback = firingKnockbackSpeed * Time.deltaTime;
-
-                int random_number = UnityEngine.Random.Range(0, 100);
-
-                //FIX THIS :) nice
-                if (random_number == 69)
-                {
-                    Debug.Log("Nice");
-                    transform.position += new Vector3(knockback * -playerFacing.x, 0.0f, knockback * -playerFacing.z);
-                }
-                else
-                {
-                    rb.AddForce(75 * knockback * -playerFacing, ForceMode.VelocityChange);
-                }
-
+                rb.AddForce(75 * knockback * -playerFacing, ForceMode.VelocityChange);
                 break;
             default:
                 break;
@@ -592,6 +572,19 @@ public class Player : MonoBehaviour
     {
         WeaponOnBack.SetActive(!IsWeaponEquipped);
         WeaponInHand.SetActive(IsWeaponEquipped);
+        if (IsWeaponEquipped)
+        {
+            FindAndSetupLaser();
+        }
+    }
+
+    public void FindAndSetupLaser()
+    {
+        //setting up the aim laser
+        aimLaserRenderer = GetComponentInChildren<LineRenderer>();
+        aimLaserRenderer.positionCount = 2;
+        aimLaserRenderer.SetPosition(0, new Vector3(0.05f, 0.5f, -0.3f));
+        aimLaserRenderer.enabled = false;
     }
 
     public void AttackAnimationEnded()

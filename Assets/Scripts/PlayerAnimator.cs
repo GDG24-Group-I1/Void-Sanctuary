@@ -20,8 +20,7 @@ enum PlayerState
 
 public class PlayerAnimator : MonoBehaviour
 {
-    [SerializeField] private Player player;
-
+    private Player player;
     private Animator animator;
     private const string PLAYER_STATE = "PlayerState";
     private const string ATTACK_NUMBER = "AttackNumber";
@@ -34,6 +33,7 @@ public class PlayerAnimator : MonoBehaviour
         animator = GetComponent<Animator>();
         currentState = PlayerState.Idle;
         previousState = PlayerState.Idle;
+        player = gameObject.GetComponentInParent<Player>();
     }
 
     private void Update()
@@ -58,7 +58,7 @@ public class PlayerAnimator : MonoBehaviour
         bool isRunning = player.IsRunning;
         bool isWeaponEquipped = player.IsWeaponEquipped;
         bool isAttacking = player.IsAttacking;
-        bool isAiming = true ? player.firingStage != FiringStage.notFiring : false;
+        bool isAiming = player.firingStage != FiringStage.notFiring;
 
         if (player.IsFalling == AnimationState.Transition) return PlayerState.FallingTransition;
 
@@ -69,7 +69,11 @@ public class PlayerAnimator : MonoBehaviour
         if (isWeaponEquipped)
         {
             animator.SetBool("WeaponEquipped", true);
-            if(isAttacking)
+            if (isAiming)
+            {
+                return PlayerState.AimingWithWeapon;
+            }
+            else if(isAttacking)
             {
                 return PlayerState.Attacking;
             }
@@ -80,10 +84,6 @@ public class PlayerAnimator : MonoBehaviour
             else if(isWalking)
             {
                 return PlayerState.WalkingWithWeapon;
-            }
-            else if(isAiming)
-            {
-                return PlayerState.AimingWithWeapon;
             }
             else
             {

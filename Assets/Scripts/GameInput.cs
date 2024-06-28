@@ -70,7 +70,7 @@ public class GameInput : MonoBehaviour
 
     public Action<CallbackContext> OnAim
     {
-        set { _fireAction.started += value; }
+        set { _fireAction.performed += value; }
     }
 
     public Action<CallbackContext> OnFire
