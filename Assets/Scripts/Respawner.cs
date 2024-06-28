@@ -8,6 +8,7 @@ public class Respawner : MonoBehaviour
     private Transform cameraDirection;
     private Transform cameraTransform;
     private GameObject healthBar;
+    private GameObject loaderBorder;
     private GameObject playerObject;
     private Animator animator;
     // Start is called before the first frame update
@@ -18,6 +19,7 @@ public class Respawner : MonoBehaviour
         var player = playerObject.GetComponent<Player>();
         cameraTransform = player.cameraTransform;
         healthBar = player.healthBar;
+        loaderBorder = player.loaderBorder;
     }
 
     // Update is called once per frame
@@ -41,5 +43,6 @@ public class Respawner : MonoBehaviour
         playerFollower.transform.position = playerObject.transform.position;
         player.cameraTransform = cameraTransform;
         player.healthBar = healthBar;
+        player.loaderBorder = loaderBorder;
     } 
 }

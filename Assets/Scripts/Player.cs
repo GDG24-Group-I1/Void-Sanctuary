@@ -57,6 +57,7 @@ public class Player : MonoBehaviour
     // these need to be public because they are set by the respawner script since they can't be set in the prefab
     public Transform cameraTransform;
     public GameObject healthBar;
+    public GameObject loaderBorder;
 
     private bool IsSwordGlowing = false;
     private GameObject WeaponOnBack;
@@ -532,6 +533,8 @@ public class Player : MonoBehaviour
                 GameObject projectile = Instantiate(projectilePrefab, projectilePosition, rotation * Quaternion.Euler(90, 0, 0));
                 var projectileScript = projectile.GetComponent<ProjectileScript>();
                 projectileScript.endingPosition = aimLaserRenderer.transform.TransformPoint(endingPosition);
+
+                loaderBorder.GetComponent<CircularProgressBar>().StartProgressBar(3.0f);
 
                 canFire = false;
                 fireCooldownTimer.Start(3.0f);
