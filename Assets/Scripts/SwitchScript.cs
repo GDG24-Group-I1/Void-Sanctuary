@@ -64,15 +64,19 @@ public class SwitchScript : MonoBehaviour
 
              // Cambia il colore dell'emissione
             material.SetColor("_EmissionColor", Color.green);
-        var parentObject = transform.parent;
-        if (parentObject != null)
+        var innerParent = transform.parent;
+        if (innerParent != null)
         {
-            var nChildren = parentObject.childCount;
-            for (int i = 0; i < nChildren; i++)
+            var parentObject = innerParent.parent;
+            if (parentObject != null)
             {
-                var child = parentObject.transform.GetChild(i);
-                if (child.gameObject.tag == "Platform")
-                    child.gameObject.GetComponent<PlatformScript>().activeSwitches += 1;
+                var nChildren = parentObject.childCount;
+                for (int i = 0; i < nChildren; i++)
+                {
+                    var child = parentObject.transform.GetChild(i);
+                    if (child.gameObject.tag == "Platform")
+                        child.gameObject.GetComponent<PlatformScript>().activeSwitches += 1;
+                }
             }
         }
     }
