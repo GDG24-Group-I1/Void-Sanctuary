@@ -35,6 +35,15 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""PauseGameAction"",
+                    ""type"": ""Button"",
+                    ""id"": ""278ea221-b933-45df-8e11-8c35b4a5a864"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -57,6 +66,17 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""ExitGameAction"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c69804b8-2bca-47fc-9656-3f383355d10b"",
+                    ""path"": ""<Keyboard>/p"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""PauseGameAction"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -381,6 +401,65 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""MenuActionMap"",
+            ""id"": ""1ac8f67b-16a8-43cf-b77e-817031acc2b2"",
+            ""actions"": [
+                {
+                    ""name"": ""TriggerCurrentButton"",
+                    ""type"": ""Button"",
+                    ""id"": ""e1176676-bb22-41e3-a717-939b727a865b"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""GoBackButton"",
+                    ""type"": ""Button"",
+                    ""id"": ""cb4d6fef-f653-4943-ae95-bdb9fdcc201f"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""01339e75-5712-4be2-bded-433e439f77ba"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""TriggerCurrentButton"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""86a9c09f-7f13-4d6c-909a-c975a0a5fbd3"",
+                    ""path"": ""<Keyboard>/enter"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""TriggerCurrentButton"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f0d22bb1-9419-4131-9217-317c0b13cf7d"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""GoBackButton"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -388,6 +467,7 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
         // ControlsActionMap
         m_ControlsActionMap = asset.FindActionMap("ControlsActionMap", throwIfNotFound: true);
         m_ControlsActionMap_ExitGameAction = m_ControlsActionMap.FindAction("ExitGameAction", throwIfNotFound: true);
+        m_ControlsActionMap_PauseGameAction = m_ControlsActionMap.FindAction("PauseGameAction", throwIfNotFound: true);
         // Player
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
@@ -399,6 +479,10 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
         m_Player_Dash = m_Player.FindAction("Dash", throwIfNotFound: true);
         m_Player_FakeHit = m_Player.FindAction("FakeHit", throwIfNotFound: true);
         m_Player_MousePosition = m_Player.FindAction("MousePosition", throwIfNotFound: true);
+        // MenuActionMap
+        m_MenuActionMap = asset.FindActionMap("MenuActionMap", throwIfNotFound: true);
+        m_MenuActionMap_TriggerCurrentButton = m_MenuActionMap.FindAction("TriggerCurrentButton", throwIfNotFound: true);
+        m_MenuActionMap_GoBackButton = m_MenuActionMap.FindAction("GoBackButton", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -461,11 +545,13 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_ControlsActionMap;
     private List<IControlsActionMapActions> m_ControlsActionMapActionsCallbackInterfaces = new List<IControlsActionMapActions>();
     private readonly InputAction m_ControlsActionMap_ExitGameAction;
+    private readonly InputAction m_ControlsActionMap_PauseGameAction;
     public struct ControlsActionMapActions
     {
         private @VoidSanctuaryActions m_Wrapper;
         public ControlsActionMapActions(@VoidSanctuaryActions wrapper) { m_Wrapper = wrapper; }
         public InputAction @ExitGameAction => m_Wrapper.m_ControlsActionMap_ExitGameAction;
+        public InputAction @PauseGameAction => m_Wrapper.m_ControlsActionMap_PauseGameAction;
         public InputActionMap Get() { return m_Wrapper.m_ControlsActionMap; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -478,6 +564,9 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
             @ExitGameAction.started += instance.OnExitGameAction;
             @ExitGameAction.performed += instance.OnExitGameAction;
             @ExitGameAction.canceled += instance.OnExitGameAction;
+            @PauseGameAction.started += instance.OnPauseGameAction;
+            @PauseGameAction.performed += instance.OnPauseGameAction;
+            @PauseGameAction.canceled += instance.OnPauseGameAction;
         }
 
         private void UnregisterCallbacks(IControlsActionMapActions instance)
@@ -485,6 +574,9 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
             @ExitGameAction.started -= instance.OnExitGameAction;
             @ExitGameAction.performed -= instance.OnExitGameAction;
             @ExitGameAction.canceled -= instance.OnExitGameAction;
+            @PauseGameAction.started -= instance.OnPauseGameAction;
+            @PauseGameAction.performed -= instance.OnPauseGameAction;
+            @PauseGameAction.canceled -= instance.OnPauseGameAction;
         }
 
         public void RemoveCallbacks(IControlsActionMapActions instance)
@@ -612,9 +704,64 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
         }
     }
     public PlayerActions @Player => new PlayerActions(this);
+
+    // MenuActionMap
+    private readonly InputActionMap m_MenuActionMap;
+    private List<IMenuActionMapActions> m_MenuActionMapActionsCallbackInterfaces = new List<IMenuActionMapActions>();
+    private readonly InputAction m_MenuActionMap_TriggerCurrentButton;
+    private readonly InputAction m_MenuActionMap_GoBackButton;
+    public struct MenuActionMapActions
+    {
+        private @VoidSanctuaryActions m_Wrapper;
+        public MenuActionMapActions(@VoidSanctuaryActions wrapper) { m_Wrapper = wrapper; }
+        public InputAction @TriggerCurrentButton => m_Wrapper.m_MenuActionMap_TriggerCurrentButton;
+        public InputAction @GoBackButton => m_Wrapper.m_MenuActionMap_GoBackButton;
+        public InputActionMap Get() { return m_Wrapper.m_MenuActionMap; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(MenuActionMapActions set) { return set.Get(); }
+        public void AddCallbacks(IMenuActionMapActions instance)
+        {
+            if (instance == null || m_Wrapper.m_MenuActionMapActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_MenuActionMapActionsCallbackInterfaces.Add(instance);
+            @TriggerCurrentButton.started += instance.OnTriggerCurrentButton;
+            @TriggerCurrentButton.performed += instance.OnTriggerCurrentButton;
+            @TriggerCurrentButton.canceled += instance.OnTriggerCurrentButton;
+            @GoBackButton.started += instance.OnGoBackButton;
+            @GoBackButton.performed += instance.OnGoBackButton;
+            @GoBackButton.canceled += instance.OnGoBackButton;
+        }
+
+        private void UnregisterCallbacks(IMenuActionMapActions instance)
+        {
+            @TriggerCurrentButton.started -= instance.OnTriggerCurrentButton;
+            @TriggerCurrentButton.performed -= instance.OnTriggerCurrentButton;
+            @TriggerCurrentButton.canceled -= instance.OnTriggerCurrentButton;
+            @GoBackButton.started -= instance.OnGoBackButton;
+            @GoBackButton.performed -= instance.OnGoBackButton;
+            @GoBackButton.canceled -= instance.OnGoBackButton;
+        }
+
+        public void RemoveCallbacks(IMenuActionMapActions instance)
+        {
+            if (m_Wrapper.m_MenuActionMapActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(IMenuActionMapActions instance)
+        {
+            foreach (var item in m_Wrapper.m_MenuActionMapActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_MenuActionMapActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public MenuActionMapActions @MenuActionMap => new MenuActionMapActions(this);
     public interface IControlsActionMapActions
     {
         void OnExitGameAction(InputAction.CallbackContext context);
+        void OnPauseGameAction(InputAction.CallbackContext context);
     }
     public interface IPlayerActions
     {
@@ -627,5 +774,10 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
         void OnDash(InputAction.CallbackContext context);
         void OnFakeHit(InputAction.CallbackContext context);
         void OnMousePosition(InputAction.CallbackContext context);
+    }
+    public interface IMenuActionMapActions
+    {
+        void OnTriggerCurrentButton(InputAction.CallbackContext context);
+        void OnGoBackButton(InputAction.CallbackContext context);
     }
 }
