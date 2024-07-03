@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class OpenDoors : MonoBehaviour
 {
-    public Animator animator; // Riferimento all'Animator
+    private Animator animator; // Riferimento all'Animator
 
     void Start()
     {
@@ -15,10 +15,9 @@ public class OpenDoors : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-           
-                // Attiva l'animazione per aprire la porta
-                animator.SetTrigger("open");
-           
+            // Attiva l'animazione per aprire la porta
+            animator.ResetTrigger("close");
+            animator.SetTrigger("open");
         }
         
     }
@@ -27,6 +26,7 @@ public class OpenDoors : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             // Chiudi la porta quando il giocatore esce dal trigger
+            animator.ResetTrigger("open");
             animator.SetTrigger("close");
         }
     }
