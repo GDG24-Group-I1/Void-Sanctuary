@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using static UnityEngine.InputSystem.InputAction;
 
-public class GameInput : MonoBehaviour
+public class GameInput : MonoBehaviour, IDataPersistence
 {
     private VoidSanctuaryActions playerInputActions;
 
@@ -17,16 +17,81 @@ public class GameInput : MonoBehaviour
     private InputAction _dashAction;
     private InputAction _fakeHitAction;
     public bool IsKeyboardMovement { get; private set; }
+    public bool HoldDownToRun { get; private set; } = true;
 
+    private GameObject pauseMenu;
+
+
+    public void LoadData(GameData data)
+    {
+        HoldDownToRun = data.savedSettings.holdDownToRun;
+    }
+
+    
+    public void SaveData(GameData data)
+    {
+        data.savedSettings.holdDownToRun = HoldDownToRun;
+    }
+
+    private void Start()
+    {
+        pauseMenu = GameObjectExtensions.FindInactive("PauseMenu", "Canvas");
+        if (pauseMenu != null)
+        {
+            pauseMenu.SetActive(false);
+        }
+    }
+
+    private void ChangePauseState()
+    {
+        if (Time.timeScale == 0)
+            Time.timeScale = 1;
+        else
+            Time.timeScale = 0;
+        if (pauseMenu.activeSelf)
+        {
+            playerInputActions.Player.Enable();
+            playerInputActions.MenuActionMap.Disable();
+        }
+        else
+        {
+            playerInputActions.Player.Disable();
+            playerInputActions.MenuActionMap.Enable();
+        }
+        pauseMenu.SetActive(!pauseMenu.activeSelf);
+        if (pauseMenu.activeSelf)
+        {
+            pauseMenu.GetComponentInChildren<UnityEngine.UI.Toggle>().isOn = HoldDownToRun;
+        }
+    }
 
     private void Awake()
     {
         playerInputActions = new VoidSanctuaryActions();
         playerInputActions.Enable();
-
+        playerInputActions.MenuActionMap.Disable();
+        playerInputActions.MenuActionMap.TriggerCurrentButton.performed += (context) =>
+        {
+            if (pauseMenu.activeSelf)
+            {
+                // TODO: implement "current button" mechanism
+                // for now , just exit the game as it is the only button in the menu
+                OnExitGameButtonClicked();
+            }
+        };
+        playerInputActions.MenuActionMap.GoBackButton.performed += (context) =>
+        {
+            // TODO: implement "go back" mechanism
+            // currently there is no nested menu so just unpause the game
+            ChangePauseState();
+        };
         playerInputActions.ControlsActionMap.ExitGameAction.performed += (context) =>
         {
-            Application.Quit();
+            ChangePauseState();
+        };
+        playerInputActions.ControlsActionMap.PauseGameAction.performed += (context) =>
+        {
+            ChangePauseState();
         };
         playerInputActions.Player.Move.performed += (context) =>
         {
@@ -83,9 +148,14 @@ public class GameInput : MonoBehaviour
         set { _blockAction.performed += value; }
     }
 
-    public Action<CallbackContext> OnRun
+    public Action<CallbackContext> OnRunStart
     {
         set { _runAction.performed += value; }
+    }
+
+    public Action<CallbackContext> OnRunEnd
+    {
+        set { _runAction.canceled += value; }
     }
 
     public Action<CallbackContext> OnDrawWeapon
@@ -104,5 +174,15 @@ public class GameInput : MonoBehaviour
     private void OnDestroy()
     {
         playerInputActions.Dispose();
+    }
+
+    public void OnExitGameButtonClicked()
+    {
+        Application.Quit();
+    }
+
+    public void OnHoldDownToRunChanged(bool value)
+    {
+        HoldDownToRun = value;
     }
 }

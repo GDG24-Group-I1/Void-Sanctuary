@@ -225,22 +225,36 @@ public class Player : MonoBehaviour
         {
             Block();
         };
-        gameInput.OnRun = (context) =>
+        gameInput.OnRunStart = (context) =>
         {
-
-            if (IsWalking)
+            if (gameInput.HoldDownToRun)
             {
-                IsRunning = !IsRunning;
-                if (IsRunning)
+                IsRunning = true;
+                movementSpeed = runSpeed;
+            } else
+            {
+                if (IsWalking)
                 {
-                    movementSpeed = runSpeed;
-                }
-                else
-                {
-                    movementSpeed = walkSpeed;
+                    IsRunning = !IsRunning;
+                    if (IsRunning)
+                    {
+                        movementSpeed = runSpeed;
+                    }
+                    else
+                    {
+                        movementSpeed = walkSpeed;
+                    }
                 }
             }
 
+        };
+        gameInput.OnRunEnd = (context) =>
+        {
+            if (gameInput.HoldDownToRun)
+            {
+                IsRunning = false;
+                movementSpeed = walkSpeed;
+            }
         };
         gameInput.OnDrawWeapon = (context) =>
         {
