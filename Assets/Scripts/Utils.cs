@@ -42,3 +42,14 @@ public static class RendererExtensions
         renderer.SetSharedMaterials(newMaterials);
     }
 }
+
+public static class GameObjectExtensions
+{
+    public static GameObject FindInactive(string name, string ancestor)
+    {
+        var ancestorObject = GameObject.Find(ancestor);
+        if (ancestorObject == null) return null;
+        var child = ancestorObject.transform.Find(name);
+        return child == null ? null : child.gameObject;
+    }
+}
