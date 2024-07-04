@@ -9,6 +9,8 @@ using UnityEngine.Diagnostics;
 public struct SavedSettings
 {
     public bool holdDownToRun;
+    public bool slowDownAttack;
+    public bool drawDebugRays;
 }
 
 
@@ -22,7 +24,9 @@ public class GameData
     {
         savedSettings = new()
         {
-            holdDownToRun = true
+            holdDownToRun = true,
+            slowDownAttack = true,
+            drawDebugRays = false
         };
     }
 }

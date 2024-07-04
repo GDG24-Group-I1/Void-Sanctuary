@@ -18,6 +18,8 @@ public class GameInput : MonoBehaviour, IDataPersistence
     private InputAction _fakeHitAction;
     public bool IsKeyboardMovement { get; private set; }
     public bool HoldDownToRun { get; private set; } = true;
+    public bool SlowDownAttack { get; private set; } = true;
+    public bool DrawDebugRays { get; private set; } = false;
 
     private GameObject pauseMenu;
 
@@ -25,17 +27,21 @@ public class GameInput : MonoBehaviour, IDataPersistence
     public void LoadData(GameData data)
     {
         HoldDownToRun = data.savedSettings.holdDownToRun;
+        SlowDownAttack = data.savedSettings.slowDownAttack;
+        DrawDebugRays = data.savedSettings.drawDebugRays;
     }
 
     
     public void SaveData(GameData data)
     {
         data.savedSettings.holdDownToRun = HoldDownToRun;
+        data.savedSettings.slowDownAttack = SlowDownAttack;
+        data.savedSettings.drawDebugRays = DrawDebugRays;
     }
 
     private void Start()
     {
-        pauseMenu = GameObjectExtensions.FindInactive("PauseMenu", "Canvas");
+        pauseMenu = GameObjectExtensions.FindInactive("PauseMenu", "GameUI");
         if (pauseMenu != null)
         {
             pauseMenu.SetActive(false);
@@ -119,47 +125,14 @@ public class GameInput : MonoBehaviour, IDataPersistence
         return mousePosition;
     }
 
-    public Action<CallbackContext> OnAttack
+    public void RegisterPlayer(VoidSanctuaryActions.IPlayerActions player)
     {
-        set { _attackAction.performed += value; }
+        playerInputActions.Player.SetCallbacks(player);
     }
 
-    public Action<CallbackContext> OnAim
+    public void UnregisterPlayer(VoidSanctuaryActions.IPlayerActions player)
     {
-        set { _fireAction.performed += value; }
-    }
-
-    public Action<CallbackContext> OnFire
-    {
-        set { _fireAction.canceled += value; }
-    }
-
-    public Action<CallbackContext> OnBlock
-    {
-        set { _blockAction.performed += value; }
-    }
-
-    public Action<CallbackContext> OnRunStart
-    {
-        set { _runAction.performed += value; }
-    }
-
-    public Action<CallbackContext> OnRunEnd
-    {
-        set { _runAction.canceled += value; }
-    }
-
-    public Action<CallbackContext> OnDrawWeapon
-    {
-        set { _drawWeaponAction.performed += value; }
-    }
-    public Action<CallbackContext> OnDash
-    {
-        set { _dashAction.performed += value; }
-    }
-    public Action<CallbackContext> OnFakeHit
-    {
-        set { _fakeHitAction.performed += value; }
+        playerInputActions.Player.RemoveCallbacks(player);
     }
 
     public Action<CallbackContext> OnChangeCurrentSelectedControl
@@ -185,5 +158,15 @@ public class GameInput : MonoBehaviour, IDataPersistence
     public void OnHoldDownToRunChanged(bool value)
     {
         HoldDownToRun = value;
+    }
+
+    public void OnSlowDownAttackChanged(bool value)
+    {
+        SlowDownAttack = value;
+    }
+
+    public void OnDrawDebugRaysChanged(bool value)
+    {
+        DrawDebugRays = value;
     }
 }

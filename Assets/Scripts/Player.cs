@@ -1,11 +1,10 @@
-// #define DRAW_DEBUG_RAYS
-// #define SLOW_DOWN_ATTACK
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Assertions;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public enum ComboState
@@ -34,7 +33,7 @@ public enum FiringStage
 }
 
 [RequireComponent(typeof(Rigidbody), typeof(FloorCollider))]
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
 {
     private const float firingKnockbackSpeed = 0f;
     private const int maxWallsCollided = 10;
@@ -51,9 +50,7 @@ public class Player : MonoBehaviour
     [SerializeField] private Material glowMaterial;
     [SerializeField] private Material swordBaseMaterial;
     [SerializeField] private Material swordBackBaseMaterial;
-#if SLOW_DOWN_ATTACK
     [SerializeField] private float slowDownFactor = 0.25f;
-#endif
 
     // these need to be public because they are set by the respawner script since they can't be set in the prefab
     public Transform cameraTransform;
@@ -76,9 +73,7 @@ public class Player : MonoBehaviour
     private Collider[] previousWallsCollided = Array.Empty<Collider>();
     private readonly RaycastHit[] wallsCollided = new RaycastHit[maxWallsCollided];
 
-#if SLOW_DOWN_ATTACK
     private float fixedDeltaTime;
-#endif
     public bool IsWalking { get; private set; }
 
     public bool IsRunning { get; private set; }
@@ -119,12 +114,10 @@ public class Player : MonoBehaviour
     }
 
 
-#if SLOW_DOWN_ATTACK
     private void Awake()
     {
         fixedDeltaTime = Time.fixedDeltaTime;
     }
-#endif
 
 
     private void Start()
@@ -133,6 +126,7 @@ public class Player : MonoBehaviour
         Assert.IsNotNull(healthBar, "HEALTH BAR IS NOT SET IN THE PLAYER OBJECT IN THE SCENE, PUT THE Canvas->HealthBar OBJECT IN THE Health Bar SLOT ON THIS GAME OBJECT");
         Assert.IsNotNull(loaderBorder, "LOADER BORDER IS NOT SET IN PLAYER OBJECT IN THE SCENE, PUT THE Canvas->Loader->LoaderBorder IN THE Loader Border SLOT ON THIS GAME OBJECT");
         gameInput = GameObject.FindWithTag("InputHandler").GetComponent<GameInput>();
+        gameInput.RegisterPlayer(this);
         movementSpeed = walkSpeed;
         rb = GetComponent<Rigidbody>();
         healthSlider = healthBar.GetComponent<Slider>();
@@ -195,89 +189,6 @@ public class Player : MonoBehaviour
             isGrounded = true;
         };
         rb.freezeRotation = true;
-
-        gameInput.OnAttack = (context) =>
-        {
-
-            if (IsWeaponEquipped)
-            {
-                OnPlayerAttack?.Invoke();
-                IsAttacking = true;
-                canMove = false;
-                Attack();
-                swordCollider.enabled = true;
-            }
-            else
-            {
-                IsAttacking = false;
-            }
-
-        };
-        gameInput.OnFire = (context) =>
-        {
-            Fire();
-        };
-        gameInput.OnAim = (context) =>
-        {
-            Aim();
-        };
-        gameInput.OnBlock = (context) =>
-        {
-            Block();
-        };
-        gameInput.OnRunStart = (context) =>
-        {
-            if (gameInput.HoldDownToRun)
-            {
-                IsRunning = true;
-                movementSpeed = runSpeed;
-            } else
-            {
-                if (IsWalking)
-                {
-                    IsRunning = !IsRunning;
-                    if (IsRunning)
-                    {
-                        movementSpeed = runSpeed;
-                    }
-                    else
-                    {
-                        movementSpeed = walkSpeed;
-                    }
-                }
-            }
-
-        };
-        gameInput.OnRunEnd = (context) =>
-        {
-            if (gameInput.HoldDownToRun)
-            {
-                IsRunning = false;
-                movementSpeed = walkSpeed;
-            }
-        };
-        gameInput.OnDrawWeapon = (context) =>
-        {
-            IsWeaponEquipped = !IsWeaponEquipped;
-
-            canMove = false;
-        };
-
-        gameInput.OnDash = (context) =>
-        {
-            Dash();
-        };
-        gameInput.OnFakeHit = (context) =>
-        {
-            if (healthSlider.value == healthSlider.minValue)
-            {
-                healthSlider.value = healthSlider.maxValue;
-            }
-            else
-            {
-                healthSlider.value--;
-            }
-        };
         movementCooldownTimer = new Timer(this)
         {
             OnTimerElapsed = () =>
@@ -509,12 +420,13 @@ public class Player : MonoBehaviour
 
     private void DrawDebugRays()
     {
-#if DRAW_DEBUG_RAYS
-        #region Debug rays for dashing
-        Debug.DrawRay(transform.position + Vector3.up, transform.forward * dashDistance, Color.red);
-        Debug.DrawRay(transform.position + Vector3.up + transform.forward * dashDistance, Vector3.down * 5, Color.red);
-        #endregion
-#endif
+        if (gameInput.DrawDebugRays)
+        {
+            #region Debug rays for dashing
+            Debug.DrawRay(transform.position + Vector3.up, transform.forward * dashDistance, Color.red);
+            Debug.DrawRay(transform.position + Vector3.up + transform.forward * dashDistance, Vector3.down * 5, Color.red);
+            #endregion
+        }
     }
 
     private void FiringSequence()
@@ -631,10 +543,11 @@ public class Player : MonoBehaviour
             sword.GetComponent<SkinnedMeshRenderer>().SwitchMaterial(glowMaterial, swordBaseMaterial);
             swordBack.GetComponent<SkinnedMeshRenderer>().SwitchMaterial(glowMaterial, swordBackBaseMaterial);
             IsSwordGlowing = false;
-#if SLOW_DOWN_ATTACK
-            Time.timeScale = 1.0f;
-            Time.fixedDeltaTime = fixedDeltaTime;
-#endif
+            if (gameInput.SlowDownAttack)
+            {
+                Time.timeScale = 1.0f;
+                Time.fixedDeltaTime = fixedDeltaTime;
+            }
         }
     }
 
@@ -712,11 +625,117 @@ public class Player : MonoBehaviour
         CanCombo = ComboState.CanCombo;
         sword.GetComponent<SkinnedMeshRenderer>().SwitchMaterial(swordBaseMaterial, glowMaterial);
         swordBack.GetComponent<SkinnedMeshRenderer>().SwitchMaterial(swordBackBaseMaterial, glowMaterial);
-#if SLOW_DOWN_ATTACK
-        Time.timeScale = slowDownFactor;
-        Time.fixedDeltaTime = fixedDeltaTime * Time.timeScale;
-#endif
+        if (gameInput.SlowDownAttack)
+        {
+            Time.timeScale = slowDownFactor;
+            Time.fixedDeltaTime = fixedDeltaTime * Time.timeScale;
+        }
         IsSwordGlowing = true;
         DebugExt.LogCombo($"Can combo at time {Time.time} for {AttackNumber}");
     }
+
+    public void OnDestroy()
+    {
+        StopAllCoroutines();
+        gameInput.UnregisterPlayer(this);
+    }
+
+    #region Input actions
+
+    public void OnMove(InputAction.CallbackContext context) {}
+
+    public void OnMousePosition(InputAction.CallbackContext context) {}
+
+    public void OnAttack(InputAction.CallbackContext context) {
+        if (context.performed)
+        {
+            if (IsWeaponEquipped)
+            {
+                OnPlayerAttack?.Invoke();
+                IsAttacking = true;
+                canMove = false;
+                Attack();
+                swordCollider.enabled = true;
+            }
+            else
+            {
+                IsAttacking = false;
+            }
+        }
+    }
+    public void OnFire(InputAction.CallbackContext context) {
+        if (context.performed)
+        {
+            Aim();
+        }
+        else if (context.canceled)
+        {
+            Fire();
+        }
+    }
+    public void OnBlock(InputAction.CallbackContext context) {
+        if (context.performed)
+        {
+            Block();
+        }
+    }
+    public void OnRun(InputAction.CallbackContext context) {
+        if (context.performed)
+        {
+            if (gameInput.HoldDownToRun)
+            {
+                IsRunning = true;
+                movementSpeed = runSpeed;
+            }
+            else
+            {
+                if (IsWalking)
+                {
+                    IsRunning = !IsRunning;
+                    if (IsRunning)
+                    {
+                        movementSpeed = runSpeed;
+                    }
+                    else
+                    {
+                        movementSpeed = walkSpeed;
+                    }
+                }
+            }
+        } else if (context.canceled)
+        {
+            if (gameInput.HoldDownToRun)
+            {
+                IsRunning = false;
+                movementSpeed = walkSpeed;
+            }
+        }
+    }
+    public void OnDrawWeapon(InputAction.CallbackContext context) {
+        if (context.performed)
+        {
+            IsWeaponEquipped = !IsWeaponEquipped;
+            canMove = false;
+        }
+    }
+    public void OnDash(InputAction.CallbackContext context) {
+        if (context.performed)
+        {
+            Dash();
+        }
+    }
+    public void OnFakeHit(InputAction.CallbackContext context) {
+        if (context.performed)
+        {
+            if (healthSlider.value == healthSlider.minValue)
+            {
+                healthSlider.value = healthSlider.maxValue;
+            }
+            else
+            {
+                healthSlider.value--;
+            }
+        }
+    }
+    #endregion
 }
