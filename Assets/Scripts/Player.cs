@@ -33,7 +33,7 @@ public enum FiringStage
     knockback
 }
 
-[RequireComponent(typeof(Rigidbody), typeof(GameInput), typeof(FloorCollider))]
+[RequireComponent(typeof(Rigidbody), typeof(FloorCollider))]
 public class Player : MonoBehaviour
 {
     private const float firingKnockbackSpeed = 0f;
@@ -132,7 +132,7 @@ public class Player : MonoBehaviour
         Assert.IsNotNull(cameraTransform, "CAMERA TRANSFORM IS NOT SET IN THE PLAYER OBJECT IN THE SCENE, PUT THE TopDownCamera IN THE CameraTrasform SLOT ON THIS GAMEOBJECT");        
         Assert.IsNotNull(healthBar, "HEALTH BAR IS NOT SET IN THE PLAYER OBJECT IN THE SCENE, PUT THE Canvas->HealthBar OBJECT IN THE Health Bar SLOT ON THIS GAME OBJECT");
         Assert.IsNotNull(loaderBorder, "LOADER BORDER IS NOT SET IN PLAYER OBJECT IN THE SCENE, PUT THE Canvas->Loader->LoaderBorder IN THE Loader Border SLOT ON THIS GAME OBJECT");
-        gameInput = GetComponent<GameInput>();
+        gameInput = GameObject.FindWithTag("InputHandler").GetComponent<GameInput>();
         movementSpeed = walkSpeed;
         rb = GetComponent<Rigidbody>();
         healthSlider = healthBar.GetComponent<Slider>();
