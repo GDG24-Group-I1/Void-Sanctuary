@@ -2020,21 +2020,9 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1639391105030820486, guid: 34a83b935b80352499e60b0cae9f0d9e, type: 3}
-      propertyPath: m_Size.x
-      value: 71.10331
-      objectReference: {fileID: 0}
-    - target: {fileID: 1639391105030820486, guid: 34a83b935b80352499e60b0cae9f0d9e, type: 3}
-      propertyPath: m_Center.x
-      value: 0.73441696
-      objectReference: {fileID: 0}
     - target: {fileID: 1759496726002701636, guid: 34a83b935b80352499e60b0cae9f0d9e, type: 3}
       propertyPath: m_Name
       value: Room2
-      objectReference: {fileID: 0}
-    - target: {fileID: 4864417443153207776, guid: 34a83b935b80352499e60b0cae9f0d9e, type: 3}
-      propertyPath: m_Enabled
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8662672477907036730, guid: 34a83b935b80352499e60b0cae9f0d9e, type: 3}
       propertyPath: m_LocalPosition.x
