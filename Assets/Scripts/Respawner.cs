@@ -5,7 +5,6 @@ public class Respawner : MonoBehaviour
     [SerializeField] private GameObject playerFollower;
     [SerializeField] private GameObject playerPrefab;
     [SerializeField] private GameObject youDiedText;
-    private Transform cameraDirection;
     private Transform cameraTransform;
     private GameObject healthBar;
     private GameObject loaderBorder;
