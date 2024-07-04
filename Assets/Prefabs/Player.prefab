@@ -44,7 +44,6 @@ GameObject:
   - component: {fileID: 4407350005302218948}
   - component: {fileID: 3619611160478188325}
   - component: {fileID: 2916950646172925459}
-  - component: {fileID: 540350638679568032}
   - component: {fileID: 4578832250119514008}
   m_Layer: 11
   m_Name: Player
@@ -127,6 +126,7 @@ MonoBehaviour:
   swordBackBaseMaterial: {fileID: 2100000, guid: c678acc1f49d69e46beeeef2d119d4d9, type: 2}
   cameraTransform: {fileID: 0}
   healthBar: {fileID: 0}
+  loaderBorder: {fileID: 0}
 --- !u!114 &2916950646172925459
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -137,18 +137,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5c04445f921769a4990e7c6473c39dd2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &540350638679568032
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3120664125272468870}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 55d9b74648cff234180050b707985cac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!136 &4578832250119514008
