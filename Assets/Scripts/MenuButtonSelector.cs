@@ -61,8 +61,11 @@ public class MenuButtonSelector : MonoBehaviour
             {
                 outline = text.gameObject.AddComponent<Outline>();
             }
-            outline.effectColor = Color.yellow;
-            outline.effectDistance = new Vector2(5, 5);
+            if (outline != null)
+            {
+                outline.effectColor = Color.yellow;
+                outline.effectDistance = new Vector2(5, 5);
+            }
         }
     }
 
