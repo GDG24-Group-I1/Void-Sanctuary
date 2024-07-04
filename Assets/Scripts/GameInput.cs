@@ -70,15 +70,6 @@ public class GameInput : MonoBehaviour, IDataPersistence
         playerInputActions = new VoidSanctuaryActions();
         playerInputActions.Enable();
         playerInputActions.MenuActionMap.Disable();
-        playerInputActions.MenuActionMap.TriggerCurrentButton.performed += (context) =>
-        {
-            if (pauseMenu.activeSelf)
-            {
-                // TODO: implement "current button" mechanism
-                // for now , just exit the game as it is the only button in the menu
-                OnExitGameButtonClicked();
-            }
-        };
         playerInputActions.MenuActionMap.GoBackButton.performed += (context) =>
         {
             // TODO: implement "go back" mechanism
@@ -169,6 +160,16 @@ public class GameInput : MonoBehaviour, IDataPersistence
     public Action<CallbackContext> OnFakeHit
     {
         set { _fakeHitAction.performed += value; }
+    }
+
+    public Action<CallbackContext> OnChangeCurrentSelectedControl
+    {
+        set { playerInputActions.MenuActionMap.ChangeCurrentSelectedControl.performed += value; }
+    }
+
+    public Action<CallbackContext> OnCurrentSelectedControlClick
+    {
+        set { playerInputActions.MenuActionMap.TriggerCurrentButton.performed += value; }
     }
 
     private void OnDestroy()

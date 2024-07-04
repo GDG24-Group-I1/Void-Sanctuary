@@ -423,6 +423,15 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ChangeCurrentSelectedControl"",
+                    ""type"": ""Button"",
+                    ""id"": ""ca107ba9-ab61-41df-83f8-628a81a23afe"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -458,6 +467,105 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
                     ""action"": ""GoBackButton"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""1D Axis"",
+                    ""id"": ""da820e5e-813b-4f3d-9e4a-a00b1e0d901a"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ChangeCurrentSelectedControl"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""a9129d25-f2b9-4438-94f3-627ba511640b"",
+                    ""path"": ""<Gamepad>/leftStick/up"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ChangeCurrentSelectedControl"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""402bc34d-492e-4c88-b64a-7a268d56c9e6"",
+                    ""path"": ""<Gamepad>/leftStick/down"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ChangeCurrentSelectedControl"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""1D Axis"",
+                    ""id"": ""50eb3548-04c9-4d17-b8c5-3456166d9d88"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ChangeCurrentSelectedControl"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""f9470539-128c-40aa-b42b-38ac6fc9b964"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ChangeCurrentSelectedControl"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""41aa1a9e-f95e-4f7d-b2d8-baad183654c1"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ChangeCurrentSelectedControl"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""1D Axis"",
+                    ""id"": ""8d62b218-4dfe-4724-9196-2965094ed5a5"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ChangeCurrentSelectedControl"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""d67fe950-d14c-4b52-868f-480ac625ea1c"",
+                    ""path"": ""<Keyboard>/upArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ChangeCurrentSelectedControl"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""07b7a0f4-172a-4010-bc58-2d8e218e7906"",
+                    ""path"": ""<Keyboard>/downArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ChangeCurrentSelectedControl"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 }
             ]
         }
@@ -483,6 +591,7 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
         m_MenuActionMap = asset.FindActionMap("MenuActionMap", throwIfNotFound: true);
         m_MenuActionMap_TriggerCurrentButton = m_MenuActionMap.FindAction("TriggerCurrentButton", throwIfNotFound: true);
         m_MenuActionMap_GoBackButton = m_MenuActionMap.FindAction("GoBackButton", throwIfNotFound: true);
+        m_MenuActionMap_ChangeCurrentSelectedControl = m_MenuActionMap.FindAction("ChangeCurrentSelectedControl", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -710,12 +819,14 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
     private List<IMenuActionMapActions> m_MenuActionMapActionsCallbackInterfaces = new List<IMenuActionMapActions>();
     private readonly InputAction m_MenuActionMap_TriggerCurrentButton;
     private readonly InputAction m_MenuActionMap_GoBackButton;
+    private readonly InputAction m_MenuActionMap_ChangeCurrentSelectedControl;
     public struct MenuActionMapActions
     {
         private @VoidSanctuaryActions m_Wrapper;
         public MenuActionMapActions(@VoidSanctuaryActions wrapper) { m_Wrapper = wrapper; }
         public InputAction @TriggerCurrentButton => m_Wrapper.m_MenuActionMap_TriggerCurrentButton;
         public InputAction @GoBackButton => m_Wrapper.m_MenuActionMap_GoBackButton;
+        public InputAction @ChangeCurrentSelectedControl => m_Wrapper.m_MenuActionMap_ChangeCurrentSelectedControl;
         public InputActionMap Get() { return m_Wrapper.m_MenuActionMap; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -731,6 +842,9 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
             @GoBackButton.started += instance.OnGoBackButton;
             @GoBackButton.performed += instance.OnGoBackButton;
             @GoBackButton.canceled += instance.OnGoBackButton;
+            @ChangeCurrentSelectedControl.started += instance.OnChangeCurrentSelectedControl;
+            @ChangeCurrentSelectedControl.performed += instance.OnChangeCurrentSelectedControl;
+            @ChangeCurrentSelectedControl.canceled += instance.OnChangeCurrentSelectedControl;
         }
 
         private void UnregisterCallbacks(IMenuActionMapActions instance)
@@ -741,6 +855,9 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
             @GoBackButton.started -= instance.OnGoBackButton;
             @GoBackButton.performed -= instance.OnGoBackButton;
             @GoBackButton.canceled -= instance.OnGoBackButton;
+            @ChangeCurrentSelectedControl.started -= instance.OnChangeCurrentSelectedControl;
+            @ChangeCurrentSelectedControl.performed -= instance.OnChangeCurrentSelectedControl;
+            @ChangeCurrentSelectedControl.canceled -= instance.OnChangeCurrentSelectedControl;
         }
 
         public void RemoveCallbacks(IMenuActionMapActions instance)
@@ -779,5 +896,6 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
     {
         void OnTriggerCurrentButton(InputAction.CallbackContext context);
         void OnGoBackButton(InputAction.CallbackContext context);
+        void OnChangeCurrentSelectedControl(InputAction.CallbackContext context);
     }
 }
