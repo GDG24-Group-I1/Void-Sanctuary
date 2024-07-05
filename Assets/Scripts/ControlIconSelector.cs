@@ -10,13 +10,18 @@ public enum ControlType
 
 public enum ButtonIcon
 {
+    #region Mouse
     MouseLeft,
     MouseRight,
     MouseMiddle,
+    #endregion
 
-    TouchPad, // ps4/5 controller
-    Minus, // ps4/5 controller
+    #region DualSense
+    TouchPad, 
+    Minus,
+    #endregion
 
+    #region Common
     Home,
     ButtonWest,
     ButtonEast,
@@ -34,6 +39,8 @@ public enum ButtonIcon
     DPadRight,
     LeftStick,
     RightStick
+    #endregion
+
 }
 
 public static class ControlIconSelector

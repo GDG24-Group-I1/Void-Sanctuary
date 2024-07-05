@@ -2,6 +2,7 @@
 // #define CAMERA_DEBUG
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public static class DebugExt
@@ -46,12 +47,38 @@ public static class RendererExtensions
 
 public static class GameObjectExtensions
 {
-    public static GameObject FindInactive(string name, string ancestor)
+    public static GameObject FindInactive(string name, string parent)
     {
-        var ancestorObject = GameObject.Find(ancestor);
+        var ancestorObject = GameObject.Find(parent);
         if (ancestorObject == null) return null;
         var child = ancestorObject.transform.Find(name);
         return child == null ? null : child.gameObject;
+    }
+    public static T GetComponentByName<T>(this GameObject obj, string name, bool recursive = false, bool inactive = true) where T : Component
+    {
+        try
+        {
+            if (recursive)
+            {
+                return obj.GetComponentsInChildren<T>(inactive).First(x => x.name == name);
+            }
+            else
+            {
+                return obj.GetComponents<T>().First(x => x.name == name);
+            }
+        } catch (System.InvalidOperationException)
+        {
+            Debug.LogError($"Failed to find component of type {typeof(T)} with name {name} on object {obj.name}");
+            return null;
+        }
+    }
+}
+
+public static class ColorExtensions
+{
+    public static Color CopyWithAlpha(this Color color, float alpha)
+    {
+        return new Color(color.r, color.g, color.b, alpha);
     }
 }
 
