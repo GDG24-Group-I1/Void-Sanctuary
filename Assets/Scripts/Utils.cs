@@ -1,5 +1,6 @@
 // #define COMBO_DEBUG
 // #define CAMERA_DEBUG
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -51,5 +52,30 @@ public static class GameObjectExtensions
         if (ancestorObject == null) return null;
         var child = ancestorObject.transform.Find(name);
         return child == null ? null : child.gameObject;
+    }
+}
+
+public static class CachedResources
+{
+    private static readonly Dictionary<string, Object> cache = new();
+
+    public static T Load<T>(string path) where T : Object
+    {
+        if (cache.ContainsKey(path))
+        {
+            return (T)cache[path];
+        }
+        else
+        {
+            T resource = Resources.Load<T>(path);
+            if (resource == null)
+            {
+                Debug.LogError($"Failed to load resource at path: {path}");
+                return null;
+            }
+            cache.Add(path, resource);
+            return resource;
+        }
+
     }
 }
