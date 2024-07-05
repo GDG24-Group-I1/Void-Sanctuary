@@ -1872,10 +1872,6 @@ PrefabInstance:
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 317622385}
-    - target: {fileID: 1720854126094760593, guid: c87af9a6928a1b84aa157dfcd6fea9e2, type: 3}
-      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: OnDrawDebugRaysChanged
-      objectReference: {fileID: 0}
     - target: {fileID: 2289955197850934797, guid: c87af9a6928a1b84aa157dfcd6fea9e2, type: 3}
       propertyPath: m_Camera
       value: 
@@ -1976,10 +1972,6 @@ PrefabInstance:
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 317622385}
-    - target: {fileID: 7109746964301732497, guid: c87af9a6928a1b84aa157dfcd6fea9e2, type: 3}
-      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: OnSlowDownAttackChanged
-      objectReference: {fileID: 0}
     - target: {fileID: 9060720008418446682, guid: c87af9a6928a1b84aa157dfcd6fea9e2, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 

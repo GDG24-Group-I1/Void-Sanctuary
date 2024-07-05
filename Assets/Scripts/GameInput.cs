@@ -21,7 +21,10 @@ public class GameInput : MonoBehaviour, IDataPersistence
     public bool SlowDownAttack { get; private set; } = true;
     public bool DrawDebugRays { get; private set; } = false;
 
+    public Observable<ControlType> CurrentControl { get; } = ControlType.Mouse;
+
     private GameObject pauseMenu;
+    private GameObject dialogBox;
 
 
     public void LoadData(GameData data)
@@ -42,6 +45,7 @@ public class GameInput : MonoBehaviour, IDataPersistence
     private void Start()
     {
         pauseMenu = GameObjectExtensions.FindInactive("PauseMenu", "GameUI");
+        dialogBox = GameObjectExtensions.FindInactive("DialogBox", "GameUI");
         if (pauseMenu != null)
         {
             pauseMenu.SetActive(false);
@@ -65,6 +69,7 @@ public class GameInput : MonoBehaviour, IDataPersistence
             playerInputActions.MenuActionMap.Enable();
         }
         pauseMenu.SetActive(!pauseMenu.activeSelf);
+        dialogBox.SetActive(!dialogBox.activeSelf);
         if (pauseMenu.activeSelf)
         {
             pauseMenu.GetComponentInChildren<UnityEngine.UI.Toggle>().isOn = HoldDownToRun;
@@ -92,8 +97,21 @@ public class GameInput : MonoBehaviour, IDataPersistence
         };
         playerInputActions.Player.Move.performed += (context) =>
         {
-            if (context.control.device is Keyboard or Mouse) IsKeyboardMovement = true;
-            else IsKeyboardMovement = false;
+            if (context.control.device is Keyboard or Mouse) { 
+                IsKeyboardMovement = true; 
+                CurrentControl.Value = ControlType.Mouse;
+            }
+            else { 
+                IsKeyboardMovement = false; 
+                if (context.control.device.displayName.Contains("DualSense"))
+                {
+                    CurrentControl.Value = ControlType.PSController;
+                } else
+                {
+                    CurrentControl.Value = ControlType.XboxController;
+                }
+            }
+
         };
 
         _attackAction = playerInputActions.Player.Attack;

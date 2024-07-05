@@ -63,6 +63,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
     private LineRenderer aimLaserRenderer;
     private GameObject sword;
     private GameObject swordBack;
+    private GameObject dialogBox;
     private BoxCollider swordCollider;
     private GameInput gameInput;
     private Slider healthSlider;
@@ -122,7 +123,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
 
     private void Start()
     {
-        Assert.IsNotNull(cameraTransform, "CAMERA TRANSFORM IS NOT SET IN THE PLAYER OBJECT IN THE SCENE, PUT THE TopDownCamera IN THE CameraTrasform SLOT ON THIS GAMEOBJECT");        
+        Assert.IsNotNull(cameraTransform, "CAMERA TRANSFORM IS NOT SET IN THE PLAYER OBJECT IN THE SCENE, PUT THE TopDownCamera IN THE CameraTrasform SLOT ON THIS GAMEOBJECT");
         Assert.IsNotNull(healthBar, "HEALTH BAR IS NOT SET IN THE PLAYER OBJECT IN THE SCENE, PUT THE Canvas->HealthBar OBJECT IN THE Health Bar SLOT ON THIS GAME OBJECT");
         Assert.IsNotNull(loaderBorder, "LOADER BORDER IS NOT SET IN PLAYER OBJECT IN THE SCENE, PUT THE Canvas->Loader->LoaderBorder IN THE Loader Border SLOT ON THIS GAME OBJECT");
         gameInput = GameObject.FindWithTag("InputHandler").GetComponent<GameInput>();
@@ -147,6 +148,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
         WeaponOnBack = GameObject.Find("WeaponHolderOnBack");
         WeaponInHand = GameObject.Find("WeaponHolderOnHand");
         WeaponInHand.SetActive(false);
+        dialogBox = GameObject.Find("DialogBox");
 
 
         deathTimer = new Timer(this)
@@ -368,7 +370,8 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
         {
             float rotationSpeed = 15f;
             transform.forward = Vector3.Slerp(transform.forward, rotateDir, rotationSpeed * Time.deltaTime);
-        } else if (firingStage == FiringStage.aiming)
+        }
+        else if (firingStage == FiringStage.aiming)
         {
             Vector3 mousePosition = gameInput.GetMousePosition();
             Ray ray = Camera.main.ScreenPointToRay(mousePosition);
@@ -642,11 +645,12 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
 
     #region Input actions
 
-    public void OnMove(InputAction.CallbackContext context) {}
+    public void OnMove(InputAction.CallbackContext context) { }
 
-    public void OnMousePosition(InputAction.CallbackContext context) {}
+    public void OnMousePosition(InputAction.CallbackContext context) { }
 
-    public void OnAttack(InputAction.CallbackContext context) {
+    public void OnAttack(InputAction.CallbackContext context)
+    {
         if (context.performed)
         {
             if (IsWeaponEquipped)
@@ -663,7 +667,8 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
             }
         }
     }
-    public void OnFire(InputAction.CallbackContext context) {
+    public void OnFire(InputAction.CallbackContext context)
+    {
         if (context.performed)
         {
             Aim();
@@ -673,13 +678,15 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
             Fire();
         }
     }
-    public void OnBlock(InputAction.CallbackContext context) {
+    public void OnBlock(InputAction.CallbackContext context)
+    {
         if (context.performed)
         {
             Block();
         }
     }
-    public void OnRun(InputAction.CallbackContext context) {
+    public void OnRun(InputAction.CallbackContext context)
+    {
         if (context.performed)
         {
             if (gameInput.HoldDownToRun)
@@ -702,7 +709,8 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
                     }
                 }
             }
-        } else if (context.canceled)
+        }
+        else if (context.canceled)
         {
             if (gameInput.HoldDownToRun)
             {
@@ -711,20 +719,23 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
             }
         }
     }
-    public void OnDrawWeapon(InputAction.CallbackContext context) {
+    public void OnDrawWeapon(InputAction.CallbackContext context)
+    {
         if (context.performed)
         {
             IsWeaponEquipped = !IsWeaponEquipped;
             canMove = false;
         }
     }
-    public void OnDash(InputAction.CallbackContext context) {
+    public void OnDash(InputAction.CallbackContext context)
+    {
         if (context.performed)
         {
             Dash();
         }
     }
-    public void OnFakeHit(InputAction.CallbackContext context) {
+    public void OnFakeHit(InputAction.CallbackContext context)
+    {
         if (context.performed)
         {
             if (healthSlider.value == healthSlider.minValue)
@@ -737,5 +748,36 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
             }
         }
     }
+
+    public void OnDismissDialog(InputAction.CallbackContext context)
+    {
+        var handler = dialogBox.GetComponent<DialogHandler>();
+        if (!gameInput.IsKeyboardMovement && handler.IsInDialog && handler.IsDialogDismissable)
+        {
+            handler.DismissDialog();
+        }
+    }
+
     #endregion
+    static int dialogCounter = 0;
+    public void OnTestDialog(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            var handler = dialogBox.GetComponent<DialogHandler>();
+            if (dialogCounter == 0)
+            {
+                handler.SetDialog("This is a test dialog", 1.0f);
+            }
+            else if (dialogCounter == 1)
+            {
+                handler.SetDialog("This is a bit of a longer dialog\nEven with a newline!!!", 4.0f);
+            }
+            else
+            {
+                handler.SetDialog("I will be repeated forever each time F4 is pressed", 1.5f);
+            }
+            dialogCounter++;
+        }
+    }
 }
