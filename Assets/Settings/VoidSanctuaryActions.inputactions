@@ -409,6 +409,17 @@
                 },
                 {
                     "name": "",
+                    "id": "8961fff4-8c3e-4f5e-a806-a2ffe6de024b",
+                    "path": "<Gamepad>/select",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "TestDialog",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "dc978922-ff50-4ab4-b2f2-87f72402edc0",
                     "path": "<Gamepad>/buttonSouth",
                     "interactions": "",

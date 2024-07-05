@@ -42,7 +42,7 @@ public static class ControlIconSelector
     {
         if (control == ControlType.Mouse)
         {
-            var basePath = "ControlIcons/Icons/Mouse";
+            var basePath = "ControlIcons/Mouse";
             return icon switch
             {
                 ButtonIcon.MouseLeft => CachedResources.Load<Sprite>($"{basePath}/mouse_left"),
@@ -53,8 +53,8 @@ public static class ControlIconSelector
         }
         else
         {
-            var commonPath = "ControlIcons/Icons/Common";
-            var basePath = "ControlIcons/Icons/";
+            var commonPath = "ControlIcons/Common";
+            var basePath = "ControlIcons/";
             switch (control)
             {
                 case ControlType.PSController:
