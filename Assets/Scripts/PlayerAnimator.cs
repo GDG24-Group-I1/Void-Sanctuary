@@ -89,5 +89,10 @@ public class PlayerAnimator : MonoBehaviour
     {
         animator.SetTrigger("Dashing");
     }
+
+    public void SetPickup()
+    {
+        animator.SetTrigger("Pickup");
+    }
 }
 

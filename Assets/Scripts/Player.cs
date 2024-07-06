@@ -38,11 +38,16 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
     private const float firingKnockbackSpeed = 0f;
     private const int maxWallsCollided = 10;
 
+    private const string GunSpriteName = "gun";
+    private const string IceSpriteName = "ice";
+    private const string MagnetSpriteName = "magnet";
+
     [Header("Fixed values set in the prefab\nDo not need to be reset by the Respawner")]
     [SerializeField] private float walkSpeed = 5f;
     [SerializeField] private float runSpeed = 10f;
     [SerializeField] private float groundDrag = 6f;
-    [SerializeField] private GameObject projectilePrefab;
+    [SerializeField] private GameObject damageProjectilePrefab;
+    [SerializeField] private GameObject iceProjectilePrefab;
     [SerializeField] private GameObject trailPrefab;
     [SerializeField] private LayerMask wallLayerMask;
     [SerializeField] private LayerMask groundLayerMask;
@@ -54,18 +59,21 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
     [SerializeField] private Material swordBackBaseMaterial;
     [SerializeField] private float slowDownFactor = 0.25f;
     [SerializeField] private List<Sprite> weaponSprites;
+    [SerializeField] private Material[] weaponMaterials;
 
     // these need to be public because they are set by the respawner script since they can't be set in the prefab
     [Header("Dynamic references to specific object instances in the scene\nNeed to be reset in the Respawner on death")]
     public Transform cameraTransform;
     public GameObject healthBar;
     public GameObject loaderBorder;
+    public GameObject dashLoaderBorder;
     public Image uiWeaponImage;
 
     private bool IsSwordGlowing = false;
     private LineRenderer aimLaserRenderer;
     private GameObject sword;
     private GameObject swordBack;
+    private GameObject swordPartWithLine;
     private GameObject dialogBox;
     private BoxCollider swordCollider;
     private GameInput gameInput;
@@ -113,6 +121,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
     private Timer firingStageCooldown;
     private Timer deathTimer;
     private Timer dashCooldownTimer;
+    private PlayerAnimator animator;
 
 
     private void ResetPlayer()
@@ -132,6 +141,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
         Assert.IsNotNull(cameraTransform, "CAMERA TRANSFORM IS NOT SET IN THE PLAYER OBJECT IN THE SCENE, PUT THE TopDownCamera IN THE CameraTrasform SLOT ON THIS GAMEOBJECT");
         Assert.IsNotNull(healthBar, "HEALTH BAR IS NOT SET IN THE PLAYER OBJECT IN THE SCENE, PUT THE Canvas->HealthBar OBJECT IN THE Health Bar SLOT ON THIS GAME OBJECT");
         Assert.IsNotNull(loaderBorder, "LOADER BORDER IS NOT SET IN PLAYER OBJECT IN THE SCENE, PUT THE Canvas->Loader->LoaderBorder IN THE Loader Border SLOT ON THIS GAME OBJECT");
+        Assert.IsNotNull(dashLoaderBorder, "DASH LOADER BORDER IS NOT SET IN PLAYER OBJECT IN THE SCENE, PUT THE Canvas->DashLoader->DashLoaderBorder IN THE Dash Loader Border SLOT ON THIS GAME OBJECT");
         uiWeaponImage.sprite = weaponSprites[weaponIndex];
         gameInput = GameObject.FindWithTag("InputHandler").GetComponent<GameInput>();
         gameInput.RegisterPlayer(this);
@@ -146,11 +156,12 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
                 ResetPlayer();
             }
         });
-
+        animator = GetComponentInChildren<PlayerAnimator>();
         var swords = GameObject.FindGameObjectsWithTag("Sword");
         Debug.Assert(swords.Length == 1, "There should be exactly one sword in the scene");
         sword = swords[0];
         swordBack = GameObject.FindGameObjectWithTag("SwordInternal");
+        swordPartWithLine = sword.transform.parent.Find("Cube").gameObject;
         swordCollider = sword.GetComponent<BoxCollider>();
         dialogBox = GameObject.Find("DialogBox");
 
@@ -424,6 +435,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
 
         canDash = false;
         dashCooldownTimer.Start(dashCooldown);
+        dashLoaderBorder.GetComponent<CircularProgressBar>().StartProgressBar(dashCooldown);
         IsDashing = true;
     }
 
@@ -436,6 +448,50 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
             Debug.DrawRay(transform.position + Vector3.up + transform.forward * dashDistance, Vector3.down * 5, Color.red);
             #endregion
         }
+    }
+
+    private void FireProjectileCommon()
+    {
+        loaderBorder.GetComponent<CircularProgressBar>().StartProgressBar(3.0f);
+
+        canFire = false;
+        fireCooldownTimer.Start(3.0f);
+
+        canAct = false;
+        actionCooldownTimer.Start(1.0f);
+
+        canMove = false;
+        movementCooldownTimer.Start(0.4f);
+
+        canTurn = false;
+        turningCooldownTimer.Start(0.4f);
+
+        firingStageCooldown.Start(0.1f);
+        firingStage = FiringStage.knockback;
+    }
+
+    private void FireDamageProjectile()
+    {
+        var startingPosition = aimLaserRenderer.GetPosition(0);
+        var endingPosition = aimLaserRenderer.GetPosition(1);
+        Vector3 projectilePosition = aimLaserRenderer.transform.TransformPoint(startingPosition) + transform.forward;
+        var rotation = transform.rotation;
+        GameObject projectile = Instantiate(damageProjectilePrefab, projectilePosition, rotation * Quaternion.Euler(90, 0, 0));
+        var projectileScript = projectile.GetComponent<ProjectileScript>();
+        projectileScript.endingPosition = aimLaserRenderer.transform.TransformPoint(endingPosition);
+        FireProjectileCommon();
+    }
+
+    private void FireIceProjectile()
+    {
+        var startingPosition = aimLaserRenderer.GetPosition(0);
+        var endingPosition = aimLaserRenderer.GetPosition(1);
+        Vector3 projectilePosition = aimLaserRenderer.transform.TransformPoint(startingPosition) + transform.forward;
+        var rotation = transform.rotation;
+        GameObject projectile = Instantiate(iceProjectilePrefab, projectilePosition, rotation * Quaternion.Euler(90, 0, 0));
+        var projectileScript = projectile.GetComponent<ProjectileScript>();
+        projectileScript.endingPosition = aimLaserRenderer.transform.TransformPoint(endingPosition);
+        FireProjectileCommon();
     }
 
     private void FiringSequence()
@@ -463,30 +519,14 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
                 break;
             //fire projectile
             case FiringStage.firing:
-                var startingPosition = aimLaserRenderer.GetPosition(0);
-                var endingPosition = aimLaserRenderer.GetPosition(1);
-                Vector3 projectilePosition = aimLaserRenderer.transform.TransformPoint(startingPosition) + transform.forward;
-                var rotation = transform.rotation;
-                GameObject projectile = Instantiate(projectilePrefab, projectilePosition, rotation * Quaternion.Euler(90, 0, 0));
-                var projectileScript = projectile.GetComponent<ProjectileScript>();
-                projectileScript.endingPosition = aimLaserRenderer.transform.TransformPoint(endingPosition);
-
-                loaderBorder.GetComponent<CircularProgressBar>().StartProgressBar(3.0f);
-
-                canFire = false;
-                fireCooldownTimer.Start(3.0f);
-
-                canAct = false;
-                actionCooldownTimer.Start(1.0f);
-
-                canMove = false;
-                movementCooldownTimer.Start(0.4f);
-
-                canTurn = false;
-                turningCooldownTimer.Start(0.4f);
-
-                firingStageCooldown.Start(0.1f);
-                firingStage = FiringStage.knockback;
+                if (weaponSprites[weaponIndex].name == GunSpriteName)
+                {
+                    FireDamageProjectile();
+                }
+                else if (weaponSprites[weaponIndex].name == IceSpriteName)
+                {
+                    FireIceProjectile();
+                }
                 break;
             //knockback
             case FiringStage.knockback:
@@ -629,7 +669,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
     {
         if (IsDashing)
         {
-            GetComponentInChildren<PlayerAnimator>().SetDash();
+            animator.SetDash();
             IsDashing = false;
         }
         else
@@ -650,6 +690,14 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
         }
         IsSwordGlowing = true;
         DebugExt.LogCombo($"Can combo at time {Time.time} for {AttackNumber}");
+    }
+
+    public void PickupItem()
+    { 
+        weaponSprites.Add(TouchedPowerup.Powerup);
+        Destroy(TouchedPowerup.gameObject);
+        TouchedPowerup = null;
+        canMove = true;
     }
 
     public void OnDestroy()
@@ -752,16 +800,18 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
 
     public void OnInteract(InputAction.CallbackContext context)
     {
-        if (TouchedPowerup != null)
+        if (context.performed)
         {
-            weaponSprites.Add(TouchedPowerup.Powerup);
-            Destroy(TouchedPowerup.gameObject);
-            TouchedPowerup = null;
-        }
-        var handler = dialogBox.GetComponent<DialogHandler>();
-        if (!gameInput.IsKeyboardMovement && handler.IsInDialog && handler.IsDialogDismissable)
-        {
-            handler.DismissDialog();
+            if (TouchedPowerup != null && canMove)
+            {
+                animator.SetPickup();
+                canMove = false;
+            }
+            var handler = dialogBox.GetComponent<DialogHandler>();
+            if (!gameInput.IsKeyboardMovement && handler.IsInDialog && handler.IsDialogDismissable)
+            {
+                handler.DismissDialog();
+            }
         }
     }
 
@@ -780,6 +830,24 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
                 weaponIndex = (weaponIndex - 1 + weaponSprites.Count) % weaponSprites.Count;
             }
             uiWeaponImage.sprite = weaponSprites[weaponIndex];
+            var renderer = swordPartWithLine.GetComponent<SkinnedMeshRenderer>();
+            var materialToSwitch = weaponMaterials.First(mat => renderer.sharedMaterials.Contains(mat));
+            if (weaponSprites[weaponIndex].name == GunSpriteName)
+            {
+                var newMaterial = weaponMaterials.First(mat => mat.name == "GlowLaser");
+                renderer.SwitchMaterial(materialToSwitch, newMaterial);
+                aimLaserRenderer.sharedMaterial = newMaterial;
+            } else if (weaponSprites[weaponIndex].name == IceSpriteName)
+            {
+                var newMaterial = weaponMaterials.First(mat => mat.name == "light");
+                renderer.SwitchMaterial(materialToSwitch, newMaterial);
+                aimLaserRenderer.sharedMaterial = newMaterial;
+            } else if (weaponSprites[weaponIndex].name == MagnetSpriteName)
+            {
+                var newMaterial = weaponMaterials.First(mat => mat.name == "GlowMagnet");
+                renderer.SwitchMaterial(materialToSwitch, newMaterial);
+                aimLaserRenderer.sharedMaterial = newMaterial;
+            }
         }
     }
 

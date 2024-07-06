@@ -1744,7 +1744,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4003200396375645057, guid: 2205ad28781ba2a45a6c0721f64bf749, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.956
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 4003200396375645057, guid: 2205ad28781ba2a45a6c0721f64bf749, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1801,7 +1801,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3077503840162378866, guid: 94d26109e3ac5134597f25f0b2acf810, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.956
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 3077503840162378866, guid: 94d26109e3ac5134597f25f0b2acf810, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1912,6 +1912,10 @@ PrefabInstance:
       propertyPath: cameraTransform
       value: 
       objectReference: {fileID: 1218966244}
+    - target: {fileID: 3619611160478188325, guid: 602c5e512c353fa4f9089894d785261b, type: 3}
+      propertyPath: dashLoaderBorder
+      value: 
+      objectReference: {fileID: 8526250417528074729}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2110,6 +2114,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &8526250417528074729 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5932065696047902184, guid: c87af9a6928a1b84aa157dfcd6fea9e2, type: 3}
+  m_PrefabInstance: {fileID: 8526250417528074727}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

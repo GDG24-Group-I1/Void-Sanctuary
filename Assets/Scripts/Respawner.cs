@@ -9,6 +9,7 @@ public class Respawner : MonoBehaviour
     private Transform cameraTransform;
     private GameObject healthBar;
     private GameObject loaderBorder;
+    private GameObject dashLoaderBorder;
     private GameObject playerObject;
     private Image uiWeaponImage;
     private Animator animator;
@@ -21,6 +22,7 @@ public class Respawner : MonoBehaviour
         cameraTransform = player.cameraTransform;
         healthBar = player.healthBar;
         loaderBorder = player.loaderBorder;
+        dashLoaderBorder = player.dashLoaderBorder;
         uiWeaponImage = player.uiWeaponImage;
     }
 
@@ -46,6 +48,7 @@ public class Respawner : MonoBehaviour
         player.cameraTransform = cameraTransform;
         player.healthBar = healthBar;
         player.loaderBorder = loaderBorder;
+        player.dashLoaderBorder = dashLoaderBorder;
         player.uiWeaponImage = uiWeaponImage;
     } 
 }
