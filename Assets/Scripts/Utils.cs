@@ -82,6 +82,18 @@ public static class ColorExtensions
     }
 }
 
+public static class VectorExtensions
+{
+    public static Vector3 ShiftBy(this Vector3 vector, float x = 0, float y = 0, float z = 0)
+    {
+        return new Vector3(vector.x + x, vector.y + y, vector.z + z);
+    }
+    public static Vector3 CopyWith(this Vector3 vector, float? x = null, float? y = null, float? z = null)
+    {
+        return new Vector3(x ?? vector.x, y ?? vector.y, z ?? vector.z);
+    }
+}
+
 public static class CachedResources
 {
     private static readonly Dictionary<string, Object> cache = new();
