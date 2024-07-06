@@ -184,6 +184,15 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ChangeEquippedWeapon"",
+                    ""type"": ""Button"",
+                    ""id"": ""f7247064-3cd8-4ad9-a0bd-e2344a29a205"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -450,6 +459,72 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
                     ""action"": ""DismissDialog"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""1D Axis"",
+                    ""id"": ""10b2a7b1-fa1f-4ec7-a472-955543640d99"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ChangeEquippedWeapon"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""b9b81606-6491-4998-af67-83b26952af7b"",
+                    ""path"": ""<Gamepad>/dpad/up"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ChangeEquippedWeapon"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""14addd65-a6c3-4d22-9eb9-4f547ec2f990"",
+                    ""path"": ""<Gamepad>/dpad/down"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ChangeEquippedWeapon"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""1D Axis"",
+                    ""id"": ""bc506522-4409-4f36-a6eb-36c0a0598a6e"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ChangeEquippedWeapon"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""e1937ae8-3aeb-41ff-aeb8-2d72674d3c85"",
+                    ""path"": ""<Keyboard>/upArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ChangeEquippedWeapon"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""6ad1e5b7-ece9-480a-ac69-fd373dc5823c"",
+                    ""path"": ""<Keyboard>/downArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ChangeEquippedWeapon"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 }
             ]
         },
@@ -640,6 +715,7 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
         m_Player_MousePosition = m_Player.FindAction("MousePosition", throwIfNotFound: true);
         m_Player_TestDialog = m_Player.FindAction("TestDialog", throwIfNotFound: true);
         m_Player_DismissDialog = m_Player.FindAction("DismissDialog", throwIfNotFound: true);
+        m_Player_ChangeEquippedWeapon = m_Player.FindAction("ChangeEquippedWeapon", throwIfNotFound: true);
         // MenuActionMap
         m_MenuActionMap = asset.FindActionMap("MenuActionMap", throwIfNotFound: true);
         m_MenuActionMap_TriggerCurrentButton = m_MenuActionMap.FindAction("TriggerCurrentButton", throwIfNotFound: true);
@@ -771,6 +847,7 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_MousePosition;
     private readonly InputAction m_Player_TestDialog;
     private readonly InputAction m_Player_DismissDialog;
+    private readonly InputAction m_Player_ChangeEquippedWeapon;
     public struct PlayerActions
     {
         private @VoidSanctuaryActions m_Wrapper;
@@ -786,6 +863,7 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
         public InputAction @MousePosition => m_Wrapper.m_Player_MousePosition;
         public InputAction @TestDialog => m_Wrapper.m_Player_TestDialog;
         public InputAction @DismissDialog => m_Wrapper.m_Player_DismissDialog;
+        public InputAction @ChangeEquippedWeapon => m_Wrapper.m_Player_ChangeEquippedWeapon;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -828,6 +906,9 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
             @DismissDialog.started += instance.OnDismissDialog;
             @DismissDialog.performed += instance.OnDismissDialog;
             @DismissDialog.canceled += instance.OnDismissDialog;
+            @ChangeEquippedWeapon.started += instance.OnChangeEquippedWeapon;
+            @ChangeEquippedWeapon.performed += instance.OnChangeEquippedWeapon;
+            @ChangeEquippedWeapon.canceled += instance.OnChangeEquippedWeapon;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -865,6 +946,9 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
             @DismissDialog.started -= instance.OnDismissDialog;
             @DismissDialog.performed -= instance.OnDismissDialog;
             @DismissDialog.canceled -= instance.OnDismissDialog;
+            @ChangeEquippedWeapon.started -= instance.OnChangeEquippedWeapon;
+            @ChangeEquippedWeapon.performed -= instance.OnChangeEquippedWeapon;
+            @ChangeEquippedWeapon.canceled -= instance.OnChangeEquippedWeapon;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -962,6 +1046,7 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
         void OnMousePosition(InputAction.CallbackContext context);
         void OnTestDialog(InputAction.CallbackContext context);
         void OnDismissDialog(InputAction.CallbackContext context);
+        void OnChangeEquippedWeapon(InputAction.CallbackContext context);
     }
     public interface IMenuActionMapActions
     {

@@ -37,6 +37,8 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
 {
     private const float firingKnockbackSpeed = 0f;
     private const int maxWallsCollided = 10;
+
+    [Header("Fixed values set in the prefab\nDo not need to be reset by the Respawner")]
     [SerializeField] private float walkSpeed = 5f;
     [SerializeField] private float runSpeed = 10f;
     [SerializeField] private float groundDrag = 6f;
@@ -51,11 +53,14 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
     [SerializeField] private Material swordBaseMaterial;
     [SerializeField] private Material swordBackBaseMaterial;
     [SerializeField] private float slowDownFactor = 0.25f;
+    [SerializeField] private Sprite[] weaponSprites;
 
     // these need to be public because they are set by the respawner script since they can't be set in the prefab
+    [Header("Dynamic references to specific object instances in the scene\nNeed to be reset in the Respawner on death")]
     public Transform cameraTransform;
     public GameObject healthBar;
     public GameObject loaderBorder;
+    public Image uiWeaponImage;
 
     private bool IsSwordGlowing = false;
     private GameObject WeaponOnBack;
@@ -73,6 +78,8 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
     private bool isGrounded;
     private Collider[] previousWallsCollided = Array.Empty<Collider>();
     private readonly RaycastHit[] wallsCollided = new RaycastHit[maxWallsCollided];
+
+    private int weaponIndex = 0;
 
     private float fixedDeltaTime;
     public bool IsWalking { get; private set; }
@@ -126,6 +133,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
         Assert.IsNotNull(cameraTransform, "CAMERA TRANSFORM IS NOT SET IN THE PLAYER OBJECT IN THE SCENE, PUT THE TopDownCamera IN THE CameraTrasform SLOT ON THIS GAMEOBJECT");
         Assert.IsNotNull(healthBar, "HEALTH BAR IS NOT SET IN THE PLAYER OBJECT IN THE SCENE, PUT THE Canvas->HealthBar OBJECT IN THE Health Bar SLOT ON THIS GAME OBJECT");
         Assert.IsNotNull(loaderBorder, "LOADER BORDER IS NOT SET IN PLAYER OBJECT IN THE SCENE, PUT THE Canvas->Loader->LoaderBorder IN THE Loader Border SLOT ON THIS GAME OBJECT");
+        uiWeaponImage.sprite = weaponSprites[weaponIndex];
         gameInput = GameObject.FindWithTag("InputHandler").GetComponent<GameInput>();
         gameInput.RegisterPlayer(this);
         movementSpeed = walkSpeed;
@@ -755,6 +763,24 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
         if (!gameInput.IsKeyboardMovement && handler.IsInDialog && handler.IsDialogDismissable)
         {
             handler.DismissDialog();
+        }
+    }
+
+    public void OnChangeEquippedWeapon(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            float value = context.ReadValue<float>();
+            var direction = value > 0 ? Direction.Down : Direction.Up;
+            if (direction == Direction.Down)
+            {
+                weaponIndex = (weaponIndex + 1) % weaponSprites.Length;
+            }
+            else
+            {
+                weaponIndex = (weaponIndex - 1 + weaponSprites.Length) % weaponSprites.Length;
+            }
+            uiWeaponImage.sprite = weaponSprites[weaponIndex];
         }
     }
 
