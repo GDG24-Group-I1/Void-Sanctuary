@@ -1,0 +1,67 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &2106352992565014515
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1432815112596947672, guid: 94d26109e3ac5134597f25f0b2acf810, type: 3}
+      propertyPath: Powerup
+      value: 
+      objectReference: {fileID: 21300000, guid: d5a80b7fe6443de4ea1b1fd917409214, type: 3}
+    - target: {fileID: 1952419641560457380, guid: 94d26109e3ac5134597f25f0b2acf810, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: f717183ae12e4b5439723d24b7059050, type: 2}
+    - target: {fileID: 3077503840162378866, guid: 94d26109e3ac5134597f25f0b2acf810, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -3.34
+      objectReference: {fileID: 0}
+    - target: {fileID: 3077503840162378866, guid: 94d26109e3ac5134597f25f0b2acf810, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.02
+      objectReference: {fileID: 0}
+    - target: {fileID: 3077503840162378866, guid: 94d26109e3ac5134597f25f0b2acf810, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3077503840162378866, guid: 94d26109e3ac5134597f25f0b2acf810, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3077503840162378866, guid: 94d26109e3ac5134597f25f0b2acf810, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3077503840162378866, guid: 94d26109e3ac5134597f25f0b2acf810, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3077503840162378866, guid: 94d26109e3ac5134597f25f0b2acf810, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3077503840162378866, guid: 94d26109e3ac5134597f25f0b2acf810, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3077503840162378866, guid: 94d26109e3ac5134597f25f0b2acf810, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3077503840162378866, guid: 94d26109e3ac5134597f25f0b2acf810, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8521232311011038771, guid: 94d26109e3ac5134597f25f0b2acf810, type: 3}
+      propertyPath: m_Name
+      value: MagnetPowerupItem
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 94d26109e3ac5134597f25f0b2acf810, type: 3}

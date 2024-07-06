@@ -295,7 +295,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   YDiff: -8
-  Speed: 5
+  Duration: 2
+  RotateSpeed: 0
 --- !u!1 &164049377254420372
 GameObject:
   m_ObjectHideFlags: 0
@@ -1081,7 +1082,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   YDiff: 4
-  Speed: 3.5
+  Duration: 2
+  RotateSpeed: 0
 --- !u!1 &1671808479560573168
 GameObject:
   m_ObjectHideFlags: 0
@@ -2131,7 +2133,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   YDiff: -4
-  Speed: 3.5
+  Duration: 2
+  RotateSpeed: 0
 --- !u!1 &5431528763360857344
 GameObject:
   m_ObjectHideFlags: 0
@@ -2530,8 +2533,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 9, y: -0.4999981}
-  m_SizeDelta: {x: -28, y: -3}
+  m_AnchoredPosition: {x: 45.118225, y: -0.4999981}
+  m_SizeDelta: {x: 44.2365, y: -3}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5422335517912237064
 CanvasRenderer:
@@ -3038,7 +3041,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: You died!
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 47f43f07b77d5304d9beeb108097e2ac, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -3102,7 +3105,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 0
+  m_hasFontAssetChanged: 1
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!95 &6517037746458242825

@@ -53,7 +53,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
     [SerializeField] private Material swordBaseMaterial;
     [SerializeField] private Material swordBackBaseMaterial;
     [SerializeField] private float slowDownFactor = 0.25f;
-    [SerializeField] private Sprite[] weaponSprites;
+    [SerializeField] private List<Sprite> weaponSprites;
 
     // these need to be public because they are set by the respawner script since they can't be set in the prefab
     [Header("Dynamic references to specific object instances in the scene\nNeed to be reset in the Respawner on death")]
@@ -99,6 +99,8 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
     public int AttackNumber { get; set; } = 0;
 
     public FiringStage firingStage { get; private set; } = FiringStage.notFiring;
+
+    public PowerUpHolder TouchedPowerup { get; set; }
 
     private float movementSpeed;
     private bool canMove = true;
@@ -773,8 +775,14 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
         }
     }
 
-    public void OnDismissDialog(InputAction.CallbackContext context)
+    public void OnInteract(InputAction.CallbackContext context)
     {
+        if (TouchedPowerup != null)
+        {
+            weaponSprites.Add(TouchedPowerup.Powerup);
+            Destroy(TouchedPowerup.gameObject);
+            TouchedPowerup = null;
+        }
         var handler = dialogBox.GetComponent<DialogHandler>();
         if (!gameInput.IsKeyboardMovement && handler.IsInDialog && handler.IsDialogDismissable)
         {
@@ -790,11 +798,11 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
             var direction = value > 0 ? Direction.Down : Direction.Up;
             if (direction == Direction.Down)
             {
-                weaponIndex = (weaponIndex + 1) % weaponSprites.Length;
+                weaponIndex = (weaponIndex + 1) % weaponSprites.Count;
             }
             else
             {
-                weaponIndex = (weaponIndex - 1 + weaponSprites.Length) % weaponSprites.Length;
+                weaponIndex = (weaponIndex - 1 + weaponSprites.Count) % weaponSprites.Count;
             }
             uiWeaponImage.sprite = weaponSprites[weaponIndex];
         }

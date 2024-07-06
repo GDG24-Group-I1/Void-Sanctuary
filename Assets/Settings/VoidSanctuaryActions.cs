@@ -177,7 +177,7 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""DismissDialog"",
+                    ""name"": ""Interact"",
                     ""type"": ""Button"",
                     ""id"": ""226eda28-cb4b-45c1-965e-4b0c782e1b24"",
                     ""expectedControlType"": ""Button"",
@@ -456,7 +456,7 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""DismissDialog"",
+                    ""action"": ""Interact"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -714,7 +714,7 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
         m_Player_FakeHit = m_Player.FindAction("FakeHit", throwIfNotFound: true);
         m_Player_MousePosition = m_Player.FindAction("MousePosition", throwIfNotFound: true);
         m_Player_TestDialog = m_Player.FindAction("TestDialog", throwIfNotFound: true);
-        m_Player_DismissDialog = m_Player.FindAction("DismissDialog", throwIfNotFound: true);
+        m_Player_Interact = m_Player.FindAction("Interact", throwIfNotFound: true);
         m_Player_ChangeEquippedWeapon = m_Player.FindAction("ChangeEquippedWeapon", throwIfNotFound: true);
         // MenuActionMap
         m_MenuActionMap = asset.FindActionMap("MenuActionMap", throwIfNotFound: true);
@@ -846,7 +846,7 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_FakeHit;
     private readonly InputAction m_Player_MousePosition;
     private readonly InputAction m_Player_TestDialog;
-    private readonly InputAction m_Player_DismissDialog;
+    private readonly InputAction m_Player_Interact;
     private readonly InputAction m_Player_ChangeEquippedWeapon;
     public struct PlayerActions
     {
@@ -862,7 +862,7 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
         public InputAction @FakeHit => m_Wrapper.m_Player_FakeHit;
         public InputAction @MousePosition => m_Wrapper.m_Player_MousePosition;
         public InputAction @TestDialog => m_Wrapper.m_Player_TestDialog;
-        public InputAction @DismissDialog => m_Wrapper.m_Player_DismissDialog;
+        public InputAction @Interact => m_Wrapper.m_Player_Interact;
         public InputAction @ChangeEquippedWeapon => m_Wrapper.m_Player_ChangeEquippedWeapon;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
@@ -903,9 +903,9 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
             @TestDialog.started += instance.OnTestDialog;
             @TestDialog.performed += instance.OnTestDialog;
             @TestDialog.canceled += instance.OnTestDialog;
-            @DismissDialog.started += instance.OnDismissDialog;
-            @DismissDialog.performed += instance.OnDismissDialog;
-            @DismissDialog.canceled += instance.OnDismissDialog;
+            @Interact.started += instance.OnInteract;
+            @Interact.performed += instance.OnInteract;
+            @Interact.canceled += instance.OnInteract;
             @ChangeEquippedWeapon.started += instance.OnChangeEquippedWeapon;
             @ChangeEquippedWeapon.performed += instance.OnChangeEquippedWeapon;
             @ChangeEquippedWeapon.canceled += instance.OnChangeEquippedWeapon;
@@ -943,9 +943,9 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
             @TestDialog.started -= instance.OnTestDialog;
             @TestDialog.performed -= instance.OnTestDialog;
             @TestDialog.canceled -= instance.OnTestDialog;
-            @DismissDialog.started -= instance.OnDismissDialog;
-            @DismissDialog.performed -= instance.OnDismissDialog;
-            @DismissDialog.canceled -= instance.OnDismissDialog;
+            @Interact.started -= instance.OnInteract;
+            @Interact.performed -= instance.OnInteract;
+            @Interact.canceled -= instance.OnInteract;
             @ChangeEquippedWeapon.started -= instance.OnChangeEquippedWeapon;
             @ChangeEquippedWeapon.performed -= instance.OnChangeEquippedWeapon;
             @ChangeEquippedWeapon.canceled -= instance.OnChangeEquippedWeapon;
@@ -1045,7 +1045,7 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
         void OnFakeHit(InputAction.CallbackContext context);
         void OnMousePosition(InputAction.CallbackContext context);
         void OnTestDialog(InputAction.CallbackContext context);
-        void OnDismissDialog(InputAction.CallbackContext context);
+        void OnInteract(InputAction.CallbackContext context);
         void OnChangeEquippedWeapon(InputAction.CallbackContext context);
     }
     public interface IMenuActionMapActions
