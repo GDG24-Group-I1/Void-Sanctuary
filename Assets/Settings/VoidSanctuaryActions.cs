@@ -159,15 +159,6 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""TestDialog"",
-                    ""type"": ""Button"",
-                    ""id"": ""de695ae6-d12c-495b-9c73-9224f4271945"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
                     ""name"": ""Interact"",
                     ""type"": ""Button"",
                     ""id"": ""226eda28-cb4b-45c1-965e-4b0c782e1b24"",
@@ -393,28 +384,6 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""MousePosition"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""1cfc2524-b58b-433c-b4fb-ba3759d329e7"",
-                    ""path"": ""<Keyboard>/f4"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""TestDialog"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""8961fff4-8c3e-4f5e-a806-a2ffe6de024b"",
-                    ""path"": ""<Gamepad>/select"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""TestDialog"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -681,7 +650,6 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
         m_Player_Dash = m_Player.FindAction("Dash", throwIfNotFound: true);
         m_Player_FakeHit = m_Player.FindAction("FakeHit", throwIfNotFound: true);
         m_Player_MousePosition = m_Player.FindAction("MousePosition", throwIfNotFound: true);
-        m_Player_TestDialog = m_Player.FindAction("TestDialog", throwIfNotFound: true);
         m_Player_Interact = m_Player.FindAction("Interact", throwIfNotFound: true);
         m_Player_ChangeEquippedWeapon = m_Player.FindAction("ChangeEquippedWeapon", throwIfNotFound: true);
         // MenuActionMap
@@ -812,7 +780,6 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Dash;
     private readonly InputAction m_Player_FakeHit;
     private readonly InputAction m_Player_MousePosition;
-    private readonly InputAction m_Player_TestDialog;
     private readonly InputAction m_Player_Interact;
     private readonly InputAction m_Player_ChangeEquippedWeapon;
     public struct PlayerActions
@@ -827,7 +794,6 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
         public InputAction @Dash => m_Wrapper.m_Player_Dash;
         public InputAction @FakeHit => m_Wrapper.m_Player_FakeHit;
         public InputAction @MousePosition => m_Wrapper.m_Player_MousePosition;
-        public InputAction @TestDialog => m_Wrapper.m_Player_TestDialog;
         public InputAction @Interact => m_Wrapper.m_Player_Interact;
         public InputAction @ChangeEquippedWeapon => m_Wrapper.m_Player_ChangeEquippedWeapon;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
@@ -863,9 +829,6 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
             @MousePosition.started += instance.OnMousePosition;
             @MousePosition.performed += instance.OnMousePosition;
             @MousePosition.canceled += instance.OnMousePosition;
-            @TestDialog.started += instance.OnTestDialog;
-            @TestDialog.performed += instance.OnTestDialog;
-            @TestDialog.canceled += instance.OnTestDialog;
             @Interact.started += instance.OnInteract;
             @Interact.performed += instance.OnInteract;
             @Interact.canceled += instance.OnInteract;
@@ -900,9 +863,6 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
             @MousePosition.started -= instance.OnMousePosition;
             @MousePosition.performed -= instance.OnMousePosition;
             @MousePosition.canceled -= instance.OnMousePosition;
-            @TestDialog.started -= instance.OnTestDialog;
-            @TestDialog.performed -= instance.OnTestDialog;
-            @TestDialog.canceled -= instance.OnTestDialog;
             @Interact.started -= instance.OnInteract;
             @Interact.performed -= instance.OnInteract;
             @Interact.canceled -= instance.OnInteract;
@@ -1003,7 +963,6 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
         void OnDash(InputAction.CallbackContext context);
         void OnFakeHit(InputAction.CallbackContext context);
         void OnMousePosition(InputAction.CallbackContext context);
-        void OnTestDialog(InputAction.CallbackContext context);
         void OnInteract(InputAction.CallbackContext context);
         void OnChangeEquippedWeapon(InputAction.CallbackContext context);
     }

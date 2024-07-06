@@ -137,15 +137,6 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "TestDialog",
-                    "type": "Button",
-                    "id": "de695ae6-d12c-495b-9c73-9224f4271945",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
                     "name": "Interact",
                     "type": "Button",
                     "id": "226eda28-cb4b-45c1-965e-4b0c782e1b24",
@@ -371,28 +362,6 @@
                     "processors": "",
                     "groups": "",
                     "action": "MousePosition",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "1cfc2524-b58b-433c-b4fb-ba3759d329e7",
-                    "path": "<Keyboard>/f4",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "TestDialog",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "8961fff4-8c3e-4f5e-a806-a2ffe6de024b",
-                    "path": "<Gamepad>/select",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "TestDialog",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

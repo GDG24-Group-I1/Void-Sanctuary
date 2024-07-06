@@ -852,25 +852,12 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
     }
 
     #endregion
-    static int dialogCounter = 0;
-    public void OnTestDialog(InputAction.CallbackContext context)
+
+
+    public void TriggerDialog(string dialogId)
     {
-        if (context.performed)
-        {
-            var handler = dialogBox.GetComponent<DialogHandler>();
-            if (dialogCounter == 0)
-            {
-                handler.SetDialog("This is a test dialog", 1.0f);
-            }
-            else if (dialogCounter == 1)
-            {
-                handler.SetDialog("This is a bit of a longer dialog\nEven with a newline!!!", 4.0f);
-            }
-            else
-            {
-                handler.SetDialog("I will be repeated forever each time F4 is pressed", 1.5f);
-            }
-            dialogCounter++;
-        }
+        var dialog = DialogData.GetDialog(dialogId);
+        var handler = dialogBox.GetComponent<DialogHandler>();
+        handler.SetDialog(dialog.Text, dialog.WriteDuration, dialog.LingerTime);
     }
 }
