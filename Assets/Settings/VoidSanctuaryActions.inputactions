@@ -110,15 +110,6 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "DrawWeapon",
-                    "type": "Button",
-                    "id": "eaddbf77-3a63-46e7-ac47-8138dc802ad1",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
                     "name": "Dash",
                     "type": "Button",
                     "id": "6f452dbe-afcb-4cff-be87-053005122fcc",
@@ -336,28 +327,6 @@
                     "processors": "",
                     "groups": "",
                     "action": "Run",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "e9af9bb1-ff5c-40b0-8f57-731c12560bd4",
-                    "path": "<Gamepad>/buttonNorth",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "DrawWeapon",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "9482b8bc-6542-4e20-948c-bf7a5d185295",
-                    "path": "<Keyboard>/tab",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "DrawWeapon",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

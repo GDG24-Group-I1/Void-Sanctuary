@@ -63,8 +63,6 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
     public Image uiWeaponImage;
 
     private bool IsSwordGlowing = false;
-    private GameObject WeaponOnBack;
-    private GameObject WeaponInHand;
     private LineRenderer aimLaserRenderer;
     private GameObject sword;
     private GameObject swordBack;
@@ -87,8 +85,6 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
     public bool IsDashing { get; private set; }
 
     public bool IsRunning { get; private set; }
-
-    public bool IsWeaponEquipped { get; private set; }
 
     public bool IsAttacking { get; private set; }
 
@@ -156,9 +152,6 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
         sword = swords[0];
         swordBack = GameObject.FindGameObjectWithTag("SwordInternal");
         swordCollider = sword.GetComponent<BoxCollider>();
-        WeaponOnBack = GameObject.Find("WeaponHolderOnBack");
-        WeaponInHand = GameObject.Find("WeaponHolderOnHand");
-        WeaponInHand.SetActive(false);
         dialogBox = GameObject.Find("DialogBox");
 
 
@@ -252,6 +245,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
                 return null;
             }
         };
+        FindAndSetupLaser();
     }
 
     private void FixedUpdate()
@@ -406,7 +400,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
 
     private void Aim()
     {
-        if (!canFire || !canAct || !IsWeaponEquipped)
+        if (!canFire || !canAct)
             return;
         aimLaserRenderer.enabled = true;
         firingStage = FiringStage.aiming;
@@ -521,12 +515,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
 
     public void SwordDrawn()
     {
-        WeaponOnBack.SetActive(!IsWeaponEquipped);
-        WeaponInHand.SetActive(IsWeaponEquipped);
-        if (IsWeaponEquipped)
-        {
-            FindAndSetupLaser();
-        }
+        FindAndSetupLaser();
     }
 
     public void FindAndSetupLaser()
@@ -679,18 +668,11 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
     {
         if (context.performed)
         {
-            if (IsWeaponEquipped)
-            {
-                OnPlayerAttack?.Invoke();
-                IsAttacking = true;
-                canMove = false;
-                Attack();
-                swordCollider.enabled = true;
-            }
-            else
-            {
-                IsAttacking = false;
-            }
+            OnPlayerAttack?.Invoke();
+            IsAttacking = true;
+            canMove = false;
+            Attack();
+            swordCollider.enabled = true;
         }
     }
     public void OnFire(InputAction.CallbackContext context)
@@ -745,14 +727,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
             }
         }
     }
-    public void OnDrawWeapon(InputAction.CallbackContext context)
-    {
-        if (context.performed)
-        {
-            IsWeaponEquipped = !IsWeaponEquipped;
-            canMove = false;
-        }
-    }
+
     public void OnDash(InputAction.CallbackContext context)
     {
         if (context.performed)
