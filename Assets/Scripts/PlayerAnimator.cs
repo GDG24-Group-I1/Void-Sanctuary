@@ -39,6 +39,7 @@ public class PlayerAnimator : MonoBehaviour
     private void Update()
     {
         PlayerState newState = GetPlayerState();
+
         if (newState != currentState)
         {
             previousState = currentState;
@@ -93,7 +94,7 @@ public class PlayerAnimator : MonoBehaviour
         else
         {
             animator.SetBool("WeaponEquipped", false);
-            if(isRunning)
+            if (isRunning)
             {
                 return PlayerState.Running;
             }
@@ -112,6 +113,11 @@ public class PlayerAnimator : MonoBehaviour
     public Player GetPlayer()
     {
         return player;
+    }
+
+    public void SetDash()
+    {
+       animator.SetTrigger("Dashing");
     }
 }
 

@@ -7,7 +7,6 @@ public class CubeGravity : MonoBehaviour
     private Rigidbody rb;
     public float gravity = 9.8f;
     
-    
     void Start()
     {
         rb = GetComponent<Rigidbody>();

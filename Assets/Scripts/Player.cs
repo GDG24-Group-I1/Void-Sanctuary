@@ -84,13 +84,13 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
     private float fixedDeltaTime;
     public bool IsWalking { get; private set; }
 
+    public bool IsDashing { get; private set; }
+
     public bool IsRunning { get; private set; }
 
     public bool IsWeaponEquipped { get; private set; }
 
     public bool IsAttacking { get; private set; }
-
-    public bool DashClicked { get; private set; }
 
     public AnimationState IsFalling { get; private set; } = AnimationState.None;
 
@@ -107,6 +107,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
     private bool canFire = true;
     private bool canAttack = true;
     private bool canDash = true;
+    private bool executeDash = false;
     private Timer movementCooldownTimer;
     private Timer turningCooldownTimer;
     private Timer actionCooldownTimer;
@@ -258,7 +259,8 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
             frameNotGrounded++;
         }
         HandleMovement();
-        Dashing();
+        StartDashing();
+        ExecuteDash();
     }
 
 
@@ -426,7 +428,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
 
         canDash = false;
         dashCooldownTimer.Start(dashCooldown);
-        DashClicked = true;
+        IsDashing = true;
     }
 
     private void DrawDebugRays()
@@ -500,6 +502,11 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
         }
     }
 
+    public void DashAnimationEnded()
+    {
+        executeDash = true;
+    }
+
     private void Block()
     {
 
@@ -569,11 +576,10 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
 
     public Action OnPlayerAttack;
 
-    private void Dashing()
+    public void ExecuteDash()
     {
-        if (DashClicked)
+        if (executeDash)
         {
-            DashClicked = false;
             var notPlayerLayer = ~LayerMask.GetMask("playerLayer");
             var hasHit = Physics.Raycast(transform.position + Vector3.up, transform.forward, out RaycastHit hit, dashDistance, notPlayerLayer);
             var groundLayer = LayerMask.NameToLayer("groundLayer");
@@ -624,6 +630,16 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
                 }
             }
             transform.position = newPosition;
+        }
+        executeDash = false;
+    }
+
+    private void StartDashing()
+    {
+        if (IsDashing)
+        {
+            GetComponentInChildren<PlayerAnimator>().SetDash();
+            IsDashing = false;
         }
         else
         {
