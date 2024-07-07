@@ -93,6 +93,7 @@ public class GameInput : MonoBehaviour, IDataPersistence
 
     private void Awake()
     {
+        IsKeyboardMovement = true;
         playerInputActions = new VoidSanctuaryActions();
         playerInputActions.Enable();
         playerInputActions.MenuActionMap.Disable();

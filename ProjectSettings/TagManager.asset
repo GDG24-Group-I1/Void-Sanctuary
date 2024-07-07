@@ -16,6 +16,8 @@ TagManager:
   - rooms
   - Ligth
   - InputHandler
+  - Projectile
+  - Enemy
   layers:
   - Default
   - TransparentFX

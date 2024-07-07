@@ -104,7 +104,15 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
 
     public FiringStage firingStage { get; private set; } = FiringStage.notFiring;
 
-    public PowerUpHolder TouchedPowerup { get; set; }
+    public PowerUpHolder _touchedPowerup;
+    public PowerUpHolder TouchedPowerup
+    {
+        get => _touchedPowerup; set
+        {
+            if (isPickingUpItem) return; // if the player is already picking up an item, don't change it.
+            _touchedPowerup = value;
+        }
+    }
 
     private float movementSpeed;
     private bool canMove = true;
@@ -114,6 +122,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
     private bool canAttack = true;
     private bool canDash = true;
     private bool executeDash = false;
+    private bool isPickingUpItem = false;
     private Timer movementCooldownTimer;
     private Timer turningCooldownTimer;
     private Timer actionCooldownTimer;
@@ -390,12 +399,14 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
         }
         else if (firingStage == FiringStage.aiming)
         {
-            Vector3 mousePosition = gameInput.GetMousePosition();
-            Ray ray = Camera.main.ScreenPointToRay(mousePosition);
-            if (Physics.Raycast(ray, out RaycastHit hit))
-            {
-                transform.LookAt(new Vector3(hit.point.x, transform.position.y, hit.point.z));
-            }
+            var mousePosition = gameInput.GetMousePosition();
+            var distance = Vector3.Distance(transform.position, cameraTransform.position);
+            var worldPosition = Camera.main.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, distance));
+            transform.LookAt(worldPosition.CopyWith(y: transform.position.y));
+        }
+        if (isPickingUpItem)
+        {
+            transform.LookAt(TouchedPowerup.transform.position.CopyWith(y: transform.position.y));
         }
     }
 
@@ -693,11 +704,12 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
     }
 
     public void PickupItem()
-    { 
+    {
         weaponSprites.Add(TouchedPowerup.Powerup);
         Destroy(TouchedPowerup.gameObject);
-        TouchedPowerup = null;
         canMove = true;
+        isPickingUpItem = false;
+        TouchedPowerup = null;
     }
 
     public void OnDestroy()
@@ -806,6 +818,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
             {
                 animator.SetPickup();
                 canMove = false;
+                isPickingUpItem = true;
             }
             var handler = dialogBox.GetComponent<DialogHandler>();
             if (!gameInput.IsKeyboardMovement && handler.IsInDialog && handler.IsDialogDismissable)
@@ -837,12 +850,14 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
                 var newMaterial = weaponMaterials.First(mat => mat.name == "GlowLaser");
                 renderer.SwitchMaterial(materialToSwitch, newMaterial);
                 aimLaserRenderer.sharedMaterial = newMaterial;
-            } else if (weaponSprites[weaponIndex].name == IceSpriteName)
+            }
+            else if (weaponSprites[weaponIndex].name == IceSpriteName)
             {
                 var newMaterial = weaponMaterials.First(mat => mat.name == "light");
                 renderer.SwitchMaterial(materialToSwitch, newMaterial);
                 aimLaserRenderer.sharedMaterial = newMaterial;
-            } else if (weaponSprites[weaponIndex].name == MagnetSpriteName)
+            }
+            else if (weaponSprites[weaponIndex].name == MagnetSpriteName)
             {
                 var newMaterial = weaponMaterials.First(mat => mat.name == "GlowMagnet");
                 renderer.SwitchMaterial(materialToSwitch, newMaterial);
