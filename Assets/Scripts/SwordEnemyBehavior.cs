@@ -25,7 +25,7 @@ public enum SearchState
 
 public class SwordEnemyBehavior : MonoBehaviour
 {
-    private EnemyState enemyState = EnemyState.Resting;
+    [SerializeField] private EnemyState enemyState = EnemyState.Resting;
     private SearchState searchState = SearchState.notSearching;
     private Vector3 startingPosition;
     private Vector3 playerPosition;
@@ -106,7 +106,7 @@ public class SwordEnemyBehavior : MonoBehaviour
     void Update()
     {
         //Debug.Log($"state: {enemyState} - {searchState}");
-        //Debug.DrawRay(targetPosition, Vector3.up * 5, UnityEngine.Color.blue);
+        Debug.DrawRay(targetPosition, Vector3.up * 5, UnityEngine.Color.blue);
         switch (enemyState)
         {
             case EnemyState.Aggro:
@@ -142,7 +142,7 @@ public class SwordEnemyBehavior : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            FindPlayerPosition();
+            playerPosition = other.gameObject.transform.position;
             //if the view is obstructed, player is not detected
             if (!Physics.Linecast(transform.position, playerPosition))
             {
@@ -158,7 +158,7 @@ public class SwordEnemyBehavior : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            FindPlayerPosition();
+            playerPosition = other.gameObject.transform.position;
             if (!CheckWall(transform.position, playerPosition))
             {
                 enemyState = EnemyState.Aggro;
@@ -186,13 +186,6 @@ public class SwordEnemyBehavior : MonoBehaviour
             searchState = SearchState.Moving;
             searchTimer.Start(searchDuration);
         }
-    }
-
-    void FindPlayerPosition()
-    {
-        var player = GameObject.FindGameObjectsWithTag("Player");
-        if (player.Length > 0)
-            playerPosition = player[0].transform.position;
     }
 
     void Attack()
@@ -296,7 +289,7 @@ public class SwordEnemyBehavior : MonoBehaviour
                 break;
         }
 
-        if (!Physics.Linecast(transform.position, calculatedTargetPosition))
+        if (!CheckWall(transform.position, calculatedTargetPosition))
         {
             var hasHit = Physics.Raycast(calculatedTargetPosition, Vector3.down, out RaycastHit _, 5f);
             if (!hasHit)

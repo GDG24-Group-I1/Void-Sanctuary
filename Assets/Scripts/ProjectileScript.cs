@@ -5,14 +5,12 @@ using UnityEngine;
 public class ProjectileScript : MonoBehaviour
 {
     [SerializeField] private float projectileSpeed = 30f;
-    [SerializeField] private float minCollisionDistance = 1f;
     [SerializeField] private GameObject IceCube;
-    private Vector3 startingPosition;
     public Vector3 endingPosition;
 
     void Start()
     {
-        startingPosition = transform.position;
+
     }
 
     void Update()
@@ -22,15 +20,12 @@ public class ProjectileScript : MonoBehaviour
 
     private void OnCollisionEnter(Collision other)
     {
-        var distance = Mathf.Sqrt(Mathf.Pow(transform.position.x - startingPosition.x, 2) + Mathf.Pow(transform.position.z - startingPosition.z, 2));
-        if (distance > minCollisionDistance)
+        Debug.Log($"projectile hit: {other.gameObject.name}");
+        if (IceCube != null && other.gameObject.CompareTag("Enemy"))
         {
-            if (IceCube != null && other.gameObject.CompareTag("Enemy"))
-            {
-                Instantiate(IceCube, other.transform.position, other.transform.rotation, other.transform);
-            }
-            Destroy(gameObject);
+            Instantiate(IceCube, other.transform.position, other.transform.rotation, other.transform);
         }
+        Destroy(gameObject);
     }
 
     void projectileMove()

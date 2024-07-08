@@ -27,6 +27,7 @@ public class ProjectileEnemyBehavior : MonoBehaviour
 {
     [SerializeField] private GameObject projectilePrefab;
     private float projectileHeight = 0.8f;
+    private float projectileRange = 15f;
 
     private EnemyState enemyState = EnemyState.Resting;
     private SearchState searchState = SearchState.notSearching;
@@ -110,7 +111,7 @@ public class ProjectileEnemyBehavior : MonoBehaviour
     void Update()
     {
         //Debug.Log($"state: {enemyState} - {searchState}");
-        //Debug.DrawRay(targetPosition, Vector3.up * 5, UnityEngine.Color.blue);
+        //Debug.DrawRay(targetPosition, Vector3.up * 5, UnityEngine.Color.green);
         switch (enemyState)
         {
             case EnemyState.Aggro:
@@ -145,7 +146,7 @@ public class ProjectileEnemyBehavior : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            FindPlayerPosition();
+            playerPosition = other.gameObject.transform.position;
             //if the view is obstructed, player is not detected
             if (!CheckWall(transform.position, playerPosition))
             {
@@ -162,7 +163,7 @@ public class ProjectileEnemyBehavior : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            FindPlayerPosition();
+            playerPosition = other.gameObject.transform.position;
             if (!CheckWall(transform.position, playerPosition))
             {
                 enemyState = EnemyState.Aggro;
@@ -192,19 +193,19 @@ public class ProjectileEnemyBehavior : MonoBehaviour
         }
     }
 
-    void FindPlayerPosition()
-    {
-        var player = GameObject.FindGameObjectsWithTag("Player");
-        if (player.Length > 0)
-            playerPosition = player[0].transform.position;
-    }
-
     void Attack()
     {
         Debug.Log("attacking player");
         var startingPosition = new Vector3(transform.position.x, projectileHeight, transform.position.z);
-        var endingPosition = new Vector3(playerPosition.x, projectileHeight, playerPosition.z);
-        Vector3 projectilePosition = startingPosition + transform.forward;
+        
+        var targetAngle = Math.Atan2((float)(transform.position.x - playerPosition.x), (float)(transform.position.z - playerPosition.z));
+        var targetX = -Mathf.Sin((float)targetAngle) * projectileRange + transform.position.x;
+        var targetZ = -Mathf.Cos((float)targetAngle) * projectileRange + transform.position.z;
+
+        var endingPosition = new Vector3(targetX, projectileHeight, targetZ);
+        Debug.Log($"targeting: {endingPosition}");
+
+        Vector3 projectilePosition = startingPosition + transform.forward * 1.5f;
         var rotation = transform.rotation;
         GameObject projectile = Instantiate(projectilePrefab, projectilePosition, rotation * Quaternion.Euler(90, 0, 0));
         var projectileScript = projectile.GetComponent<ProjectileScript>();
@@ -316,10 +317,9 @@ public class ProjectileEnemyBehavior : MonoBehaviour
                 break;
         }
 
-        if (!Physics.Linecast(transform.position, calculatedTargetPosition))
+        if (!CheckWall(transform.position, calculatedTargetPosition))
         {
-            var groundLayer = LayerMask.NameToLayer("groundLayer");
-            var hasHit = Physics.Raycast(calculatedTargetPosition, Vector3.down, out RaycastHit hit, 5f);
+            var hasHit = Physics.Raycast(calculatedTargetPosition, Vector3.down, out RaycastHit _, 5f);
             if (!hasHit)
             {
                 Debug.Log($"invalid targetPosition");

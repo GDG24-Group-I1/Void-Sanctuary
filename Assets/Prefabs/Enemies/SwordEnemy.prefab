@@ -153,9 +153,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2947dbafd4f63941ac6ae5ee5ee967e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemyState: 3
   movementSpeed: 9
-  attackRange: 5
-  engagementRange: 4
+  attackRange: 4.5
+  engagementRange: 3.5
 --- !u!114 &2388267972546752669
 MonoBehaviour:
   m_ObjectHideFlags: 0
