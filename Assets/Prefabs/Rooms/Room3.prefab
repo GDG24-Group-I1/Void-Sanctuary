@@ -352,6 +352,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2697657399250429576}
+  - component: {fileID: 8786873623718351512}
+  - component: {fileID: 4982493140948279614}
   m_Layer: 0
   m_Name: Room3
   m_TagString: rooms
@@ -410,6 +412,39 @@ Transform:
   - {fileID: 4955455836683653582}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8786873623718351512
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9087818826114105233}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26122340b513a024a8ba90083ef7b219, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!65 &4982493140948279614
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9087818826114105233}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 92.88219, y: 9.014051, z: 97.85939}
+  m_Center: {x: 17.425926, y: 4.0070257, z: -28.212181}
 --- !u!1001 &9055044469751555
 PrefabInstance:
   m_ObjectHideFlags: 0

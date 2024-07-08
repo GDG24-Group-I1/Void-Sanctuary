@@ -214,8 +214,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 41.360077, y: 8.767276, z: 40.836792}
-  m_Center: {x: -4.8994007, y: 3.8836389, z: -0.07946396}
+  m_Size: {x: 44.44125, y: 8.767276, z: 40.836792}
+  m_Center: {x: -6.4399743, y: 3.8836389, z: -0.07946396}
 --- !u!114 &-5748205298236840265
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -228,7 +228,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26122340b513a024a8ba90083ef7b219, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rooms: []
 --- !u!1001 &215219173721531498
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -160,6 +160,7 @@ GameObject:
   - component: {fileID: 265799939959398738}
   - component: {fileID: 265799939956226796}
   - component: {fileID: 2740252595036166316}
+  - component: {fileID: 8004442983971484451}
   m_Layer: 0
   m_Name: doorLi
   m_TagString: Untagged
@@ -299,6 +300,19 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 4, y: 4.290932, z: 4.6163197}
   m_Center: {x: -2.0645221e-16, y: 1.9020936, z: -0.047972202}
+--- !u!114 &8004442983971484451
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 265799939950006820}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 262b3cf86f9245443a120f06d949910e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 0}
 --- !u!1 &265799939950012826
 GameObject:
   m_ObjectHideFlags: 0
