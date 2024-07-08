@@ -25,6 +25,7 @@ public class ProjectileScript : MonoBehaviour
         {
             Instantiate(IceCube, other.transform.position, other.transform.rotation, other.transform);
         }
+
         Destroy(gameObject);
     }
 

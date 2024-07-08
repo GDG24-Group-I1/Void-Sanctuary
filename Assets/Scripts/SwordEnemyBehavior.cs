@@ -66,7 +66,7 @@ public class SwordEnemyBehavior : MonoBehaviour
         targetPosition = transform.position;
         startingPosition = transform.position;
         rb = GetComponent<Rigidbody>();
-        aggroRange = GetComponent<SphereCollider>().radius;
+        aggroRange = GetComponentInChildren<SphereCollider>().radius;
 
         attackCooldownTimer = new Timer(this)
         {
