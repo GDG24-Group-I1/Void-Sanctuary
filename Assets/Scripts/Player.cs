@@ -5,6 +5,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering.PostProcessing;
 using UnityEngine.UI;
 
 public enum ComboState
@@ -69,6 +70,9 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
     public GameObject dashLoaderBorder;
     public Image uiWeaponImage;
 
+    private GameObject[] movableObjects;
+    private GameObject[] visibleMovableObjects;
+    private int currentMovableObject;
     private bool IsSwordGlowing = false;
     private LineRenderer aimLaserRenderer;
     private GameObject sword;
@@ -78,6 +82,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
     private BoxCollider swordCollider;
     private GameInput gameInput;
     private Slider healthSlider;
+    private PostProcessEffectSettings outlineEffect;
 
     private Rigidbody rb;
     private int frameNotGrounded;
@@ -151,6 +156,11 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
         Assert.IsNotNull(healthBar, "HEALTH BAR IS NOT SET IN THE PLAYER OBJECT IN THE SCENE, PUT THE Canvas->HealthBar OBJECT IN THE Health Bar SLOT ON THIS GAME OBJECT");
         Assert.IsNotNull(loaderBorder, "LOADER BORDER IS NOT SET IN PLAYER OBJECT IN THE SCENE, PUT THE Canvas->Loader->LoaderBorder IN THE Loader Border SLOT ON THIS GAME OBJECT");
         Assert.IsNotNull(dashLoaderBorder, "DASH LOADER BORDER IS NOT SET IN PLAYER OBJECT IN THE SCENE, PUT THE Canvas->DashLoader->DashLoaderBorder IN THE Dash Loader Border SLOT ON THIS GAME OBJECT");
+        movableObjects = GameObject.FindGameObjectsWithTag("MovableObject");
+        visibleMovableObjects = Array.Empty<GameObject>();
+        currentMovableObject = -1;
+        outlineEffect = Camera.main.GetComponent<PostProcessVolume>().profile.settings.First(x => x.name.StartsWith("OutlineEffect"));
+        outlineEffect.enabled.value = false;
         uiWeaponImage.sprite = weaponSprites[weaponIndex];
         gameInput = GameObject.FindWithTag("InputHandler").GetComponent<GameInput>();
         gameInput.RegisterPlayer(this);
@@ -349,6 +359,8 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
         moveDir.y = 0;
         rotateDir = moveDir;
 
+        Vector3 objMoveDir = moveDir;
+
         // Check if movement is disabled
         if (!canMove)
         {
@@ -391,6 +403,23 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
             IsRunning = false;
         }
 
+        if (currentMovableObject != -1)
+        {
+            var obj = visibleMovableObjects[currentMovableObject];
+            if (obj.TryGetComponent<Rigidbody>(out var rb))
+            {
+                Vector3 objTargetVelocity = objMoveDir * movementSpeed;
+                Vector3 objVelocityChange = objTargetVelocity - rb.velocity;
+                objVelocityChange.y = 0;
+                rb.freezeRotation = true;
+                rb.excludeLayers = LayerMask.GetMask("playerLayer");
+                rb.AddForce(objVelocityChange, ForceMode.VelocityChange);
+            } else
+            {
+                Debug.LogError("Movable object does not have a rigidbody!");
+            }
+        }
+
         // Smoothly rotate player towards movement direction
         if (canMove || (!gameInput.IsKeyboardMovement && firingStage == FiringStage.aiming))
         {
@@ -408,6 +437,10 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
         {
             transform.LookAt(TouchedPowerup.transform.position.CopyWith(y: transform.position.y));
         }
+        if (currentMovableObject != -1)
+        {
+            transform.LookAt(visibleMovableObjects[currentMovableObject].transform.position.CopyWith(y: transform.position.y));
+        }
     }
 
     private void Attack()
@@ -420,12 +453,37 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
         canMove = false;
     }
 
+    private bool FilterVisibleMovableObjects(GameObject obj)
+    {
+        if (!obj.activeSelf) return false;
+        if (obj.TryGetComponent<Renderer>(out var renderer))
+        {
+            if (!renderer.isVisible) return false;
+        }
+        // Debug.DrawLine(sword.transform.position, obj.transform.position, Color.red, 10f);
+        var hit = Physics.Linecast(sword.transform.position, obj.transform.position, LayerMask.GetMask("groundLayer", "wallLayer"));
+        return !hit;
+    }
+
     private void Aim()
     {
         if (!canFire || !canAct)
             return;
         aimLaserRenderer.enabled = true;
         firingStage = FiringStage.aiming;
+
+        if (weaponSprites[weaponIndex].name == MagnetSpriteName)
+        {
+            visibleMovableObjects = movableObjects.Where(x => FilterVisibleMovableObjects(x)).OrderBy(x => Vector3.Distance(x.transform.position, transform.position)).ToArray();
+            if (visibleMovableObjects.Length != 0)
+            {
+                currentMovableObject = 0;
+            }
+            else
+            {
+                currentMovableObject = -1;
+            }
+        }
     }
 
     private void Fire()
@@ -505,6 +563,25 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
         FireProjectileCommon();
     }
 
+    private void FireMagnetProjectile()
+    {
+        if (currentMovableObject != -1)
+        {
+            var obj = visibleMovableObjects[currentMovableObject];
+            if (obj.TryGetComponent<Rigidbody>(out var rb))
+            {
+                rb.excludeLayers = LayerMask.GetMask();
+                rb.freezeRotation = false;
+            }
+            else
+            {
+                Debug.LogError("Movable object does not have a rigidbody!");
+            }
+        }
+        currentMovableObject = -1;
+        FireProjectileCommon();
+    }
+
     private void FiringSequence()
     {
         Vector3 playerFacing = transform.forward;
@@ -512,7 +589,25 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
         {
             //stop movement while aiming projectile
             case FiringStage.aiming:
-                aimLaserRenderer.SetPosition(1, new Vector3(0.05f, .5f, -100));
+                if (weaponSprites[weaponIndex].name == MagnetSpriteName)
+                {
+                    const int nPoints = 100;
+                    if (currentMovableObject == -1) return;
+                    var source = aimLaserRenderer.GetPosition(0);
+                    var target = aimLaserRenderer.transform.InverseTransformPoint(visibleMovableObjects[currentMovableObject].transform.position);
+                    aimLaserRenderer.positionCount = nPoints;
+                    for (int i = 1; i < nPoints - 1; i++)
+                    {
+                        var intermediate = Vector3.Lerp(source, target, i / 100f) + VectorExtensions.Random(0.5f);
+                        aimLaserRenderer.SetPosition(i, intermediate);
+                    }
+                    aimLaserRenderer.SetPosition(nPoints - 1, target);
+                }
+                else
+                {
+                    aimLaserRenderer.positionCount = 2;
+                    aimLaserRenderer.SetPosition(1, new Vector3(0.05f, .5f, -100));
+                }
                 canMove = false;
                 break;
             //hold still while charging projectile
@@ -537,6 +632,9 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
                 else if (weaponSprites[weaponIndex].name == IceSpriteName)
                 {
                     FireIceProjectile();
+                } else if (weaponSprites[weaponIndex].name == MagnetSpriteName)
+                {
+                    FireMagnetProjectile();
                 }
                 break;
             //knockback
@@ -832,6 +930,8 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
     {
         if (context.performed)
         {
+            if (firingStage != FiringStage.notFiring)
+                return;
             float value = context.ReadValue<float>();
             var direction = value > 0 ? Direction.Down : Direction.Up;
             if (direction == Direction.Down)
@@ -850,18 +950,37 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
                 var newMaterial = weaponMaterials.First(mat => mat.name == "GlowLaser");
                 renderer.SwitchMaterial(materialToSwitch, newMaterial);
                 aimLaserRenderer.sharedMaterial = newMaterial;
+                outlineEffect.enabled.value = false;
+                currentMovableObject = -1;
             }
             else if (weaponSprites[weaponIndex].name == IceSpriteName)
             {
                 var newMaterial = weaponMaterials.First(mat => mat.name == "light");
                 renderer.SwitchMaterial(materialToSwitch, newMaterial);
                 aimLaserRenderer.sharedMaterial = newMaterial;
+                outlineEffect.enabled.value = false;
+                currentMovableObject = -1;
             }
             else if (weaponSprites[weaponIndex].name == MagnetSpriteName)
             {
                 var newMaterial = weaponMaterials.First(mat => mat.name == "GlowMagnet");
                 renderer.SwitchMaterial(materialToSwitch, newMaterial);
                 aimLaserRenderer.sharedMaterial = newMaterial;
+                outlineEffect.enabled.value = true;
+            }
+        }
+    }
+
+    public void OnSwitchAimedObject(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            if (firingStage != FiringStage.aiming || currentMovableObject == -1 || visibleMovableObjects.Length == 0)
+                return;
+            currentMovableObject = (currentMovableObject + 1) % visibleMovableObjects.Length;
+            while (!visibleMovableObjects[currentMovableObject].activeSelf)
+            {
+                currentMovableObject = (currentMovableObject + 1) % visibleMovableObjects.Length;
             }
         }
     }

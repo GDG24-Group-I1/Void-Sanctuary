@@ -92,6 +92,14 @@ public static class VectorExtensions
     {
         return new Vector3(x ?? vector.x, y ?? vector.y, z ?? vector.z);
     }
+
+    public static Vector3 Random(float range)
+    {
+        var x = UnityEngine.Random.Range(-range, range);
+        var y = UnityEngine.Random.Range(-range, range);
+        var z = UnityEngine.Random.Range(-range, range);
+        return new Vector3(x, y, z);
+    }
 }
 
 public static class CachedResources

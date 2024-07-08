@@ -1695,7 +1695,9 @@ MonoBehaviour:
   breakBeforeColorGrading: 0
   m_BeforeTransparentBundles: []
   m_BeforeStackBundles: []
-  m_AfterStackBundles: []
+  m_AfterStackBundles:
+  - assemblyQualifiedName: OutlineEffect, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
 --- !u!114 &2063824678
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2366,4 +2368,3 @@ SceneRoots:
   - {fileID: 4238555537838564503}
   - {fileID: 1731444635714600026}
   - {fileID: 7591091107491230240}
-  - {fileID: 1133674372}

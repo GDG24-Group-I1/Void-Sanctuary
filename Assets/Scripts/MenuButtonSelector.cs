@@ -45,7 +45,7 @@ public class MenuButtonSelector : MonoBehaviour
 
     private void AddOutline(GameObject obj)
     {
-        var outline = obj.GetComponentInChildren<Outline>();
+        var outline = obj.GetComponentInChildren<UnityEngine.UI.Outline>();
         if (outline != null)
         {
             outline.enabled = true;
@@ -56,10 +56,10 @@ public class MenuButtonSelector : MonoBehaviour
             var image = obj.GetComponentInChildren<Image>();
             if (image != null)
             {
-                outline = image.gameObject.AddComponent<Outline>();
+                outline = image.gameObject.AddComponent<UnityEngine.UI.Outline>();
             } else if (text != null)
             {
-                outline = text.gameObject.AddComponent<Outline>();
+                outline = text.gameObject.AddComponent<UnityEngine.UI.Outline>();
             }
             if (outline != null)
             {
@@ -81,7 +81,7 @@ public class MenuButtonSelector : MonoBehaviour
         }
         if (oldIndex != selectedObjectIndex)
         {
-            var outline = currentSelectedObject.GetComponentInChildren<Outline>();
+            var outline = currentSelectedObject.GetComponentInChildren<UnityEngine.UI.Outline>();
             if (outline != null)
             {
                 outline.enabled = false;

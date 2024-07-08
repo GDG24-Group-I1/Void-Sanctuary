@@ -18,6 +18,7 @@ TagManager:
   - InputHandler
   - Projectile
   - Enemy
+  - MovableObject
   layers:
   - Default
   - TransparentFX

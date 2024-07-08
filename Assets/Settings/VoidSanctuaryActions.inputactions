@@ -153,6 +153,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "SwitchAimedObject",
+                    "type": "Button",
+                    "id": "3c64ea0d-c7a7-43d1-8490-9b0592e61501",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -461,6 +470,39 @@
                     "processors": "",
                     "groups": "",
                     "action": "ChangeEquippedWeapon",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a217aa04-ea5f-4261-8567-7db10656b16c",
+                    "path": "<Keyboard>/q",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SwitchAimedObject",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8bda378b-48b6-4a5f-9ab5-89849d7132fa",
+                    "path": "<Gamepad>/leftStickPress",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SwitchAimedObject",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "5a59dc1c-d0de-4180-b4af-8795478d4eb7",
+                    "path": "<Keyboard>/tab",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SwitchAimedObject",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
