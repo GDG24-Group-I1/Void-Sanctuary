@@ -132,15 +132,6 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""DrawWeapon"",
-                    ""type"": ""Button"",
-                    ""id"": ""eaddbf77-3a63-46e7-ac47-8138dc802ad1"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
                     ""name"": ""Dash"",
                     ""type"": ""Button"",
                     ""id"": ""6f452dbe-afcb-4cff-be87-053005122fcc"",
@@ -166,6 +157,24 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Interact"",
+                    ""type"": ""Button"",
+                    ""id"": ""226eda28-cb4b-45c1-965e-4b0c782e1b24"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ChangeEquippedWeapon"",
+                    ""type"": ""Button"",
+                    ""id"": ""f7247064-3cd8-4ad9-a0bd-e2344a29a205"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -336,28 +345,6 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""e9af9bb1-ff5c-40b0-8f57-731c12560bd4"",
-                    ""path"": ""<Gamepad>/buttonNorth"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""DrawWeapon"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""9482b8bc-6542-4e20-948c-bf7a5d185295"",
-                    ""path"": ""<Keyboard>/tab"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""DrawWeapon"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""ec8737b5-3378-4c90-845c-89963f652c1e"",
                     ""path"": ""<Keyboard>/space"",
                     ""interactions"": """",
@@ -397,6 +384,105 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""MousePosition"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""dc978922-ff50-4ab4-b2f2-87f72402edc0"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Interact"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6eca0db5-f3e8-4bcb-a024-ae4b4e687487"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Interact"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""1D Axis"",
+                    ""id"": ""10b2a7b1-fa1f-4ec7-a472-955543640d99"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ChangeEquippedWeapon"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""b9b81606-6491-4998-af67-83b26952af7b"",
+                    ""path"": ""<Gamepad>/dpad/up"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ChangeEquippedWeapon"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""14addd65-a6c3-4d22-9eb9-4f547ec2f990"",
+                    ""path"": ""<Gamepad>/dpad/down"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ChangeEquippedWeapon"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""1D Axis"",
+                    ""id"": ""bc506522-4409-4f36-a6eb-36c0a0598a6e"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ChangeEquippedWeapon"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""e1937ae8-3aeb-41ff-aeb8-2d72674d3c85"",
+                    ""path"": ""<Keyboard>/upArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ChangeEquippedWeapon"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""6ad1e5b7-ece9-480a-ac69-fd373dc5823c"",
+                    ""path"": ""<Keyboard>/downArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ChangeEquippedWeapon"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7c5ca5f6-dac6-446f-b641-add7fc19a26f"",
+                    ""path"": ""<Keyboard>/tab"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ChangeEquippedWeapon"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -583,10 +669,11 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
         m_Player_Fire = m_Player.FindAction("Fire", throwIfNotFound: true);
         m_Player_Block = m_Player.FindAction("Block", throwIfNotFound: true);
         m_Player_Run = m_Player.FindAction("Run", throwIfNotFound: true);
-        m_Player_DrawWeapon = m_Player.FindAction("DrawWeapon", throwIfNotFound: true);
         m_Player_Dash = m_Player.FindAction("Dash", throwIfNotFound: true);
         m_Player_FakeHit = m_Player.FindAction("FakeHit", throwIfNotFound: true);
         m_Player_MousePosition = m_Player.FindAction("MousePosition", throwIfNotFound: true);
+        m_Player_Interact = m_Player.FindAction("Interact", throwIfNotFound: true);
+        m_Player_ChangeEquippedWeapon = m_Player.FindAction("ChangeEquippedWeapon", throwIfNotFound: true);
         // MenuActionMap
         m_MenuActionMap = asset.FindActionMap("MenuActionMap", throwIfNotFound: true);
         m_MenuActionMap_TriggerCurrentButton = m_MenuActionMap.FindAction("TriggerCurrentButton", throwIfNotFound: true);
@@ -712,10 +799,11 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Fire;
     private readonly InputAction m_Player_Block;
     private readonly InputAction m_Player_Run;
-    private readonly InputAction m_Player_DrawWeapon;
     private readonly InputAction m_Player_Dash;
     private readonly InputAction m_Player_FakeHit;
     private readonly InputAction m_Player_MousePosition;
+    private readonly InputAction m_Player_Interact;
+    private readonly InputAction m_Player_ChangeEquippedWeapon;
     public struct PlayerActions
     {
         private @VoidSanctuaryActions m_Wrapper;
@@ -725,10 +813,11 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
         public InputAction @Fire => m_Wrapper.m_Player_Fire;
         public InputAction @Block => m_Wrapper.m_Player_Block;
         public InputAction @Run => m_Wrapper.m_Player_Run;
-        public InputAction @DrawWeapon => m_Wrapper.m_Player_DrawWeapon;
         public InputAction @Dash => m_Wrapper.m_Player_Dash;
         public InputAction @FakeHit => m_Wrapper.m_Player_FakeHit;
         public InputAction @MousePosition => m_Wrapper.m_Player_MousePosition;
+        public InputAction @Interact => m_Wrapper.m_Player_Interact;
+        public InputAction @ChangeEquippedWeapon => m_Wrapper.m_Player_ChangeEquippedWeapon;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -753,9 +842,6 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
             @Run.started += instance.OnRun;
             @Run.performed += instance.OnRun;
             @Run.canceled += instance.OnRun;
-            @DrawWeapon.started += instance.OnDrawWeapon;
-            @DrawWeapon.performed += instance.OnDrawWeapon;
-            @DrawWeapon.canceled += instance.OnDrawWeapon;
             @Dash.started += instance.OnDash;
             @Dash.performed += instance.OnDash;
             @Dash.canceled += instance.OnDash;
@@ -765,6 +851,12 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
             @MousePosition.started += instance.OnMousePosition;
             @MousePosition.performed += instance.OnMousePosition;
             @MousePosition.canceled += instance.OnMousePosition;
+            @Interact.started += instance.OnInteract;
+            @Interact.performed += instance.OnInteract;
+            @Interact.canceled += instance.OnInteract;
+            @ChangeEquippedWeapon.started += instance.OnChangeEquippedWeapon;
+            @ChangeEquippedWeapon.performed += instance.OnChangeEquippedWeapon;
+            @ChangeEquippedWeapon.canceled += instance.OnChangeEquippedWeapon;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -784,9 +876,6 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
             @Run.started -= instance.OnRun;
             @Run.performed -= instance.OnRun;
             @Run.canceled -= instance.OnRun;
-            @DrawWeapon.started -= instance.OnDrawWeapon;
-            @DrawWeapon.performed -= instance.OnDrawWeapon;
-            @DrawWeapon.canceled -= instance.OnDrawWeapon;
             @Dash.started -= instance.OnDash;
             @Dash.performed -= instance.OnDash;
             @Dash.canceled -= instance.OnDash;
@@ -796,6 +885,12 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
             @MousePosition.started -= instance.OnMousePosition;
             @MousePosition.performed -= instance.OnMousePosition;
             @MousePosition.canceled -= instance.OnMousePosition;
+            @Interact.started -= instance.OnInteract;
+            @Interact.performed -= instance.OnInteract;
+            @Interact.canceled -= instance.OnInteract;
+            @ChangeEquippedWeapon.started -= instance.OnChangeEquippedWeapon;
+            @ChangeEquippedWeapon.performed -= instance.OnChangeEquippedWeapon;
+            @ChangeEquippedWeapon.canceled -= instance.OnChangeEquippedWeapon;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -887,10 +982,11 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
         void OnFire(InputAction.CallbackContext context);
         void OnBlock(InputAction.CallbackContext context);
         void OnRun(InputAction.CallbackContext context);
-        void OnDrawWeapon(InputAction.CallbackContext context);
         void OnDash(InputAction.CallbackContext context);
         void OnFakeHit(InputAction.CallbackContext context);
         void OnMousePosition(InputAction.CallbackContext context);
+        void OnInteract(InputAction.CallbackContext context);
+        void OnChangeEquippedWeapon(InputAction.CallbackContext context);
     }
     public interface IMenuActionMapActions
     {

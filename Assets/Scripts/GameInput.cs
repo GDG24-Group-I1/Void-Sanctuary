@@ -1,27 +1,26 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 using static UnityEngine.InputSystem.InputAction;
 
 public class GameInput : MonoBehaviour, IDataPersistence
 {
     private VoidSanctuaryActions playerInputActions;
-
-    private InputAction _attackAction;
-    private InputAction _fireAction;
-    private InputAction _blockAction;
-    private InputAction _runAction;
-    private InputAction _drawWeaponAction;
-    private InputAction _dashAction;
-    private InputAction _fakeHitAction;
     public bool IsKeyboardMovement { get; private set; }
     public bool HoldDownToRun { get; private set; } = true;
     public bool SlowDownAttack { get; private set; } = true;
     public bool DrawDebugRays { get; private set; } = false;
 
+    public Observable<ControlType> CurrentControl { get; } = ControlType.Mouse;
+
     private GameObject pauseMenu;
+    private GameObject dialogBox;
+    private Image psControllerImage;
+    private Image xboxControllerImage;
 
 
     public void LoadData(GameData data)
@@ -42,9 +41,13 @@ public class GameInput : MonoBehaviour, IDataPersistence
     private void Start()
     {
         pauseMenu = GameObjectExtensions.FindInactive("PauseMenu", "GameUI");
+        dialogBox = GameObjectExtensions.FindInactive("DialogBox", "GameUI");
         if (pauseMenu != null)
         {
             pauseMenu.SetActive(false);
+            var images = pauseMenu.GetComponentsInChildren<Image>(true);
+            psControllerImage = images.First(x => x.name == "PSController");
+            xboxControllerImage = images.First(x => x.name == "XboxController");
         }
     }
 
@@ -65,14 +68,32 @@ public class GameInput : MonoBehaviour, IDataPersistence
             playerInputActions.MenuActionMap.Enable();
         }
         pauseMenu.SetActive(!pauseMenu.activeSelf);
+        dialogBox.SetActive(!dialogBox.activeSelf);
         if (pauseMenu.activeSelf)
         {
-            pauseMenu.GetComponentInChildren<UnityEngine.UI.Toggle>().isOn = HoldDownToRun;
+            pauseMenu.GetComponentInChildren<Toggle>().isOn = HoldDownToRun;
+            switch (CurrentControl.value)
+            {
+                case ControlType.Mouse:
+                    psControllerImage.color = psControllerImage.color.CopyWithAlpha(0.3f);
+                    xboxControllerImage.color = xboxControllerImage.color.CopyWithAlpha(0.3f);
+                    break;
+                case ControlType.PSController:
+                    psControllerImage.color = psControllerImage.color.CopyWithAlpha(1f);
+                    xboxControllerImage.color = xboxControllerImage.color.CopyWithAlpha(0.3f);
+                    break;
+                case ControlType.OtherController:
+                case ControlType.XboxController:
+                    psControllerImage.color = psControllerImage.color.CopyWithAlpha(0.3f);
+                    xboxControllerImage.color = xboxControllerImage.color.CopyWithAlpha(1f);
+                    break;
+            }
         }
     }
 
     private void Awake()
     {
+        IsKeyboardMovement = true;
         playerInputActions = new VoidSanctuaryActions();
         playerInputActions.Enable();
         playerInputActions.MenuActionMap.Disable();
@@ -92,21 +113,22 @@ public class GameInput : MonoBehaviour, IDataPersistence
         };
         playerInputActions.Player.Move.performed += (context) =>
         {
-            if (context.control.device is Keyboard or Mouse) IsKeyboardMovement = true;
-            else IsKeyboardMovement = false;
+            if (context.control.device is Keyboard or Mouse) { 
+                IsKeyboardMovement = true; 
+                CurrentControl.Value = ControlType.Mouse;
+            }
+            else { 
+                IsKeyboardMovement = false; 
+                if (context.control.device.displayName.Contains("DualSense"))
+                {
+                    CurrentControl.Value = ControlType.PSController;
+                } else
+                {
+                    CurrentControl.Value = ControlType.XboxController;
+                }
+            }
+
         };
-
-        _attackAction = playerInputActions.Player.Attack;
-
-        _fireAction = playerInputActions.Player.Fire;
-
-        _blockAction = playerInputActions.Player.Block;
-
-        _runAction = playerInputActions.Player.Run;
-           
-        _drawWeaponAction = playerInputActions.Player.DrawWeapon;
-        _dashAction = playerInputActions.Player.Dash;
-        _fakeHitAction = playerInputActions.Player.FakeHit;
 
     }
     public Vector2 GetMovementVectorNormalized()

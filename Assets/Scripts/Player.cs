@@ -37,10 +37,17 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
 {
     private const float firingKnockbackSpeed = 0f;
     private const int maxWallsCollided = 10;
+
+    private const string GunSpriteName = "gun";
+    private const string IceSpriteName = "ice";
+    private const string MagnetSpriteName = "magnet";
+
+    [Header("Fixed values set in the prefab\nDo not need to be reset by the Respawner")]
     [SerializeField] private float walkSpeed = 5f;
     [SerializeField] private float runSpeed = 10f;
     [SerializeField] private float groundDrag = 6f;
-    [SerializeField] private GameObject projectilePrefab;
+    [SerializeField] private GameObject damageProjectilePrefab;
+    [SerializeField] private GameObject iceProjectilePrefab;
     [SerializeField] private GameObject trailPrefab;
     [SerializeField] private LayerMask wallLayerMask;
     [SerializeField] private LayerMask groundLayerMask;
@@ -51,18 +58,23 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
     [SerializeField] private Material swordBaseMaterial;
     [SerializeField] private Material swordBackBaseMaterial;
     [SerializeField] private float slowDownFactor = 0.25f;
+    [SerializeField] private List<Sprite> weaponSprites;
+    [SerializeField] private Material[] weaponMaterials;
 
     // these need to be public because they are set by the respawner script since they can't be set in the prefab
+    [Header("Dynamic references to specific object instances in the scene\nNeed to be reset in the Respawner on death")]
     public Transform cameraTransform;
     public GameObject healthBar;
     public GameObject loaderBorder;
+    public GameObject dashLoaderBorder;
+    public Image uiWeaponImage;
 
     private bool IsSwordGlowing = false;
-    private GameObject WeaponOnBack;
-    private GameObject WeaponInHand;
     private LineRenderer aimLaserRenderer;
     private GameObject sword;
     private GameObject swordBack;
+    private GameObject swordPartWithLine;
+    private GameObject dialogBox;
     private BoxCollider swordCollider;
     private GameInput gameInput;
     private Slider healthSlider;
@@ -73,16 +85,16 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
     private Collider[] previousWallsCollided = Array.Empty<Collider>();
     private readonly RaycastHit[] wallsCollided = new RaycastHit[maxWallsCollided];
 
+    private int weaponIndex = 0;
+
     private float fixedDeltaTime;
     public bool IsWalking { get; private set; }
 
+    public bool IsDashing { get; private set; }
+
     public bool IsRunning { get; private set; }
 
-    public bool IsWeaponEquipped { get; private set; }
-
     public bool IsAttacking { get; private set; }
-
-    public bool DashClicked { get; private set; }
 
     public AnimationState IsFalling { get; private set; } = AnimationState.None;
 
@@ -92,6 +104,16 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
 
     public FiringStage firingStage { get; private set; } = FiringStage.notFiring;
 
+    public PowerUpHolder _touchedPowerup;
+    public PowerUpHolder TouchedPowerup
+    {
+        get => _touchedPowerup; set
+        {
+            if (isPickingUpItem) return; // if the player is already picking up an item, don't change it.
+            _touchedPowerup = value;
+        }
+    }
+
     private float movementSpeed;
     private bool canMove = true;
     private bool canTurn = true;
@@ -99,6 +121,8 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
     private bool canFire = true;
     private bool canAttack = true;
     private bool canDash = true;
+    private bool executeDash = false;
+    private bool isPickingUpItem = false;
     private Timer movementCooldownTimer;
     private Timer turningCooldownTimer;
     private Timer actionCooldownTimer;
@@ -106,6 +130,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
     private Timer firingStageCooldown;
     private Timer deathTimer;
     private Timer dashCooldownTimer;
+    private PlayerAnimator animator;
 
 
     private void ResetPlayer()
@@ -122,9 +147,11 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
 
     private void Start()
     {
-        Assert.IsNotNull(cameraTransform, "CAMERA TRANSFORM IS NOT SET IN THE PLAYER OBJECT IN THE SCENE, PUT THE TopDownCamera IN THE CameraTrasform SLOT ON THIS GAMEOBJECT");        
+        Assert.IsNotNull(cameraTransform, "CAMERA TRANSFORM IS NOT SET IN THE PLAYER OBJECT IN THE SCENE, PUT THE TopDownCamera IN THE CameraTrasform SLOT ON THIS GAMEOBJECT");
         Assert.IsNotNull(healthBar, "HEALTH BAR IS NOT SET IN THE PLAYER OBJECT IN THE SCENE, PUT THE Canvas->HealthBar OBJECT IN THE Health Bar SLOT ON THIS GAME OBJECT");
         Assert.IsNotNull(loaderBorder, "LOADER BORDER IS NOT SET IN PLAYER OBJECT IN THE SCENE, PUT THE Canvas->Loader->LoaderBorder IN THE Loader Border SLOT ON THIS GAME OBJECT");
+        Assert.IsNotNull(dashLoaderBorder, "DASH LOADER BORDER IS NOT SET IN PLAYER OBJECT IN THE SCENE, PUT THE Canvas->DashLoader->DashLoaderBorder IN THE Dash Loader Border SLOT ON THIS GAME OBJECT");
+        uiWeaponImage.sprite = weaponSprites[weaponIndex];
         gameInput = GameObject.FindWithTag("InputHandler").GetComponent<GameInput>();
         gameInput.RegisterPlayer(this);
         movementSpeed = walkSpeed;
@@ -138,15 +165,14 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
                 ResetPlayer();
             }
         });
-
+        animator = GetComponentInChildren<PlayerAnimator>();
         var swords = GameObject.FindGameObjectsWithTag("Sword");
         Debug.Assert(swords.Length == 1, "There should be exactly one sword in the scene");
         sword = swords[0];
         swordBack = GameObject.FindGameObjectWithTag("SwordInternal");
+        swordPartWithLine = sword.transform.parent.Find("Cube").gameObject;
         swordCollider = sword.GetComponent<BoxCollider>();
-        WeaponOnBack = GameObject.Find("WeaponHolderOnBack");
-        WeaponInHand = GameObject.Find("WeaponHolderOnHand");
-        WeaponInHand.SetActive(false);
+        dialogBox = GameObject.Find("DialogBox");
 
 
         deathTimer = new Timer(this)
@@ -239,6 +265,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
                 return null;
             }
         };
+        FindAndSetupLaser();
     }
 
     private void FixedUpdate()
@@ -248,7 +275,8 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
             frameNotGrounded++;
         }
         HandleMovement();
-        Dashing();
+        StartDashing();
+        ExecuteDash();
     }
 
 
@@ -368,14 +396,17 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
         {
             float rotationSpeed = 15f;
             transform.forward = Vector3.Slerp(transform.forward, rotateDir, rotationSpeed * Time.deltaTime);
-        } else if (firingStage == FiringStage.aiming)
+        }
+        else if (firingStage == FiringStage.aiming)
         {
-            Vector3 mousePosition = gameInput.GetMousePosition();
-            Ray ray = Camera.main.ScreenPointToRay(mousePosition);
-            if (Physics.Raycast(ray, out RaycastHit hit))
-            {
-                transform.LookAt(new Vector3(hit.point.x, transform.position.y, hit.point.z));
-            }
+            var mousePosition = gameInput.GetMousePosition();
+            var distance = Vector3.Distance(transform.position, cameraTransform.position);
+            var worldPosition = Camera.main.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, distance));
+            transform.LookAt(worldPosition.CopyWith(y: transform.position.y));
+        }
+        if (isPickingUpItem)
+        {
+            transform.LookAt(TouchedPowerup.transform.position.CopyWith(y: transform.position.y));
         }
     }
 
@@ -391,7 +422,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
 
     private void Aim()
     {
-        if (!canFire || !canAct || !IsWeaponEquipped)
+        if (!canFire || !canAct)
             return;
         aimLaserRenderer.enabled = true;
         firingStage = FiringStage.aiming;
@@ -415,7 +446,8 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
 
         canDash = false;
         dashCooldownTimer.Start(dashCooldown);
-        DashClicked = true;
+        dashLoaderBorder.GetComponent<CircularProgressBar>().StartProgressBar(dashCooldown);
+        IsDashing = true;
     }
 
     private void DrawDebugRays()
@@ -427,6 +459,50 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
             Debug.DrawRay(transform.position + Vector3.up + transform.forward * dashDistance, Vector3.down * 5, Color.red);
             #endregion
         }
+    }
+
+    private void FireProjectileCommon()
+    {
+        loaderBorder.GetComponent<CircularProgressBar>().StartProgressBar(3.0f);
+
+        canFire = false;
+        fireCooldownTimer.Start(3.0f);
+
+        canAct = false;
+        actionCooldownTimer.Start(1.0f);
+
+        canMove = false;
+        movementCooldownTimer.Start(0.4f);
+
+        canTurn = false;
+        turningCooldownTimer.Start(0.4f);
+
+        firingStageCooldown.Start(0.1f);
+        firingStage = FiringStage.knockback;
+    }
+
+    private void FireDamageProjectile()
+    {
+        var startingPosition = aimLaserRenderer.GetPosition(0);
+        var endingPosition = aimLaserRenderer.GetPosition(1);
+        Vector3 projectilePosition = aimLaserRenderer.transform.TransformPoint(startingPosition) + transform.forward;
+        var rotation = transform.rotation;
+        GameObject projectile = Instantiate(damageProjectilePrefab, projectilePosition, rotation * Quaternion.Euler(90, 0, 0));
+        var projectileScript = projectile.GetComponent<ProjectileScript>();
+        projectileScript.endingPosition = aimLaserRenderer.transform.TransformPoint(endingPosition);
+        FireProjectileCommon();
+    }
+
+    private void FireIceProjectile()
+    {
+        var startingPosition = aimLaserRenderer.GetPosition(0);
+        var endingPosition = aimLaserRenderer.GetPosition(1);
+        Vector3 projectilePosition = aimLaserRenderer.transform.TransformPoint(startingPosition) + transform.forward;
+        var rotation = transform.rotation;
+        GameObject projectile = Instantiate(iceProjectilePrefab, projectilePosition, rotation * Quaternion.Euler(90, 0, 0));
+        var projectileScript = projectile.GetComponent<ProjectileScript>();
+        projectileScript.endingPosition = aimLaserRenderer.transform.TransformPoint(endingPosition);
+        FireProjectileCommon();
     }
 
     private void FiringSequence()
@@ -454,30 +530,14 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
                 break;
             //fire projectile
             case FiringStage.firing:
-                var startingPosition = aimLaserRenderer.GetPosition(0);
-                var endingPosition = aimLaserRenderer.GetPosition(1);
-                Vector3 projectilePosition = aimLaserRenderer.transform.TransformPoint(startingPosition) + transform.forward;
-                var rotation = transform.rotation;
-                GameObject projectile = Instantiate(projectilePrefab, projectilePosition, rotation * Quaternion.Euler(90, 0, 0));
-                var projectileScript = projectile.GetComponent<ProjectileScript>();
-                projectileScript.endingPosition = aimLaserRenderer.transform.TransformPoint(endingPosition);
-
-                loaderBorder.GetComponent<CircularProgressBar>().StartProgressBar(3.0f);
-
-                canFire = false;
-                fireCooldownTimer.Start(3.0f);
-
-                canAct = false;
-                actionCooldownTimer.Start(1.0f);
-
-                canMove = false;
-                movementCooldownTimer.Start(0.4f);
-
-                canTurn = false;
-                turningCooldownTimer.Start(0.4f);
-
-                firingStageCooldown.Start(0.1f);
-                firingStage = FiringStage.knockback;
+                if (weaponSprites[weaponIndex].name == GunSpriteName)
+                {
+                    FireDamageProjectile();
+                }
+                else if (weaponSprites[weaponIndex].name == IceSpriteName)
+                {
+                    FireIceProjectile();
+                }
                 break;
             //knockback
             case FiringStage.knockback:
@@ -487,6 +547,11 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
             default:
                 break;
         }
+    }
+
+    public void DashAnimationEnded()
+    {
+        executeDash = true;
     }
 
     private void Block()
@@ -501,12 +566,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
 
     public void SwordDrawn()
     {
-        WeaponOnBack.SetActive(!IsWeaponEquipped);
-        WeaponInHand.SetActive(IsWeaponEquipped);
-        if (IsWeaponEquipped)
-        {
-            FindAndSetupLaser();
-        }
+        FindAndSetupLaser();
     }
 
     public void FindAndSetupLaser()
@@ -558,11 +618,10 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
 
     public Action OnPlayerAttack;
 
-    private void Dashing()
+    public void ExecuteDash()
     {
-        if (DashClicked)
+        if (executeDash)
         {
-            DashClicked = false;
             var notPlayerLayer = ~LayerMask.GetMask("playerLayer");
             var hasHit = Physics.Raycast(transform.position + Vector3.up, transform.forward, out RaycastHit hit, dashDistance, notPlayerLayer);
             var groundLayer = LayerMask.NameToLayer("groundLayer");
@@ -614,6 +673,16 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
             }
             transform.position = newPosition;
         }
+        executeDash = false;
+    }
+
+    private void StartDashing()
+    {
+        if (IsDashing)
+        {
+            animator.SetDash();
+            IsDashing = false;
+        }
         else
         {
             rb.isKinematic = false;
@@ -634,6 +703,15 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
         DebugExt.LogCombo($"Can combo at time {Time.time} for {AttackNumber}");
     }
 
+    public void PickupItem()
+    {
+        weaponSprites.Add(TouchedPowerup.Powerup);
+        Destroy(TouchedPowerup.gameObject);
+        canMove = true;
+        isPickingUpItem = false;
+        TouchedPowerup = null;
+    }
+
     public void OnDestroy()
     {
         StopAllCoroutines();
@@ -642,28 +720,23 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
 
     #region Input actions
 
-    public void OnMove(InputAction.CallbackContext context) {}
+    public void OnMove(InputAction.CallbackContext context) { }
 
-    public void OnMousePosition(InputAction.CallbackContext context) {}
+    public void OnMousePosition(InputAction.CallbackContext context) { }
 
-    public void OnAttack(InputAction.CallbackContext context) {
+    public void OnAttack(InputAction.CallbackContext context)
+    {
         if (context.performed)
         {
-            if (IsWeaponEquipped)
-            {
-                OnPlayerAttack?.Invoke();
-                IsAttacking = true;
-                canMove = false;
-                Attack();
-                swordCollider.enabled = true;
-            }
-            else
-            {
-                IsAttacking = false;
-            }
+            OnPlayerAttack?.Invoke();
+            IsAttacking = true;
+            canMove = false;
+            Attack();
+            swordCollider.enabled = true;
         }
     }
-    public void OnFire(InputAction.CallbackContext context) {
+    public void OnFire(InputAction.CallbackContext context)
+    {
         if (context.performed)
         {
             Aim();
@@ -673,13 +746,15 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
             Fire();
         }
     }
-    public void OnBlock(InputAction.CallbackContext context) {
+    public void OnBlock(InputAction.CallbackContext context)
+    {
         if (context.performed)
         {
             Block();
         }
     }
-    public void OnRun(InputAction.CallbackContext context) {
+    public void OnRun(InputAction.CallbackContext context)
+    {
         if (context.performed)
         {
             if (gameInput.HoldDownToRun)
@@ -702,7 +777,8 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
                     }
                 }
             }
-        } else if (context.canceled)
+        }
+        else if (context.canceled)
         {
             if (gameInput.HoldDownToRun)
             {
@@ -711,20 +787,16 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
             }
         }
     }
-    public void OnDrawWeapon(InputAction.CallbackContext context) {
-        if (context.performed)
-        {
-            IsWeaponEquipped = !IsWeaponEquipped;
-            canMove = false;
-        }
-    }
-    public void OnDash(InputAction.CallbackContext context) {
+
+    public void OnDash(InputAction.CallbackContext context)
+    {
         if (context.performed)
         {
             Dash();
         }
     }
-    public void OnFakeHit(InputAction.CallbackContext context) {
+    public void OnFakeHit(InputAction.CallbackContext context)
+    {
         if (context.performed)
         {
             if (healthSlider.value == healthSlider.minValue)
@@ -737,5 +809,70 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
             }
         }
     }
+
+    public void OnInteract(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            if (TouchedPowerup != null && canMove)
+            {
+                animator.SetPickup();
+                canMove = false;
+                isPickingUpItem = true;
+            }
+            var handler = dialogBox.GetComponent<DialogHandler>();
+            if (!gameInput.IsKeyboardMovement && handler.IsInDialog && handler.IsDialogDismissable)
+            {
+                handler.DismissDialog();
+            }
+        }
+    }
+
+    public void OnChangeEquippedWeapon(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            float value = context.ReadValue<float>();
+            var direction = value > 0 ? Direction.Down : Direction.Up;
+            if (direction == Direction.Down)
+            {
+                weaponIndex = (weaponIndex + 1) % weaponSprites.Count;
+            }
+            else
+            {
+                weaponIndex = (weaponIndex - 1 + weaponSprites.Count) % weaponSprites.Count;
+            }
+            uiWeaponImage.sprite = weaponSprites[weaponIndex];
+            var renderer = swordPartWithLine.GetComponent<SkinnedMeshRenderer>();
+            var materialToSwitch = weaponMaterials.First(mat => renderer.sharedMaterials.Contains(mat));
+            if (weaponSprites[weaponIndex].name == GunSpriteName)
+            {
+                var newMaterial = weaponMaterials.First(mat => mat.name == "GlowLaser");
+                renderer.SwitchMaterial(materialToSwitch, newMaterial);
+                aimLaserRenderer.sharedMaterial = newMaterial;
+            }
+            else if (weaponSprites[weaponIndex].name == IceSpriteName)
+            {
+                var newMaterial = weaponMaterials.First(mat => mat.name == "light");
+                renderer.SwitchMaterial(materialToSwitch, newMaterial);
+                aimLaserRenderer.sharedMaterial = newMaterial;
+            }
+            else if (weaponSprites[weaponIndex].name == MagnetSpriteName)
+            {
+                var newMaterial = weaponMaterials.First(mat => mat.name == "GlowMagnet");
+                renderer.SwitchMaterial(materialToSwitch, newMaterial);
+                aimLaserRenderer.sharedMaterial = newMaterial;
+            }
+        }
+    }
+
     #endregion
+
+
+    public void TriggerDialog(string dialogId)
+    {
+        var dialog = DialogData.GetDialog(dialogId);
+        var handler = dialogBox.GetComponent<DialogHandler>();
+        handler.SetDialog(dialog.Text, dialog.WriteDuration, dialog.LingerTime);
+    }
 }
