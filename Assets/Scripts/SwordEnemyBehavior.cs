@@ -298,8 +298,7 @@ public class SwordEnemyBehavior : MonoBehaviour
 
         if (!Physics.Linecast(transform.position, calculatedTargetPosition))
         {
-            var groundLayer = LayerMask.NameToLayer("groundLayer");
-            var hasHit = Physics.Raycast(calculatedTargetPosition, Vector3.down, out RaycastHit hit, 5f);
+            var hasHit = Physics.Raycast(calculatedTargetPosition, Vector3.down, out RaycastHit _, 5f);
             if (!hasHit)
             {
                 Debug.Log($"invalid targetPosition");
@@ -317,10 +316,8 @@ public class SwordEnemyBehavior : MonoBehaviour
 
     bool CheckWall(Vector3 origin, Vector3 target)
     {
-        //var mask = LayerMask.NameToLayer("wallLayer");
-        //var mask = ~LayerMask.NameToLayer("wallLayer");
-        var line = Physics.Linecast(origin, target, (1<<9));
-        //Debug.Log($"mask: {mask} - layer: {1<<9}");
+        var mask = LayerMask.GetMask("wallLayer");
+        var line = Physics.Linecast(origin, target, mask);
         return line;
     }
 }

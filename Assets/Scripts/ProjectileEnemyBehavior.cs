@@ -281,7 +281,8 @@ public class ProjectileEnemyBehavior : MonoBehaviour
         switch (enemyState)
         {
             case EnemyState.Aggro:
-                if (Vector3.Distance(transform.position, playerPosition) > maxEngagementRange)
+                var distance = Vector3.Distance(transform.position, playerPosition);
+                if (distance > maxEngagementRange)
                 {
                     targetAngle = Math.Atan2((float)(transform.position.x - playerPosition.x), (float)(transform.position.z - playerPosition.z));
                     targetAngle += angleAdjustment;
@@ -289,7 +290,7 @@ public class ProjectileEnemyBehavior : MonoBehaviour
                     targetZ = Mathf.Cos((float)targetAngle) * (maxEngagementRange + rangeAdjustment) + playerPosition.z;
                     calculatedTargetPosition = new Vector3(targetX, playerPosition.y, targetZ);
                 }
-                else if (Vector3.Distance(transform.position, playerPosition) < minEngagementRange)
+                else if (distance < minEngagementRange)
                 {
                     targetAngle = Math.Atan2((float)(transform.position.x - playerPosition.x), (float)(transform.position.z - playerPosition.z));
                     targetAngle += angleAdjustment;
@@ -336,10 +337,8 @@ public class ProjectileEnemyBehavior : MonoBehaviour
 
     bool CheckWall(Vector3 origin, Vector3 target)
     {
-        //var mask = LayerMask.NameToLayer("wallLayer");
-        //var mask = ~LayerMask.NameToLayer("wallLayer");
-        var line = Physics.Linecast(origin, target, (1 << 9));
-        //Debug.Log($"mask: {mask} - layer: {1<<9}");
+        var mask = LayerMask.GetMask("wallLayer");
+        var line = Physics.Linecast(origin, target, mask);
         return line;
     }
 }

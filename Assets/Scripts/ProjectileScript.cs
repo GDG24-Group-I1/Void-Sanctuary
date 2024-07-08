@@ -20,7 +20,7 @@ public class ProjectileScript : MonoBehaviour
         projectileMove();
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnCollisionEnter(Collision other)
     {
         var distance = Mathf.Sqrt(Mathf.Pow(transform.position.x - startingPosition.x, 2) + Mathf.Pow(transform.position.z - startingPosition.z, 2));
         if (distance > minCollisionDistance)
