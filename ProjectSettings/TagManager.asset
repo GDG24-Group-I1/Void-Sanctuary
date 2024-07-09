@@ -19,6 +19,7 @@ TagManager:
   - Projectile
   - Enemy
   - MovableObject
+  - EnemyObj
   layers:
   - Default
   - TransparentFX
@@ -35,7 +36,7 @@ TagManager:
   - playerLayer
   - 
   - 
-  - 
+  - enemyLayer
   - 
   - 
   - 

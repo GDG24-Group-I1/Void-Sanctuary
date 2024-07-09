@@ -6,6 +6,7 @@ public class ProjectileScript : MonoBehaviour
 {
     [SerializeField] private float projectileSpeed = 30f;
     [SerializeField] private GameObject IceCube;
+    [SerializeField] private LayerMask ignoreLayers;
     public Vector3 endingPosition;
 
     void Start()
@@ -20,6 +21,11 @@ public class ProjectileScript : MonoBehaviour
 
     private void OnCollisionEnter(Collision other)
     {
+        if (((1 << other.gameObject.layer) & ignoreLayers) != 0)
+        {
+            return;
+        }
+
         Debug.Log($"projectile hit: {other.gameObject.name}");
         if (IceCube != null && other.gameObject.CompareTag("Enemy"))
         {

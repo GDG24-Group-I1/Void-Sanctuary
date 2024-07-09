@@ -50,5 +50,16 @@ public class Respawner : MonoBehaviour
         player.loaderBorder = loaderBorder;
         player.dashLoaderBorder = dashLoaderBorder;
         player.uiWeaponImage = uiWeaponImage;
+
+        var enemyList = GameObject.FindGameObjectsWithTag("EnemyObj");
+        foreach (var enemy in enemyList)
+        {
+            if (!enemy.TryGetComponent<EnemyAI>(out var enemyAI))
+            {
+                Debug.LogError("EnemyAI script not found on enemy object");
+            }
+            enemyAI.player = playerObject.transform;
+        }
+
     } 
 }

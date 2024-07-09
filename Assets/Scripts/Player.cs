@@ -109,7 +109,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
 
     public FiringStage firingStage { get; private set; } = FiringStage.notFiring;
 
-    public PowerUpHolder _touchedPowerup;
+    private PowerUpHolder _touchedPowerup;
     public PowerUpHolder TouchedPowerup
     {
         get => _touchedPowerup; set
@@ -722,7 +722,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
     {
         if (executeDash)
         {
-            var notPlayerLayer = ~LayerMask.GetMask("playerLayer");
+            var notPlayerLayer = ~LayerMask.GetMask("playerLayer", "enemyLayer");
             var hasHit = Physics.Raycast(transform.position + Vector3.up, transform.forward, out RaycastHit hit, dashDistance, notPlayerLayer);
             var groundLayer = LayerMask.NameToLayer("groundLayer");
             Vector3 newPosition;

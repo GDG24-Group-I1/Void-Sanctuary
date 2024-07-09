@@ -506,11 +506,6 @@ MonoBehaviour:
   m_DeselectOnBackgroundClick: 1
   m_PointerBehavior: 0
   m_CursorLockBehavior: 0
---- !u!195 &266192133 stripped
-NavMeshAgent:
-  m_CorrespondingSourceObject: {fileID: 1401712663294380011, guid: 2a02a2f46a8a06f4098f8e17d53709a8, type: 3}
-  m_PrefabInstance: {fileID: 7196681532762753637}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &317622385 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 9118581060632519449, guid: 551b157c3ed03d2489c214e57d817ec4, type: 3}
@@ -1959,25 +1954,9 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 648493156321077960, guid: 9dac9a6f59137ee4c877ffa14b7324f7, type: 3}
-      propertyPath: agent
-      value: 
-      objectReference: {fileID: 266192133}
-    - target: {fileID: 648493156321077960, guid: 9dac9a6f59137ee4c877ffa14b7324f7, type: 3}
       propertyPath: player
       value: 
       objectReference: {fileID: 1773679469}
-    - target: {fileID: 648493156321077960, guid: 9dac9a6f59137ee4c877ffa14b7324f7, type: 3}
-      propertyPath: isMelee
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 648493156321077960, guid: 9dac9a6f59137ee4c877ffa14b7324f7, type: 3}
-      propertyPath: timeBetweenAttacks
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 648493156321077960, guid: 9dac9a6f59137ee4c877ffa14b7324f7, type: 3}
-      propertyPath: whatIsPlayer.m_Bits
-      value: 4096
-      objectReference: {fileID: 0}
     - target: {fileID: 4188234102827016206, guid: 9dac9a6f59137ee4c877ffa14b7324f7, type: 3}
       propertyPath: m_Name
       value: EnemySword
@@ -2174,34 +2153,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1401712663294380011, guid: 2a02a2f46a8a06f4098f8e17d53709a8, type: 3}
-      propertyPath: m_AutoBraking
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1401712663294380011, guid: 2a02a2f46a8a06f4098f8e17d53709a8, type: 3}
-      propertyPath: m_AngularSpeed
-      value: 120
-      objectReference: {fileID: 0}
     - target: {fileID: 4342376734747084420, guid: 2a02a2f46a8a06f4098f8e17d53709a8, type: 3}
       propertyPath: player
       value: 
       objectReference: {fileID: 1773679469}
-    - target: {fileID: 4342376734747084420, guid: 2a02a2f46a8a06f4098f8e17d53709a8, type: 3}
-      propertyPath: projectileHeight
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 4342376734747084420, guid: 2a02a2f46a8a06f4098f8e17d53709a8, type: 3}
-      propertyPath: projectilePrefab
-      value: 
-      objectReference: {fileID: 2225220425910028821, guid: d648b877a1539bf43864fdddf250861d, type: 3}
-    - target: {fileID: 4342376734747084420, guid: 2a02a2f46a8a06f4098f8e17d53709a8, type: 3}
-      propertyPath: timeBetweenAttacks
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4342376734747084420, guid: 2a02a2f46a8a06f4098f8e17d53709a8, type: 3}
-      propertyPath: whatIsPlayer.m_Bits
-      value: 4096
-      objectReference: {fileID: 0}
     - target: {fileID: 8123513749073689288, guid: 2a02a2f46a8a06f4098f8e17d53709a8, type: 3}
       propertyPath: m_Name
       value: EnemyLaser

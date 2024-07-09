@@ -109,7 +109,7 @@ public static class DialogData
         {"Test1", new Dialog("This is a test dialog", 1f) },
         {"Test2", new Dialog("This is a bit of a longer dialog\nEven with a newline!!!", 4f) },
         {"RepeatTest1", new Dialog("I am supposed to be used as a test for repeated dialogs", 1.5f) },
-        {"PickupText", new Dialog("You can press {Interact} to pick up items and {SwitchPowerup} to switch between them", 2.5f, 2f) }
+        {"PickupText", new Dialog("Use {MeleeAttack} to attack and and {RangedAttack} to start a ranged attack then aim with {Aim}", 2.5f, 2f) }
     };
 
     public static Dialog GetDialog(string dialogId)

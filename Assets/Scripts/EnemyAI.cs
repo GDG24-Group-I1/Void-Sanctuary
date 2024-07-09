@@ -160,7 +160,7 @@ public class EnemyAI : MonoBehaviour
 
         Debug.Log($"Starting position: {startingPosition}, Ending position: {endingPosition}");
 
-        Vector3 projectilePosition = startingPosition + transform.forward * 1.5f;
+        Vector3 projectilePosition = startingPosition;
 
         // Instantiate the projectile
         GameObject projectile = Instantiate(projectilePrefab, projectilePosition, Quaternion.LookRotation(directionToPlayer));
