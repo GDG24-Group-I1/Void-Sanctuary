@@ -95,7 +95,7 @@ MonoBehaviour:
   swordBackBaseMaterial: {fileID: 2100000, guid: c678acc1f49d69e46beeeef2d119d4d9, type: 2}
   slowDownFactor: 0.25
   weaponSprites:
-  - {fileID: 21300000, guid: 01df339a4f3d37842b4b38d8074ed7ee, type: 3}
+  - {fileID: 21300000, guid: 5fed32202f487f34eb0a0097a88ffde1, type: 3}
   weaponMaterials:
   - {fileID: 2100000, guid: a32407f707afc9740af43793c2b0fd5e, type: 2}
   - {fileID: 2100000, guid: 6ed0162cbc73cea449ccbf9d315cb441, type: 2}
@@ -105,7 +105,6 @@ MonoBehaviour:
   loaderBorder: {fileID: 0}
   dashLoaderBorder: {fileID: 0}
   uiWeaponImage: {fileID: 0}
-  _touchedPowerup: {fileID: 0}
 --- !u!114 &2916950646172925459
 MonoBehaviour:
   m_ObjectHideFlags: 0

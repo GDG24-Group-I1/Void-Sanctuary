@@ -39,9 +39,9 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
     private const float firingKnockbackSpeed = 0f;
     private const int maxWallsCollided = 10;
 
-    private const string GunSpriteName = "gun";
-    private const string IceSpriteName = "ice";
-    private const string MagnetSpriteName = "magnet";
+    private const string GunSpriteName = "GunTransparent";
+    private const string IceSpriteName = "IceTransparent";
+    private const string MagnetSpriteName = "MagnetTransparent";
 
     [Header("Fixed values set in the prefab\nDo not need to be reset by the Respawner")]
     [SerializeField] private float walkSpeed = 5f;
