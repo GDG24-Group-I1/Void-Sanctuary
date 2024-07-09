@@ -482,6 +482,8 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
             else
             {
                 currentMovableObject = -1;
+                firingStage = FiringStage.notFiring;
+                aimLaserRenderer.enabled = false;
             }
         }
     }
@@ -992,6 +994,6 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
     {
         var dialog = DialogData.GetDialog(dialogId);
         var handler = dialogBox.GetComponent<DialogHandler>();
-        handler.SetDialog(dialog.Text, dialog.WriteDuration, dialog.LingerTime);
+        handler.SetDialog(dialog.TransformText(gameInput.CurrentControl.value), dialog.WriteDuration, dialog.LingerTime);
     }
 }

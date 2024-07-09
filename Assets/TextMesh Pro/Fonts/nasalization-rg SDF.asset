@@ -124,8 +124,8 @@ MonoBehaviour:
   material: {fileID: -351706805771253716}
   materialHashCode: 1254428182
   m_Version: 1.1.0
-  m_SourceFontFileGUID: f870507eef3b3f9468dfd45651c5040b
-  m_SourceFontFile_EditorRef: {fileID: 12800000, guid: f870507eef3b3f9468dfd45651c5040b, type: 3}
+  m_SourceFontFileGUID: ee13eb9f0ee6c86498d1136e15a902eb
+  m_SourceFontFile_EditorRef: {fileID: 12800000, guid: ee13eb9f0ee6c86498d1136e15a902eb, type: 3}
   m_SourceFontFile: {fileID: 0}
   m_AtlasPopulationMode: 0
   m_FaceInfo:
@@ -1591,7 +1591,7 @@ MonoBehaviour:
     m_Scale: 1
     m_AtlasIndex: 0
     m_ClassDefinitionType: 0
-  - m_Index: 691
+  - m_Index: 692
     m_Metrics:
       m_Width: 40.328125
       m_Height: 8.96875
@@ -1993,7 +1993,7 @@ MonoBehaviour:
     m_Scale: 1
   - m_ElementType: 1
     m_Unicode: 8230
-    m_GlyphIndex: 691
+    m_GlyphIndex: 692
     m_Scale: 1
   m_AtlasTextures:
   - {fileID: 5861385473400731591}
@@ -2678,16 +2678,16 @@ MonoBehaviour:
   m_FallbackFontAssetTable: []
   m_CreationSettings:
     sourceFontFileName: 
-    sourceFontFileGUID: f870507eef3b3f9468dfd45651c5040b
+    sourceFontFileGUID: ee13eb9f0ee6c86498d1136e15a902eb
     pointSizeSamplingMode: 0
     pointSize: 66
     padding: 5
     packingMode: 0
     atlasWidth: 512
     atlasHeight: 512
-    characterSetSelectionMode: 0
-    characterSequence: 32 - 126, 160, 8203, 8230, 9633
-    referencedFontAssetGUID: 
+    characterSetSelectionMode: 6
+    characterSequence: 20-7E,A0,2026
+    referencedFontAssetGUID: 47f43f07b77d5304d9beeb108097e2ac
     referencedTextAssetGUID: 
     fontStyle: 0
     fontStyleModifier: 0
