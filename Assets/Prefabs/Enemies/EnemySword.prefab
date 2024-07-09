@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 6310376800976771779}
   - component: {fileID: 8501456226811319959}
   - component: {fileID: 648493156321077960}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: EnemySword
-  m_TagString: Untagged
+  m_TagString: EnemyObj
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -83,7 +83,7 @@ NavMeshAgent:
   m_AutoBraking: 1
   m_AutoRepath: 1
   m_Height: 2
-  m_BaseOffset: 1.3
+  m_BaseOffset: 1.6
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
 --- !u!114 &648493156321077960
@@ -98,14 +98,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 33e0a69847b30354185f0ff141d9d8fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  agent: {fileID: 0}
+  agent: {fileID: 8501456226811319959}
   player: {fileID: 0}
   whatIsGround:
     serializedVersion: 2
     m_Bits: 1024
   whatIsPlayer:
     serializedVersion: 2
-    m_Bits: 2048
+    m_Bits: 4096
   stopDistance: 5
   walkPoint: {x: 0, y: 0, z: 0}
   walkPointRange: 10
@@ -113,7 +113,11 @@ MonoBehaviour:
   attackRange: 3
   playerInSightRange: 1
   playerInAttackRange: 1
-  timeBetweenAttacks: 0
+  timeBetweenAttacks: 1
+  isMelee: 1
+  projectilePrefab: {fileID: 0}
+  projectileHeight: 0.8
+  projectileRange: 15
 --- !u!1001 &3365594497817581515
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -125,6 +129,14 @@ PrefabInstance:
     - target: {fileID: 3519580889382846385, guid: 8b155522444510b41a04e9422a91f03d, type: 3}
       propertyPath: m_Name
       value: enemySwordToon
+      objectReference: {fileID: 0}
+    - target: {fileID: 3519580889382846385, guid: 8b155522444510b41a04e9422a91f03d, type: 3}
+      propertyPath: m_Layer
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 3803451241278514824, guid: 8b155522444510b41a04e9422a91f03d, type: 3}
+      propertyPath: m_Layer
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 4292986557064455435, guid: 8b155522444510b41a04e9422a91f03d, type: 3}
       propertyPath: m_LocalPosition.x
@@ -165,6 +177,26 @@ PrefabInstance:
     - target: {fileID: 4292986557064455435, guid: 8b155522444510b41a04e9422a91f03d, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4646902588718462668, guid: 8b155522444510b41a04e9422a91f03d, type: 3}
+      propertyPath: m_Layer
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 5080270136615479301, guid: 8b155522444510b41a04e9422a91f03d, type: 3}
+      propertyPath: m_Layer
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 7118087576825020447, guid: 8b155522444510b41a04e9422a91f03d, type: 3}
+      propertyPath: m_Layer
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 8158123788260513766, guid: 8b155522444510b41a04e9422a91f03d, type: 3}
+      propertyPath: m_Layer
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 9176154341296529058, guid: 8b155522444510b41a04e9422a91f03d, type: 3}
+      propertyPath: m_Layer
+      value: 15
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 7703789555657854990}
   - component: {fileID: 1401712663294380011}
   - component: {fileID: 4342376734747084420}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: EnemyLaser
-  m_TagString: Untagged
+  m_TagString: EnemyObj
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -81,7 +81,7 @@ NavMeshAgent:
   m_AngularSpeed: 120
   m_StoppingDistance: 0
   m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 1
+  m_AutoBraking: 0
   m_AutoRepath: 1
   m_Height: 2
   m_BaseOffset: 1
@@ -106,7 +106,7 @@ MonoBehaviour:
     m_Bits: 1024
   whatIsPlayer:
     serializedVersion: 2
-    m_Bits: 2048
+    m_Bits: 4096
   stopDistance: 7
   walkPoint: {x: 0, y: 0, z: 0}
   walkPointRange: 9
@@ -114,7 +114,11 @@ MonoBehaviour:
   attackRange: 10
   playerInSightRange: 1
   playerInAttackRange: 1
-  timeBetweenAttacks: 0
+  timeBetweenAttacks: 2
+  isMelee: 0
+  projectilePrefab: {fileID: 2225220425910028821, guid: ad35dc2357e786a47be6650006d72a7e, type: 3}
+  projectileHeight: 0.9
+  projectileRange: 15
 --- !u!1001 &8760612005569324015
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -123,9 +127,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8337766784243805574}
     m_Modifications:
+    - target: {fileID: 1201994012999585440, guid: 06ff1d95f8705dd47b66ddd8f055cacd, type: 3}
+      propertyPath: m_Layer
+      value: 15
+      objectReference: {fileID: 0}
     - target: {fileID: 1494867168284301209, guid: 06ff1d95f8705dd47b66ddd8f055cacd, type: 3}
       propertyPath: m_Name
       value: enemyLaserToon
+      objectReference: {fileID: 0}
+    - target: {fileID: 1494867168284301209, guid: 06ff1d95f8705dd47b66ddd8f055cacd, type: 3}
+      propertyPath: m_Layer
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 2302752730538216739, guid: 06ff1d95f8705dd47b66ddd8f055cacd, type: 3}
       propertyPath: m_LocalPosition.x
@@ -166,6 +178,22 @@ PrefabInstance:
     - target: {fileID: 2302752730538216739, guid: 06ff1d95f8705dd47b66ddd8f055cacd, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6147905744189439950, guid: 06ff1d95f8705dd47b66ddd8f055cacd, type: 3}
+      propertyPath: m_Layer
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 6574967584288110218, guid: 06ff1d95f8705dd47b66ddd8f055cacd, type: 3}
+      propertyPath: m_Layer
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 7126518884939431981, guid: 06ff1d95f8705dd47b66ddd8f055cacd, type: 3}
+      propertyPath: m_Layer
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 7213597442358910692, guid: 06ff1d95f8705dd47b66ddd8f055cacd, type: 3}
+      propertyPath: m_Layer
+      value: 15
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
