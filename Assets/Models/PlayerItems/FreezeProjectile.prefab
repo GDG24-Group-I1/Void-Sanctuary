@@ -100,8 +100,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   projectileSpeed: 20
-  minCollisionDistance: 1
   IceCube: {fileID: 479484690787221877, guid: 982416b5f04903548bf1fbb6266be553, type: 3}
+  ignoreLayers:
+    serializedVersion: 2
+    m_Bits: 69632
   endingPosition: {x: 0, y: 0, z: 0}
 --- !u!54 &1609808747299697749
 Rigidbody:

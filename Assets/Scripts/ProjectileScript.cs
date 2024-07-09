@@ -27,9 +27,24 @@ public class ProjectileScript : MonoBehaviour
         }
 
         Debug.Log($"projectile hit: {other.gameObject.name}");
-        if (IceCube != null && other.gameObject.CompareTag("Enemy"))
+        var isEnemy = other.gameObject.CompareTag("Enemy");
+        if (IceCube != null && isEnemy)
         {
-            Instantiate(IceCube, other.transform.position, other.transform.rotation, other.transform);
+            var enemyAi = other.transform.parent.GetComponent<EnemyAI>();
+            if (!enemyAi.IsFrozen)
+            {
+                Instantiate(IceCube, other.transform.position, other.transform.rotation, other.transform);
+                enemyAi.IsFrozen = true;
+            }
+        } else if (IceCube == null && isEnemy)
+        {
+            var enemyAi = other.transform.parent.GetComponent<EnemyAI>();
+            if (enemyAi.IsFrozen)
+            {
+                Destroy(other.gameObject.transform.GetChild(other.gameObject.transform.childCount - 1).gameObject);
+                enemyAi.IsFrozen = false;
+            }
+            
         }
 
         Destroy(gameObject);

@@ -83,6 +83,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
     private GameInput gameInput;
     private Slider healthSlider;
     private PostProcessEffectSettings outlineEffect;
+    private Respawner respawner;
 
     private Rigidbody rb;
     private int frameNotGrounded;
@@ -183,7 +184,11 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
         swordPartWithLine = sword.transform.parent.Find("Cube").gameObject;
         swordCollider = sword.GetComponent<BoxCollider>();
         dialogBox = GameObject.Find("DialogBox");
-
+        respawner = GameObject.FindGameObjectWithTag("Respawner").GetComponent<Respawner>();
+        foreach (var spr in weaponSprites)
+        {
+            respawner.AddPowerup(spr);
+        }
 
         deathTimer = new Timer(this)
         {
@@ -806,6 +811,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
     public void PickupItem()
     {
         weaponSprites.Add(TouchedPowerup.Powerup);
+        respawner.AddPowerup(TouchedPowerup.Powerup);
         Destroy(TouchedPowerup.gameObject);
         canMove = true;
         isPickingUpItem = false;
@@ -995,5 +1001,11 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
         var dialog = DialogData.GetDialog(dialogId);
         var handler = dialogBox.GetComponent<DialogHandler>();
         handler.SetDialog(dialog.TransformText(gameInput.CurrentControl.value), dialog.WriteDuration, dialog.LingerTime);
+    }
+
+    public void SetPowerupsOnRespawn(List<Sprite> sprites)
+    {
+        weaponSprites.Clear();
+        weaponSprites.AddRange(sprites);
     }
 }

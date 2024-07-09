@@ -10,6 +10,16 @@ public class EnemyAI : MonoBehaviour
     public Transform player;
     public LayerMask whatIsGround, whatIsPlayer;
 
+    private bool isFrozen;
+    public bool IsFrozen
+    {
+        get => isFrozen; set
+        {
+            agent.isStopped = value;
+            isFrozen = value;
+        }
+    }
+
     public float stopDistance;
 
     // Patroling
@@ -40,8 +50,14 @@ public class EnemyAI : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
     }
 
+    private void Start()
+    {
+        IsFrozen = false;
+    }
+
     private void Update()
     {
+        if (IsFrozen) return;
         // Update the detection of player
         playerInSightRange = Physics.CheckSphere(transform.position, sightRange, whatIsPlayer);
         playerInAttackRange = Physics.CheckSphere(transform.position, attackRange, whatIsPlayer);

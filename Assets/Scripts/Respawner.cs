@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,6 +14,7 @@ public class Respawner : MonoBehaviour
     private GameObject playerObject;
     private Image uiWeaponImage;
     private Animator animator;
+    private List<Sprite> powerupsEquipped = new();
     // Start is called before the first frame update
     void Start()
     {
@@ -50,7 +52,7 @@ public class Respawner : MonoBehaviour
         player.loaderBorder = loaderBorder;
         player.dashLoaderBorder = dashLoaderBorder;
         player.uiWeaponImage = uiWeaponImage;
-
+        player.SetPowerupsOnRespawn(powerupsEquipped);
         var enemyList = GameObject.FindGameObjectsWithTag("EnemyObj");
         foreach (var enemy in enemyList)
         {
@@ -62,4 +64,9 @@ public class Respawner : MonoBehaviour
         }
 
     } 
+
+    public void AddPowerup(Sprite sprite)
+    {
+        powerupsEquipped.Add(sprite);
+    }
 }
