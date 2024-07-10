@@ -855,7 +855,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
             IsAttacking = true;
             canMove = false;
             Attack();
-            swordCollider.enabled = true;
+            swordCollider.enabled = true; // FIXME: this should ONLY be enabled during the attack animation and not immediately
         }
     }
     public void OnFire(InputAction.CallbackContext context)
