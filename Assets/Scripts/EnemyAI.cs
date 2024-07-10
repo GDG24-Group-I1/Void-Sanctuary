@@ -19,6 +19,7 @@ public class EnemyAI : MonoBehaviour
         {
             agent.isStopped = value;
             isFrozen = value;
+            animator.SetBool("Frozen", value);
         }
     }
 
@@ -51,6 +52,8 @@ public class EnemyAI : MonoBehaviour
     public Timer staggerTimer;
     Animator animator;
 
+    //
+    Renderer[] renderers;
 
     private void Awake()
     {
@@ -61,6 +64,7 @@ public class EnemyAI : MonoBehaviour
 
     private void Start()
     {
+        renderers = GetComponentsInChildren<Renderer>();
         animator = GetComponentInChildren<Animator>();
         IsFrozen = false;
         attackCooldownTimer = new Timer(this)
@@ -76,6 +80,11 @@ public class EnemyAI : MonoBehaviour
         {
             OnTimerElapsed = () =>
             {
+                CancelInvoke(nameof(FlashEnemy));
+                foreach (var renderer in renderers)
+                {
+                    renderer.enabled = true;
+                }
                 isStaggered = false;
                 return null;
             }
@@ -180,6 +189,7 @@ public class EnemyAI : MonoBehaviour
     {
         isStaggered = true;
         staggerTimer.Start(staggerDuration);
+        InvokeRepeating(nameof(FlashEnemy), 0f, 0.1f);
     }
 
     private void OnDrawGizmosSelected()
@@ -224,25 +234,42 @@ public class EnemyAI : MonoBehaviour
         }
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if (isStaggered) return;
+        if (other.gameObject.CompareTag("Sword"))
+        {
+            health -= 1;
+            StaggerFromHit();
+        }
+
+        if (health <= 0)
+        {
+            canAttack = false;
+            agent.angularSpeed = 0;
+            agent.isStopped = true;
+            animator.SetTrigger("Death");
+            Destroy(gameObject, 5f);
+        }
+    }
+
+
+    private void FlashEnemy()
+    {
+        foreach (var renderer in renderers)
+        {
+            renderer.enabled = !renderer.enabled;
+        }
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
+        if (isStaggered) return;
         if (collision.gameObject.name == "Projectile(Clone)")
         {
             health -= 2;
-            isStaggered = true;
-            staggerTimer.Start(staggerDuration);
+            StaggerFromHit();
         }
-        else if (collision.gameObject.name == "Sword") // adjust this
-        {
-            health -= 1;
-            isStaggered = true;
-            staggerTimer.Start(staggerDuration);
-        }
-        else
-        {
-            //Debug.Log($"hit by: {collision.gameObject.name}");
-        }
-
         if (health <= 0)
         {
             canAttack = false;

@@ -69,6 +69,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
     public GameObject loaderBorder;
     public GameObject dashLoaderBorder;
     public Image uiWeaponImage;
+    public GameObject youDiedText;
 
     private GameObject[] movableObjects;
     private GameObject[] visibleMovableObjects;
@@ -84,6 +85,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
     private Slider healthSlider;
     private PostProcessEffectSettings outlineEffect;
     private Respawner respawner;
+    private Animator youDiedTextAnimator;
 
     private Rigidbody rb;
     private int frameNotGrounded;
@@ -141,8 +143,16 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
 
     private void ResetPlayer()
     {
+        canMove = false;
+        canTurn = false;
+        canAct = false;
+        canFire = false;
+        canAttack = false;
+        canDash = false;
         Animator animator = GetComponentInChildren<Animator>();
         animator.SetTrigger("Death");
+        youDiedText.SetActive(true);
+        youDiedTextAnimator.SetTrigger("PlayerDied");
         Destroy(gameObject, 3.0f);
     }
 
@@ -159,6 +169,9 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
         Assert.IsNotNull(healthBar, "HEALTH BAR IS NOT SET IN THE PLAYER OBJECT IN THE SCENE, PUT THE Canvas->HealthBar OBJECT IN THE Health Bar SLOT ON THIS GAME OBJECT");
         Assert.IsNotNull(loaderBorder, "LOADER BORDER IS NOT SET IN PLAYER OBJECT IN THE SCENE, PUT THE Canvas->Loader->LoaderBorder IN THE Loader Border SLOT ON THIS GAME OBJECT");
         Assert.IsNotNull(dashLoaderBorder, "DASH LOADER BORDER IS NOT SET IN PLAYER OBJECT IN THE SCENE, PUT THE Canvas->DashLoader->DashLoaderBorder IN THE Dash Loader Border SLOT ON THIS GAME OBJECT");
+        Assert.IsNotNull(uiWeaponImage, "UI WEAPON IMAGE IS NOT SET IN PLAYER OBJECT IN THE SCENE, PUT THE Canvas->UiWeaponImage IN THE UI Weapon Image SLOT ON THIS GAME OBJECT");
+        Assert.IsNotNull(youDiedText, "YOU DIED TEXT IS NOT SET IN PLAYER OBJECT IN THE SCENE, PUT THE Canvas->YouDiedText IN THE You Died Text SLOT ON THIS GAME OBJECT");
+        youDiedTextAnimator = youDiedText.GetComponent<Animator>();
         movableObjects = GameObject.FindGameObjectsWithTag("MovableObject");
         visibleMovableObjects = Array.Empty<GameObject>();
         currentMovableObject = -1;
@@ -421,7 +434,8 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
                 rb.freezeRotation = true;
                 rb.excludeLayers = LayerMask.GetMask("playerLayer");
                 rb.AddForce(objVelocityChange, ForceMode.VelocityChange);
-            } else
+            }
+            else
             {
                 Debug.LogError("Movable object does not have a rigidbody!");
             }
@@ -641,7 +655,8 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
                 else if (weaponSprites[weaponIndex].name == IceSpriteName)
                 {
                     FireIceProjectile();
-                } else if (weaponSprites[weaponIndex].name == MagnetSpriteName)
+                }
+                else if (weaponSprites[weaponIndex].name == MagnetSpriteName)
                 {
                     FireMagnetProjectile();
                 }
