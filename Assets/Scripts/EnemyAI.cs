@@ -10,6 +10,7 @@ public class EnemyAI : MonoBehaviour
     public Transform player;
     public LayerMask whatIsGround, whatIsPlayer;
 
+    private bool isStaggered;
     private bool isFrozen;
     public bool IsFrozen
     {
@@ -32,8 +33,9 @@ public class EnemyAI : MonoBehaviour
     public bool playerInSightRange, playerInAttackRange;
 
     // Attack
-    public float timeBetweenAttacks;
-    bool alreadyAttacked;
+    private bool canAttack = true;
+    private float attackCooldown = 2f;
+    public Timer attackCooldownTimer;
     private Vector3 playerPosition;
 
     public bool isMelee;
@@ -42,6 +44,12 @@ public class EnemyAI : MonoBehaviour
     [SerializeField] private GameObject projectilePrefab;
     [SerializeField] private float projectileHeight = 0.8f;
     [SerializeField] private float projectileRange = 15f;
+
+    // combat
+    public float health = 3;
+    public float staggerDuration = 1f;
+    public Timer staggerTimer;
+
 
     private void Awake()
     {
@@ -53,11 +61,28 @@ public class EnemyAI : MonoBehaviour
     private void Start()
     {
         IsFrozen = false;
+        attackCooldownTimer = new Timer(this)
+        {
+            OnTimerElapsed = () =>
+            {
+                Debug.Log($"canAttack");
+                canAttack = true;
+                return null;
+            }
+        };
+        staggerTimer = new Timer(this)
+        {
+            OnTimerElapsed = () =>
+            {
+                isStaggered = false;
+                return null;
+            }
+        };
     }
 
     private void Update()
     {
-        if (IsFrozen) return;
+        if (IsFrozen || isStaggered) return;
         // Update the detection of player
         playerInSightRange = Physics.CheckSphere(transform.position, sightRange, whatIsPlayer);
         playerInAttackRange = Physics.CheckSphere(transform.position, attackRange, whatIsPlayer);
@@ -131,7 +156,7 @@ public class EnemyAI : MonoBehaviour
                 Vector3 lookDirection = new Vector3(player.position.x, transform.position.y, player.position.z);
                 transform.LookAt(lookDirection);
 
-                if (!alreadyAttacked)
+                if (canAttack)
                 {
                     if (isMelee)
                     {
@@ -142,17 +167,17 @@ public class EnemyAI : MonoBehaviour
                         // Perform ranged attack
                         RangedAttack();
                     }
-                    alreadyAttacked = true;
-                    Invoke(nameof(ResetAttack), timeBetweenAttacks);
+                    canAttack = false;
+                    attackCooldownTimer.Start(attackCooldown);
                 }
             }
         }
     }
 
-    private void ResetAttack()
+    public void StaggerFromHit()
     {
-        alreadyAttacked = false;
-        Debug.Log("Resetting attack!");
+        isStaggered = true;
+        staggerTimer.Start(staggerDuration);
     }
 
     private void OnDrawGizmosSelected()
@@ -165,7 +190,7 @@ public class EnemyAI : MonoBehaviour
 
     private void RangedAttack()
     {
-        Debug.Log("Ranged attacking player");
+        //Debug.Log("Ranged attacking player");
 
         Vector3 startingPosition = new Vector3(transform.position.x, projectileHeight, transform.position.z);
 
@@ -174,7 +199,7 @@ public class EnemyAI : MonoBehaviour
         Vector3 endingPosition = transform.position + directionToPlayer * projectileRange;
         endingPosition.y = projectileHeight;
 
-        Debug.Log($"Starting position: {startingPosition}, Ending position: {endingPosition}");
+        //Debug.Log($"Starting position: {startingPosition}, Ending position: {endingPosition}");
 
         Vector3 projectilePosition = startingPosition;
 
@@ -190,6 +215,32 @@ public class EnemyAI : MonoBehaviour
         else
         {
             Debug.LogError("ProjectileScript is missing on the projectile prefab!");
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.name == "Projectile(Clone)")
+        {
+            health -= 2;
+            isStaggered = true;
+            staggerTimer.Start(staggerDuration);
+        }
+        else if (collision.gameObject.name == "Sword") // adjust this
+        {
+            health -= 1;
+            isStaggered = true;
+            staggerTimer.Start(staggerDuration);
+        }
+        else
+        {
+            //Debug.Log($"hit by: {collision.gameObject.name}");
+        }
+
+        if (health <= 0)
+        {
+            Debug.Log("dead");
+            gameObject.SetActive(false);
         }
     }
 }
