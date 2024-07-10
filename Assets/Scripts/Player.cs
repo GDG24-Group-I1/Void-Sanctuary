@@ -141,7 +141,9 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
 
     private void ResetPlayer()
     {
-        Destroy(gameObject);
+        Animator animator = GetComponentInChildren<Animator>();
+        animator.SetTrigger("Death");
+        Destroy(gameObject, 3.0f);
     }
 
 
