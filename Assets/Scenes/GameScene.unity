@@ -1957,6 +1957,10 @@ PrefabInstance:
       propertyPath: player
       value: 
       objectReference: {fileID: 1773679469}
+    - target: {fileID: 2630759226692012494, guid: 9dac9a6f59137ee4c877ffa14b7324f7, type: 3}
+      propertyPath: m_IsKinematic
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4188234102827016206, guid: 9dac9a6f59137ee4c877ffa14b7324f7, type: 3}
       propertyPath: m_Name
       value: EnemySword
@@ -1964,43 +1968,8 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 4188234102827016206, guid: 9dac9a6f59137ee4c877ffa14b7324f7, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 710590033454420802}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9dac9a6f59137ee4c877ffa14b7324f7, type: 3}
---- !u!1 &710590033454420801 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4188234102827016206, guid: 9dac9a6f59137ee4c877ffa14b7324f7, type: 3}
-  m_PrefabInstance: {fileID: 710590033454420800}
-  m_PrefabAsset: {fileID: 0}
---- !u!54 &710590033454420802
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 710590033454420801}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 80
-  m_CollisionDetection: 0
 --- !u!1001 &2299443374272311480
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2192,6 +2161,10 @@ PrefabInstance:
       propertyPath: player
       value: 
       objectReference: {fileID: 1773679469}
+    - target: {fileID: 7796587839242472862, guid: 2a02a2f46a8a06f4098f8e17d53709a8, type: 3}
+      propertyPath: m_IsKinematic
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8123513749073689288, guid: 2a02a2f46a8a06f4098f8e17d53709a8, type: 3}
       propertyPath: m_Name
       value: EnemyLaser
@@ -2239,43 +2212,8 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 8123513749073689288, guid: 2a02a2f46a8a06f4098f8e17d53709a8, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 7196681532762753639}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2a02a2f46a8a06f4098f8e17d53709a8, type: 3}
---- !u!1 &7196681532762753638 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8123513749073689288, guid: 2a02a2f46a8a06f4098f8e17d53709a8, type: 3}
-  m_PrefabInstance: {fileID: 7196681532762753637}
-  m_PrefabAsset: {fileID: 0}
---- !u!54 &7196681532762753639
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7196681532762753638}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 80
-  m_CollisionDetection: 0
 --- !u!1001 &7296185728808138311
 PrefabInstance:
   m_ObjectHideFlags: 0

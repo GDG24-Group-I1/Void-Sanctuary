@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.EventSystems;
 
 public class EnemyAI : MonoBehaviour
 {
@@ -36,8 +37,7 @@ public class EnemyAI : MonoBehaviour
     private bool canAttack = true;
     private float attackCooldown = 2f;
     public Timer attackCooldownTimer;
-    private Vector3 playerPosition;
-
+    public bool animationEnded = false;
     public bool isMelee;
 
     // range attack
@@ -49,17 +49,19 @@ public class EnemyAI : MonoBehaviour
     public float health = 3;
     public float staggerDuration = 1f;
     public Timer staggerTimer;
+    Animator animator;
 
 
     private void Awake()
     {
         player = GameObject.Find("Player").transform;
-        playerPosition = player.transform.position;
+
         agent = GetComponent<NavMeshAgent>();
     }
 
     private void Start()
     {
+        animator = GetComponentInChildren<Animator>();
         IsFrozen = false;
         attackCooldownTimer = new Timer(this)
         {
@@ -82,7 +84,7 @@ public class EnemyAI : MonoBehaviour
 
     private void Update()
     {
-        if (IsFrozen || isStaggered) return;
+        if (IsFrozen || isStaggered || health <=0) return;
         // Update the detection of player
         playerInSightRange = Physics.CheckSphere(transform.position, sightRange, whatIsPlayer);
         playerInAttackRange = Physics.CheckSphere(transform.position, attackRange, whatIsPlayer);
@@ -160,11 +162,11 @@ public class EnemyAI : MonoBehaviour
                 {
                     if (isMelee)
                     {
-                        Debug.Log("Melee attack");
+                        MeleeAttack();
                     }
                     else
                     {
-                        // Perform ranged attack
+                        animator.SetTrigger("Attack");
                         RangedAttack();
                     }
                     canAttack = false;
@@ -188,10 +190,14 @@ public class EnemyAI : MonoBehaviour
         Gizmos.DrawWireSphere(transform.position, attackRange);
     }
 
+    private void MeleeAttack()
+    {
+        animator.SetTrigger("Attack");
+    }
+
     private void RangedAttack()
     {
         //Debug.Log("Ranged attacking player");
-
         Vector3 startingPosition = new Vector3(transform.position.x, projectileHeight, transform.position.z);
 
         Vector3 directionToPlayer = (player.position - transform.position).normalized;
@@ -239,8 +245,21 @@ public class EnemyAI : MonoBehaviour
 
         if (health <= 0)
         {
-            Debug.Log("dead");
-            gameObject.SetActive(false);
+            canAttack = false;
+            agent.angularSpeed = 0;
+            agent.isStopped = true;
+            animator.SetTrigger("Death");
+            Destroy(gameObject, 5f);
         }
+    }
+
+    public EnemyAI GetEnemy()
+    {
+        return this;
+    }
+
+    public void OnDestroy()
+    {
+        StopAllCoroutines();
     }
 }
