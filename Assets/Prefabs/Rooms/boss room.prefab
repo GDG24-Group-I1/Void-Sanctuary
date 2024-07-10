@@ -365,6 +365,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2697657399250429576}
   - component: {fileID: 7631038918025739319}
+  - component: {fileID: 3944240843967585040}
   m_Layer: 0
   m_Name: boss room
   m_TagString: rooms
@@ -481,6 +482,18 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 130.88835, y: 17.209993, z: 104.46429}
   m_Center: {x: -15.94735, y: 8.341609, z: -0.030467987}
+--- !u!114 &3944240843967585040
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9087818826114105233}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26122340b513a024a8ba90083ef7b219, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &5344192666644995
 PrefabInstance:
   m_ObjectHideFlags: 0
