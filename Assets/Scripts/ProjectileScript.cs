@@ -26,11 +26,11 @@ public class ProjectileScript : MonoBehaviour
             return;
         }
 
-        Debug.Log($"projectile hit: {other.gameObject.name}");
-        var isEnemy = other.gameObject.CompareTag("Enemy");
+        //Debug.Log($"projectile hit: {other.gameObject.name}");
+        var isEnemy = other.gameObject.CompareTag("EnemyObj");
         if (IceCube != null && isEnemy)
         {
-            var enemyAi = other.transform.parent.GetComponent<EnemyAI>();
+            var enemyAi = other.gameObject.GetComponent<EnemyAI>();
             if (!enemyAi.IsFrozen)
             {
                 Instantiate(IceCube, other.transform.position, other.transform.rotation, other.transform);
@@ -38,7 +38,7 @@ public class ProjectileScript : MonoBehaviour
             }
         } else if (IceCube == null && isEnemy)
         {
-            var enemyAi = other.transform.parent.GetComponent<EnemyAI>();
+            var enemyAi = other.gameObject.GetComponent<EnemyAI>();
             if (enemyAi.IsFrozen)
             {
                 Destroy(other.gameObject.transform.GetChild(other.gameObject.transform.childCount - 1).gameObject);
