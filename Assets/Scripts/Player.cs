@@ -131,6 +131,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
     private bool canDash = true;
     private bool executeDash = false;
     private bool isPickingUpItem = false;
+    private bool isStaggered = false;
     private Timer movementCooldownTimer;
     private Timer turningCooldownTimer;
     private Timer actionCooldownTimer;
@@ -138,7 +139,9 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
     private Timer firingStageCooldown;
     private Timer deathTimer;
     private Timer dashCooldownTimer;
+    private Timer staggerTimer;
     private PlayerAnimator animator;
+    Renderer[] renderers;
 
 
     private void ResetPlayer()
@@ -200,10 +203,12 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
         swordCollider = sword.GetComponent<BoxCollider>();
         dialogBox = GameObject.Find("DialogBox");
         respawner = GameObject.FindGameObjectWithTag("Respawner").GetComponent<Respawner>();
+        respawner.ClearPowerups();
         foreach (var spr in weaponSprites)
         {
             respawner.AddPowerup(spr);
         }
+        renderers = GetComponentsInChildren<Renderer>().Where(x => x is not LineRenderer).ToArray();
 
         deathTimer = new Timer(this)
         {
@@ -292,6 +297,19 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
             OnTimerElapsed = () =>
             {
                 canDash = true;
+                return null;
+            }
+        };
+        staggerTimer = new Timer(this)
+        {
+            OnTimerElapsed = () =>
+            {
+                isStaggered = false;
+                CancelInvoke(nameof(FlashPlayer));
+                foreach (var renderer in renderers)
+                {
+                    renderer.enabled = true;
+                }
                 return null;
             }
         };
@@ -710,7 +728,6 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
         {
             AttackNumber = 0;
             IsAttacking = false;
-            swordCollider.enabled = false;
             canAttack = true;
             canMove = true;
         }
@@ -731,6 +748,11 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
                 Time.fixedDeltaTime = fixedDeltaTime;
             }
         }
+    }
+
+    public void SetSwordSolidity(bool isSolid)
+    {
+        swordCollider.enabled = isSolid;
     }
 
     public void StartFalling()
@@ -835,6 +857,38 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
         TouchedPowerup = null;
     }
 
+    private void FlashPlayer()
+    {
+        foreach (var renderer in renderers)
+        {
+            renderer.enabled = !renderer.enabled;
+        }
+    }
+
+    private void StaggerFromHit(Vector3 direction)
+    {
+        healthSlider.value = Math.Clamp(healthSlider.value - 1, healthSlider.minValue, healthSlider.maxValue);
+        InvokeRepeating(nameof(FlashPlayer), 0, 0.1f);
+        isStaggered = true;
+        staggerTimer.Start(1.0f); 
+        rb.AddForce(direction * 5_000, ForceMode.Impulse);
+    }
+
+    public void OnTriggerEnter(Collider other)
+    {
+        if (isStaggered) return;
+        var direction = (transform.position - other.transform.position).normalized;
+        if (other.gameObject.name == "ProjectileEnemy(Clone)")
+        {
+            Debug.Log("Player hit by enemy projectile");
+            StaggerFromHit(direction);
+        } else if (other.gameObject.name == "Arm_L" || other.gameObject.name == "Arm_R")
+        {
+            Debug.Log("Player hit by enemy");
+            StaggerFromHit(direction);
+        }
+    }
+
     public void OnDestroy()
     {
         StopAllCoroutines();
@@ -855,7 +909,6 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
             IsAttacking = true;
             canMove = false;
             Attack();
-            swordCollider.enabled = true; // FIXME: this should ONLY be enabled during the attack animation and not immediately
         }
     }
     public void OnFire(InputAction.CallbackContext context)
@@ -944,7 +997,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
                 isPickingUpItem = true;
             }
             var handler = dialogBox.GetComponent<DialogHandler>();
-            if (!gameInput.IsKeyboardMovement && handler.IsInDialog && handler.IsDialogDismissable)
+            if (handler.IsInDialog && handler.IsDialogDismissable)
             {
                 handler.DismissDialog();
             }

@@ -1,10 +1,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.EventSystems;
 
+[RequireComponent(typeof(Rigidbody))]
 public class EnemyAI : MonoBehaviour
 {
     public NavMeshAgent agent;
@@ -45,27 +47,40 @@ public class EnemyAI : MonoBehaviour
     [SerializeField] private GameObject projectilePrefab;
     [SerializeField] private float projectileHeight = 0.8f;
     [SerializeField] private float projectileRange = 15f;
+    [SerializeField] private float lingerTimeAfterDeath = 5f;
+
+    // melee attack
+    [SerializeField] private BoxCollider leftArmCollider;
+    [SerializeField] private BoxCollider rightArmCollider;
+
+    // enemy type
+    public EnemyType Type;
 
     // combat
     public float health = 3;
     public float staggerDuration = 1f;
     public Timer staggerTimer;
     Animator animator;
+    private Rigidbody rb;
 
     //
     Renderer[] renderers;
 
     private void Awake()
     {
-        player = GameObject.Find("Player").transform;
-
         agent = GetComponent<NavMeshAgent>();
     }
 
     private void Start()
     {
+        if (Type == EnemyType.Melee)
+        {
+            leftArmCollider.enabled = false;
+            rightArmCollider.enabled = false;
+        }
         renderers = GetComponentsInChildren<Renderer>();
         animator = GetComponentInChildren<Animator>();
+        rb = GetComponent<Rigidbody>();
         IsFrozen = false;
         attackCooldownTimer = new Timer(this)
         {
@@ -86,6 +101,7 @@ public class EnemyAI : MonoBehaviour
                     renderer.enabled = true;
                 }
                 isStaggered = false;
+                agent.isStopped = false;
                 return null;
             }
         };
@@ -93,7 +109,7 @@ public class EnemyAI : MonoBehaviour
 
     private void Update()
     {
-        if (IsFrozen || isStaggered || health <=0) return;
+        if (IsFrozen || isStaggered || health <= 0) return;
         // Update the detection of player
         playerInSightRange = Physics.CheckSphere(transform.position, sightRange, whatIsPlayer);
         playerInAttackRange = Physics.CheckSphere(transform.position, attackRange, whatIsPlayer);
@@ -185,8 +201,18 @@ public class EnemyAI : MonoBehaviour
         }
     }
 
+    public void SetSwordSolidity(bool isSolid)
+    {
+        if (Type != EnemyType.Melee) return;
+        leftArmCollider.enabled = isSolid;
+        rightArmCollider.enabled = isSolid;
+    }
+
     public void StaggerFromHit()
     {
+        agent.isStopped = true;
+        rb.MovePosition(transform.position + transform.forward * -1);
+        if (health <= 0) return;
         isStaggered = true;
         staggerTimer.Start(staggerDuration);
         InvokeRepeating(nameof(FlashEnemy), 0f, 0.1f);
@@ -223,8 +249,7 @@ public class EnemyAI : MonoBehaviour
         GameObject projectile = Instantiate(projectilePrefab, projectilePosition, Quaternion.LookRotation(directionToPlayer));
         projectile.transform.Rotate(90, 0, 0);
 
-        ProjectileScript projectileScript = projectile.GetComponent<ProjectileScript>();
-        if (projectileScript != null)
+        if (projectile.TryGetComponent<ProjectileScript>(out var projectileScript))
         {
             projectileScript.endingPosition = endingPosition;
         }
@@ -236,7 +261,7 @@ public class EnemyAI : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (isStaggered) return;
+        if (isStaggered || health <= 0) return;
         if (other.gameObject.CompareTag("Sword"))
         {
             health -= 1;
@@ -249,7 +274,8 @@ public class EnemyAI : MonoBehaviour
             agent.angularSpeed = 0;
             agent.isStopped = true;
             animator.SetTrigger("Death");
-            Destroy(gameObject, 5f);
+            StartCoroutine(EnemyFlashDeath());
+            Destroy(gameObject, lingerTimeAfterDeath);
         }
     }
 
@@ -262,9 +288,32 @@ public class EnemyAI : MonoBehaviour
         }
     }
 
+    private IEnumerator EnemyFlashDeath()
+    {
+        const float waitBeforeFlashing = 2f;
+        float realLingerTimeAfterDeath = lingerTimeAfterDeath - waitBeforeFlashing;
+        int flashCount = 0;
+        int currentInterval = 0;
+        float[] flashIntervals = { 0.3f, 0.2f, 0.1f };
+        float intervalDuration = realLingerTimeAfterDeath / flashIntervals.Length;
+        int[] intervalsCount = flashIntervals.Select(x => (int)(intervalDuration / x)).ToArray();
+        yield return new WaitForSeconds(waitBeforeFlashing);
+        while (currentInterval < flashIntervals.Length)
+        {
+            yield return new WaitForSeconds(flashIntervals[currentInterval]);
+            FlashEnemy();
+            flashCount++;
+            if (flashCount >= intervalsCount[currentInterval])
+            {
+                currentInterval++;
+                flashCount = 0;
+            }
+        }
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
-        if (isStaggered) return;
+        if (isStaggered || health <= 0) return;
         if (collision.gameObject.name == "Projectile(Clone)")
         {
             health -= 2;
@@ -276,7 +325,8 @@ public class EnemyAI : MonoBehaviour
             agent.angularSpeed = 0;
             agent.isStopped = true;
             animator.SetTrigger("Death");
-            Destroy(gameObject, 5f);
+            StartCoroutine(EnemyFlashDeath());
+            Destroy(gameObject, lingerTimeAfterDeath);
         }
     }
 

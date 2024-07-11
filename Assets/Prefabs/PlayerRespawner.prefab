@@ -44,6 +44,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1eb47603be9a6d34bb1ee6e9435942bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerFollower: {fileID: 0}
   playerPrefab: {fileID: 3120664125272468870, guid: 602c5e512c353fa4f9089894d785261b, type: 3}
-  youDiedText: {fileID: 0}
+  enemySwordPrefab: {fileID: 4188234102827016206, guid: 9dac9a6f59137ee4c877ffa14b7324f7, type: 3}
+  enemyRangedPrefab: {fileID: 8123513749073689288, guid: 2a02a2f46a8a06f4098f8e17d53709a8, type: 3}
+  MaxAdjustment: 10
+  yDiffThreshold: 0.5
