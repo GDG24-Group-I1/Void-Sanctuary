@@ -56,14 +56,14 @@ public class SwitchScript : MonoBehaviour
         //gameObject.GetComponent<MeshRenderer>().material.color = Color.green;
         gameObject.GetComponent<MeshRenderer>().materials[0].color = Color.green;
 
-            // Ottieni il materiale del MeshRenderer
-             Material material = gameObject.GetComponent<MeshRenderer>().materials[0];
+        // Ottieni il materiale del MeshRenderer
+        Material material = gameObject.GetComponent<MeshRenderer>().materials[0];
 
-            // Abilita l'emissione sul materiale
-             material.EnableKeyword("_EMISSION");
+        // Abilita l'emissione sul materiale
+        material.EnableKeyword("_EMISSION");
 
-             // Cambia il colore dell'emissione
-            material.SetColor("_EmissionColor", Color.green);
+        // Cambia il colore dell'emissione
+        material.SetColor("_EmissionColor", Color.green);
         var innerParent = transform.parent;
         if (innerParent != null)
         {
@@ -75,7 +75,7 @@ public class SwitchScript : MonoBehaviour
                 {
                     var child = parentObject.transform.GetChild(i);
                     if (child.gameObject.tag == "Platform")
-                        child.gameObject.GetComponent<PlatformScript>().activeSwitches += 1;
+                        child.gameObject.GetComponent<PlatformScript>().Input(1);
                 }
             }
         }
@@ -92,7 +92,7 @@ public class SwitchScript : MonoBehaviour
             {
                 var child = parentObject.transform.GetChild(i);
                 if (child.gameObject.tag == "Platform")
-                    child.gameObject.GetComponent<PlatformScript>().activeSwitches -= 1;
+                    child.gameObject.GetComponent<PlatformScript>().Input(-1);
             }
         }
     }
