@@ -1191,12 +1191,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec5a4cdc707e9664682ebb09b384fdcd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activeSwitches: 0
   movementType: 3
   requiredSwitches: 0
   movements:
-  - {x: 0, y: 0, z: 8}
-  travelDistance: 04000000
+  - {x: 0, y: 0, z: 4}
+  speed: 8
+  cycleCooldown: 1
 --- !u!1001 &186619609144408990
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1544,6 +1544,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 262b3cf86f9245443a120f06d949910e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  unlocked: 1
+  requiredInputs: 5
+  light: {fileID: 0}
   animator: {fileID: 0}
 --- !u!1001 &346693694452116207
 PrefabInstance:
@@ -5560,6 +5563,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 262b3cf86f9245443a120f06d949910e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  unlocked: 1
+  requiredInputs: 5
+  light: {fileID: 0}
   animator: {fileID: 0}
 --- !u!1001 &2866818726473844336
 PrefabInstance:
@@ -5753,12 +5759,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec5a4cdc707e9664682ebb09b384fdcd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activeSwitches: 0
   movementType: 3
   requiredSwitches: 0
   movements:
-  - {x: 0, y: 1, z: 0}
-  travelDistance: 08000000
+  - {x: 0, y: 8, z: 0}
+  speed: 6
+  cycleCooldown: 1
 --- !u!1001 &2894650489227626906
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7361,16 +7367,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec5a4cdc707e9664682ebb09b384fdcd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activeSwitches: 0
   movementType: 3
   requiredSwitches: 1
   movements:
-  - {x: 4, y: 0, z: 0}
-  - {x: 0, y: 0, z: 4}
-  - {x: 4, y: 0, z: 0}
-  - {x: 0, y: 0, z: -4}
-  - {x: 4, y: 0, z: 0}
-  travelDistance: 1200000009000000040000000d00000005000000
+  - {x: 18, y: 0, z: 0}
+  - {x: 0, y: 0, z: 9}
+  - {x: 4.5, y: 0, z: 0}
+  - {x: 0, y: 0, z: -9}
+  - {x: 9, y: 0, z: 0}
+  speed: 10
+  cycleCooldown: 4
 --- !u!1001 &3993122340510528305
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10441,15 +10447,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 469248, guid: e2b765e173dde5746a32f2cb5d3f2de4, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 28.715076
+      value: 29.61507
       objectReference: {fileID: 0}
     - target: {fileID: 469248, guid: e2b765e173dde5746a32f2cb5d3f2de4, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.3446398
+      value: 3.9904833
       objectReference: {fileID: 0}
     - target: {fileID: 469248, guid: e2b765e173dde5746a32f2cb5d3f2de4, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 13.860779
+      value: 13.610779
       objectReference: {fileID: 0}
     - target: {fileID: 469248, guid: e2b765e173dde5746a32f2cb5d3f2de4, type: 3}
       propertyPath: m_LocalRotation.w
@@ -10544,12 +10550,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec5a4cdc707e9664682ebb09b384fdcd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activeSwitches: 0
   movementType: 3
   requiredSwitches: 1
   movements:
-  - {x: 0, y: 4, z: 0}
-  travelDistance: 0a000000
+  - {x: 0, y: 9, z: 0}
+  speed: 10
+  cycleCooldown: 2
 --- !u!4 &5604099750816638284 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 469248, guid: e2b765e173dde5746a32f2cb5d3f2de4, type: 3}
@@ -11083,12 +11089,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec5a4cdc707e9664682ebb09b384fdcd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activeSwitches: 0
   movementType: 3
   requiredSwitches: 0
   movements:
-  - {x: 0, y: 0, z: -8}
-  travelDistance: 04000000
+  - {x: 0, y: 0, z: -4}
+  speed: 8
+  cycleCooldown: 1
 --- !u!1001 &5786924029494159166
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11883,12 +11889,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec5a4cdc707e9664682ebb09b384fdcd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activeSwitches: 0
   movementType: 3
   requiredSwitches: 0
   movements:
-  - {x: 4, y: 0, z: 0}
-  travelDistance: 0a000000
+  - {x: 12, y: 0, z: 0}
+  speed: 10
+  cycleCooldown: 1
 --- !u!1001 &6317248633013550696
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -15307,12 +15313,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec5a4cdc707e9664682ebb09b384fdcd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activeSwitches: 0
   movementType: 3
   requiredSwitches: 0
   movements:
-  - {x: -4, y: 0, z: 0}
-  travelDistance: 0a000000
+  - {x: -12, y: 0, z: 0}
+  speed: 10
+  cycleCooldown: 1
 --- !u!1001 &8297104966767084076
 PrefabInstance:
   m_ObjectHideFlags: 0

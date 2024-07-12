@@ -733,8 +733,8 @@ MonoBehaviour:
   movementType: 3
   requiredSwitches: 1
   movements:
-  - {x: 0, y: 0, z: 7}
-  speed: 4
+  - {x: 0, y: 0, z: 6.2}
+  speed: 6
   cycleCooldown: 1
 --- !u!1001 &46467863724785929
 PrefabInstance:
@@ -5128,6 +5128,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: light_wall_3_blue
       objectReference: {fileID: 0}
+    - target: {fileID: 135472, guid: 8b5797a18349fb546be8acddc71151ff, type: 3}
+      propertyPath: m_Name
+      value: Point light down_exit_door
+      objectReference: {fileID: 0}
     - target: {fileID: 405920, guid: 8b5797a18349fb546be8acddc71151ff, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.49999994
@@ -5221,6 +5225,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8b5797a18349fb546be8acddc71151ff, type: 3}
+--- !u!108 &2582568550525977878 stripped
+Light:
+  m_CorrespondingSourceObject: {fileID: 10828764, guid: 8b5797a18349fb546be8acddc71151ff, type: 3}
+  m_PrefabInstance: {fileID: 2582568550532611786}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2582568550532206442 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 405920, guid: 8b5797a18349fb546be8acddc71151ff, type: 3}
@@ -6467,9 +6476,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 262b3cf86f9245443a120f06d949910e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unlocked: 1
-  requiredInputs: 5
-  light: {fileID: 0}
+  unlocked: 0
+  requiredInputs: 1
+  light: {fileID: 2582568550525977878}
   animator: {fileID: 0}
 --- !u!1001 &2866818726473844336
 PrefabInstance:
@@ -6666,8 +6675,8 @@ MonoBehaviour:
   movementType: 3
   requiredSwitches: 0
   movements:
-  - {x: 0, y: 1, z: 0}
-  speed: 4
+  - {x: 0, y: 7.9, z: 0}
+  speed: 6
   cycleCooldown: 1
 --- !u!1001 &2879013447756714601
 PrefabInstance:
@@ -11962,10 +11971,10 @@ MonoBehaviour:
   movementType: 3
   requiredSwitches: 1
   movements:
-  - {x: -10, y: 0, z: 0}
-  - {x: 0, y: -16, z: 0}
-  speed: 4
-  cycleCooldown: 1
+  - {x: -16.55, y: 0, z: 0}
+  - {x: 0, y: -15.7, z: 0}
+  speed: 10
+  cycleCooldown: 2
 --- !u!4 &5604099750816638284 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 469248, guid: e2b765e173dde5746a32f2cb5d3f2de4, type: 3}
@@ -12514,8 +12523,8 @@ MonoBehaviour:
   movementType: 3
   requiredSwitches: 1
   movements:
-  - {x: 0, y: 0, z: -7}
-  speed: 4
+  - {x: 0, y: 0, z: -6.2}
+  speed: 6
   cycleCooldown: 1
 --- !u!1001 &5786924029494159166
 PrefabInstance:
