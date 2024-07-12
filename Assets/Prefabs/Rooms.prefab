@@ -615,6 +615,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: Room2
       objectReference: {fileID: 0}
+    - target: {fileID: 6534142488004731273, guid: 34a83b935b80352499e60b0cae9f0d9e, type: 3}
+      propertyPath: m_Size.x
+      value: 0.7141286
+      objectReference: {fileID: 0}
+    - target: {fileID: 6534142488004731273, guid: 34a83b935b80352499e60b0cae9f0d9e, type: 3}
+      propertyPath: m_Center.x
+      value: 0.056778878
+      objectReference: {fileID: 0}
+    - target: {fileID: 6534142488004731273, guid: 34a83b935b80352499e60b0cae9f0d9e, type: 3}
+      propertyPath: m_Center.z
+      value: 0.00000028448608
+      objectReference: {fileID: 0}
     - target: {fileID: 8662672477907036730, guid: 34a83b935b80352499e60b0cae9f0d9e, type: 3}
       propertyPath: m_LocalPosition.x
       value: -49.33002

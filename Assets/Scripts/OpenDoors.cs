@@ -6,16 +6,16 @@ public class OpenDoors : MonoBehaviour
 {
     [SerializeField] private bool unlocked = true;
     [SerializeField] private int requiredInputs = 5;
-    public Light light;
+    public Light doorLight;
     private int activeInputs = 0;
     public Animator animator;
 
     void Start()
     {
         animator = GetComponent<Animator>();
-        if (light != null)
+        if (doorLight != null)
             if (!unlocked)
-                light.color = Color.red;
+                doorLight.color = Color.red;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -61,7 +61,7 @@ public class OpenDoors : MonoBehaviour
         var lightColor = Color.green;
         if (!unlocked)
             lightColor = Color.red;
-        if (light != null)
-            light.color = lightColor;
+        if (doorLight != null)
+            doorLight.color = lightColor;
     }
 }
