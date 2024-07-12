@@ -5,13 +5,13 @@ using UnityEngine;
 public class ProjectileScript : MonoBehaviour
 {
     [SerializeField] private float projectileSpeed = 30f;
-    [SerializeField] private float minCollisionDistance = 1f;
-    private Vector3 startingPosition;
+    [SerializeField] private GameObject IceCube;
+    [SerializeField] private LayerMask ignoreLayers;
     public Vector3 endingPosition;
 
     void Start()
     {
-        startingPosition = transform.position;
+
     }
 
     void Update()
@@ -19,13 +19,35 @@ public class ProjectileScript : MonoBehaviour
         projectileMove();
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnCollisionEnter(Collision other)
     {
-        var distance = Mathf.Sqrt(Mathf.Pow(transform.position.x - startingPosition.x, 2) + Mathf.Pow(transform.position.z - startingPosition.z, 2));
-        if (distance > minCollisionDistance)
+        if (((1 << other.gameObject.layer) & ignoreLayers) != 0)
         {
-            Destroy(gameObject);
+            return;
         }
+
+        //Debug.Log($"projectile hit: {other.gameObject.name}");
+        var isEnemy = other.gameObject.CompareTag("EnemyObj");
+        if (IceCube != null && isEnemy)
+        {
+            var enemyAi = other.gameObject.GetComponent<EnemyAI>();
+            if (!enemyAi.IsFrozen)
+            {
+                Instantiate(IceCube, other.transform.position, other.transform.rotation, other.transform);
+                enemyAi.IsFrozen = true;
+            }
+        } else if (IceCube == null && isEnemy)
+        {
+            var enemyAi = other.gameObject.GetComponent<EnemyAI>();
+            if (enemyAi.IsFrozen)
+            {
+                Destroy(other.gameObject.transform.GetChild(other.gameObject.transform.childCount - 1).gameObject);
+                enemyAi.IsFrozen = false;
+            }
+            
+        }
+
+        Destroy(gameObject);
     }
 
     void projectileMove()

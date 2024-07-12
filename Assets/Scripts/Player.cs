@@ -1,10 +1,11 @@
-// #define DRAW_DEBUG_RAYS
-// #define SLOW_DOWN_ATTACK
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Assertions;
+using UnityEngine.InputSystem;
+using UnityEngine.Rendering.PostProcessing;
 using UnityEngine.UI;
 
 public enum ComboState
@@ -22,17 +23,32 @@ public enum AnimationState
     Playing
 }
 
-[RequireComponent(typeof(Rigidbody), typeof(GameInput), typeof(FloorCollider))]
-public class Player : MonoBehaviour
+public enum FiringStage
 {
-    enum FiringStage { notFiring, aiming, startCharging, charging, firing, knockback }
+    notFiring,
+    aiming,
+    startCharging,
+    charging,
+    firing,
+    knockback
+}
 
-    private const float firingKnockbackSpeed = 50f;
+[RequireComponent(typeof(Rigidbody), typeof(FloorCollider))]
+public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
+{
+    private const float firingKnockbackSpeed = 0f;
     private const int maxWallsCollided = 10;
+
+    private const string GunSpriteName = "GunTransparent";
+    private const string IceSpriteName = "IceTransparent";
+    private const string MagnetSpriteName = "MagnetTransparent";
+
+    [Header("Fixed values set in the prefab\nDo not need to be reset by the Respawner")]
     [SerializeField] private float walkSpeed = 5f;
     [SerializeField] private float runSpeed = 10f;
     [SerializeField] private float groundDrag = 6f;
-    [SerializeField] private GameObject projectilePrefab;
+    [SerializeField] private GameObject damageProjectilePrefab;
+    [SerializeField] private GameObject iceProjectilePrefab;
     [SerializeField] private GameObject trailPrefab;
     [SerializeField] private LayerMask wallLayerMask;
     [SerializeField] private LayerMask groundLayerMask;
@@ -42,23 +58,34 @@ public class Player : MonoBehaviour
     [SerializeField] private Material glowMaterial;
     [SerializeField] private Material swordBaseMaterial;
     [SerializeField] private Material swordBackBaseMaterial;
-#if SLOW_DOWN_ATTACK
     [SerializeField] private float slowDownFactor = 0.25f;
-#endif
+    [SerializeField] private List<Sprite> weaponSprites;
+    [SerializeField] private Material[] weaponMaterials;
 
     // these need to be public because they are set by the respawner script since they can't be set in the prefab
+    [Header("Dynamic references to specific object instances in the scene\nNeed to be reset in the Respawner on death")]
     public Transform cameraTransform;
     public GameObject healthBar;
+    public GameObject loaderBorder;
+    public GameObject dashLoaderBorder;
+    public Image uiWeaponImage;
+    public GameObject youDiedText;
 
+    private GameObject[] movableObjects;
+    private GameObject[] visibleMovableObjects;
+    private int currentMovableObject;
     private bool IsSwordGlowing = false;
-    private GameObject WeaponOnBack;
-    private GameObject WeaponInHand;
     private LineRenderer aimLaserRenderer;
     private GameObject sword;
     private GameObject swordBack;
+    private GameObject swordPartWithLine;
+    private GameObject dialogBox;
     private BoxCollider swordCollider;
     private GameInput gameInput;
     private Slider healthSlider;
+    private PostProcessEffectSettings outlineEffect;
+    private Respawner respawner;
+    private Animator youDiedTextAnimator;
 
     private Rigidbody rb;
     private int frameNotGrounded;
@@ -66,24 +93,34 @@ public class Player : MonoBehaviour
     private Collider[] previousWallsCollided = Array.Empty<Collider>();
     private readonly RaycastHit[] wallsCollided = new RaycastHit[maxWallsCollided];
 
-#if SLOW_DOWN_ATTACK
+    private int weaponIndex = 0;
+
     private float fixedDeltaTime;
-#endif
     public bool IsWalking { get; private set; }
+
+    public bool IsDashing { get; private set; }
 
     public bool IsRunning { get; private set; }
 
-    public bool IsWeaponEquipped { get; private set; }
-
     public bool IsAttacking { get; private set; }
-
-    public bool DashClicked { get; private set; }
 
     public AnimationState IsFalling { get; private set; } = AnimationState.None;
 
     public ComboState CanCombo { get; set; } = ComboState.NotPressed;
 
     public int AttackNumber { get; set; } = 0;
+
+    public FiringStage firingStage { get; private set; } = FiringStage.notFiring;
+
+    private PowerUpHolder _touchedPowerup;
+    public PowerUpHolder TouchedPowerup
+    {
+        get => _touchedPowerup; set
+        {
+            if (isPickingUpItem) return; // if the player is already picking up an item, don't change it.
+            _touchedPowerup = value;
+        }
+    }
 
     private float movementSpeed;
     private bool canMove = true;
@@ -92,6 +129,9 @@ public class Player : MonoBehaviour
     private bool canFire = true;
     private bool canAttack = true;
     private bool canDash = true;
+    private bool executeDash = false;
+    private bool isPickingUpItem = false;
+    private bool isStaggered = false;
     private Timer movementCooldownTimer;
     private Timer turningCooldownTimer;
     private Timer actionCooldownTimer;
@@ -99,28 +139,50 @@ public class Player : MonoBehaviour
     private Timer firingStageCooldown;
     private Timer deathTimer;
     private Timer dashCooldownTimer;
-    private FiringStage firingStage = FiringStage.notFiring;
+    private Timer staggerTimer;
+    private PlayerAnimator animator;
+    Renderer[] renderers;
 
 
     private void ResetPlayer()
     {
-        Destroy(gameObject);
+        canMove = false;
+        canTurn = false;
+        canAct = false;
+        canFire = false;
+        canAttack = false;
+        canDash = false;
+        Animator animator = GetComponentInChildren<Animator>();
+        animator.SetTrigger("Death");
+        youDiedText.SetActive(true);
+        youDiedTextAnimator.SetTrigger("PlayerDied");
+        Destroy(gameObject, 3.0f);
     }
 
 
-#if SLOW_DOWN_ATTACK
     private void Awake()
     {
         fixedDeltaTime = Time.fixedDeltaTime;
     }
-#endif
 
 
     private void Start()
     {
-        Debug.Assert(cameraTransform != null, "CAMERA TRANSFORM IS NOT SET IN THE PLAYER OBJECT IN THE SCENE, PUT THE TopDownCamera IN THE CameraTrasform SLOT ON THIS GAMEOBJECT");        
-        Debug.Assert(healthBar != null, "HEALTH BAR IS NOT SET IN THE PLAYER OBJECT IN THE SCENE, PUT THE Canvas->HealthBar OBJECT IN THE Health Bar SLOT ON THIS GAME OBJECT");
-        gameInput = GetComponent<GameInput>();
+        Assert.IsNotNull(cameraTransform, "CAMERA TRANSFORM IS NOT SET IN THE PLAYER OBJECT IN THE SCENE, PUT THE TopDownCamera IN THE CameraTrasform SLOT ON THIS GAMEOBJECT");
+        Assert.IsNotNull(healthBar, "HEALTH BAR IS NOT SET IN THE PLAYER OBJECT IN THE SCENE, PUT THE Canvas->HealthBar OBJECT IN THE Health Bar SLOT ON THIS GAME OBJECT");
+        Assert.IsNotNull(loaderBorder, "LOADER BORDER IS NOT SET IN PLAYER OBJECT IN THE SCENE, PUT THE Canvas->Loader->LoaderBorder IN THE Loader Border SLOT ON THIS GAME OBJECT");
+        Assert.IsNotNull(dashLoaderBorder, "DASH LOADER BORDER IS NOT SET IN PLAYER OBJECT IN THE SCENE, PUT THE Canvas->DashLoader->DashLoaderBorder IN THE Dash Loader Border SLOT ON THIS GAME OBJECT");
+        Assert.IsNotNull(uiWeaponImage, "UI WEAPON IMAGE IS NOT SET IN PLAYER OBJECT IN THE SCENE, PUT THE Canvas->UiWeaponImage IN THE UI Weapon Image SLOT ON THIS GAME OBJECT");
+        Assert.IsNotNull(youDiedText, "YOU DIED TEXT IS NOT SET IN PLAYER OBJECT IN THE SCENE, PUT THE Canvas->YouDiedText IN THE You Died Text SLOT ON THIS GAME OBJECT");
+        youDiedTextAnimator = youDiedText.GetComponent<Animator>();
+        movableObjects = GameObject.FindGameObjectsWithTag("MovableObject");
+        visibleMovableObjects = Array.Empty<GameObject>();
+        currentMovableObject = -1;
+        outlineEffect = Camera.main.GetComponent<PostProcessVolume>().profile.settings.First(x => x.name.StartsWith("OutlineEffect"));
+        outlineEffect.enabled.value = false;
+        uiWeaponImage.sprite = weaponSprites[weaponIndex];
+        gameInput = GameObject.FindWithTag("InputHandler").GetComponent<GameInput>();
+        gameInput.RegisterPlayer(this);
         movementSpeed = walkSpeed;
         rb = GetComponent<Rigidbody>();
         healthSlider = healthBar.GetComponent<Slider>();
@@ -132,16 +194,21 @@ public class Player : MonoBehaviour
                 ResetPlayer();
             }
         });
-
+        animator = GetComponentInChildren<PlayerAnimator>();
         var swords = GameObject.FindGameObjectsWithTag("Sword");
         Debug.Assert(swords.Length == 1, "There should be exactly one sword in the scene");
         sword = swords[0];
         swordBack = GameObject.FindGameObjectWithTag("SwordInternal");
+        swordPartWithLine = sword.transform.parent.Find("Cube").gameObject;
         swordCollider = sword.GetComponent<BoxCollider>();
-        WeaponOnBack = GameObject.Find("WeaponHolderOnBack");
-        WeaponInHand = GameObject.Find("WeaponHolderOnHand");
-        WeaponInHand.SetActive(false);
-
+        dialogBox = GameObject.Find("DialogBox");
+        respawner = GameObject.FindGameObjectWithTag("Respawner").GetComponent<Respawner>();
+        respawner.ClearPowerups();
+        foreach (var spr in weaponSprites)
+        {
+            respawner.AddPowerup(spr);
+        }
+        renderers = GetComponentsInChildren<Renderer>().Where(x => x is not LineRenderer).ToArray();
 
         deathTimer = new Timer(this)
         {
@@ -183,81 +250,6 @@ public class Player : MonoBehaviour
             isGrounded = true;
         };
         rb.freezeRotation = true;
-
-        //setting up the aim laser
-        aimLaserRenderer = GetComponentInChildren<LineRenderer>();
-        aimLaserRenderer.positionCount = 2;
-        aimLaserRenderer.SetPosition(0, new Vector3(0, .1f, 0));
-        aimLaserRenderer.enabled = false;
-
-        gameInput.OnAttack = (context) =>
-        {
-
-            if (IsWeaponEquipped)
-            {
-                OnPlayerAttack?.Invoke();
-                IsAttacking = true;
-                canMove = false;
-                Attack();
-                swordCollider.enabled = true;
-            }
-            else
-            {
-                IsAttacking = false;
-            }
-
-        };
-        gameInput.OnFire = (context) =>
-        {
-            Fire();
-        };
-        gameInput.OnAim = (context) =>
-        {
-            Aim();
-        };
-        gameInput.OnBlock = (context) =>
-        {
-            Block();
-        };
-        gameInput.OnRun = (context) =>
-        {
-
-            if (IsWalking)
-            {
-                IsRunning = !IsRunning;
-                if (IsRunning)
-                {
-                    movementSpeed = runSpeed;
-                }
-                else
-                {
-                    movementSpeed = walkSpeed;
-                }
-            }
-
-        };
-        gameInput.OnDrawWeapon = (context) =>
-        {
-            IsWeaponEquipped = !IsWeaponEquipped;
-
-            canMove = false;
-        };
-
-        gameInput.OnDash = (context) =>
-        {
-            Dash();
-        };
-        gameInput.OnFakeHit = (context) =>
-        {
-            if (healthSlider.value == healthSlider.minValue)
-            {
-                healthSlider.value = healthSlider.maxValue;
-            }
-            else
-            {
-                healthSlider.value--;
-            }
-        };
         movementCooldownTimer = new Timer(this)
         {
             OnTimerElapsed = () =>
@@ -308,6 +300,20 @@ public class Player : MonoBehaviour
                 return null;
             }
         };
+        staggerTimer = new Timer(this)
+        {
+            OnTimerElapsed = () =>
+            {
+                isStaggered = false;
+                CancelInvoke(nameof(FlashPlayer));
+                foreach (var renderer in renderers)
+                {
+                    renderer.enabled = true;
+                }
+                return null;
+            }
+        };
+        FindAndSetupLaser();
     }
 
     private void FixedUpdate()
@@ -317,7 +323,8 @@ public class Player : MonoBehaviour
             frameNotGrounded++;
         }
         HandleMovement();
-        Dashing();
+        StartDashing();
+        ExecuteDash();
     }
 
 
@@ -390,6 +397,8 @@ public class Player : MonoBehaviour
         moveDir.y = 0;
         rotateDir = moveDir;
 
+        Vector3 objMoveDir = moveDir;
+
         // Check if movement is disabled
         if (!canMove)
         {
@@ -432,19 +441,44 @@ public class Player : MonoBehaviour
             IsRunning = false;
         }
 
+        if (currentMovableObject != -1)
+        {
+            var obj = visibleMovableObjects[currentMovableObject];
+            if (obj.TryGetComponent<Rigidbody>(out var rb))
+            {
+                Vector3 objTargetVelocity = objMoveDir * movementSpeed;
+                Vector3 objVelocityChange = objTargetVelocity - rb.velocity;
+                objVelocityChange.y = 0;
+                rb.freezeRotation = true;
+                rb.excludeLayers = LayerMask.GetMask("playerLayer");
+                rb.AddForce(objVelocityChange, ForceMode.VelocityChange);
+            }
+            else
+            {
+                Debug.LogError("Movable object does not have a rigidbody!");
+            }
+        }
+
         // Smoothly rotate player towards movement direction
         if (canMove || (!gameInput.IsKeyboardMovement && firingStage == FiringStage.aiming))
         {
             float rotationSpeed = 15f;
             transform.forward = Vector3.Slerp(transform.forward, rotateDir, rotationSpeed * Time.deltaTime);
-        } else if (firingStage == FiringStage.aiming)
+        }
+        else if (firingStage == FiringStage.aiming)
         {
-            Vector3 mousePosition = gameInput.GetMousePosition();
-            Ray ray = Camera.main.ScreenPointToRay(mousePosition);
-            if (Physics.Raycast(ray, out RaycastHit hit))
-            {
-                transform.LookAt(new Vector3(hit.point.x, transform.position.y, hit.point.z));
-            }
+            var mousePosition = gameInput.GetMousePosition();
+            var distance = Vector3.Distance(transform.position, cameraTransform.position);
+            var worldPosition = Camera.main.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, distance));
+            transform.LookAt(worldPosition.CopyWith(y: transform.position.y));
+        }
+        if (isPickingUpItem)
+        {
+            transform.LookAt(TouchedPowerup.transform.position.CopyWith(y: transform.position.y));
+        }
+        if (currentMovableObject != -1)
+        {
+            transform.LookAt(visibleMovableObjects[currentMovableObject].transform.position.CopyWith(y: transform.position.y));
         }
     }
 
@@ -458,12 +492,39 @@ public class Player : MonoBehaviour
         canMove = false;
     }
 
+    private bool FilterVisibleMovableObjects(GameObject obj)
+    {
+        if (!obj.activeSelf) return false;
+        if (obj.TryGetComponent<Renderer>(out var renderer))
+        {
+            if (!renderer.isVisible) return false;
+        }
+        // Debug.DrawLine(sword.transform.position, obj.transform.position, Color.red, 10f);
+        var hit = Physics.Linecast(sword.transform.position, obj.transform.position, LayerMask.GetMask("groundLayer", "wallLayer"));
+        return !hit;
+    }
+
     private void Aim()
     {
         if (!canFire || !canAct)
             return;
         aimLaserRenderer.enabled = true;
         firingStage = FiringStage.aiming;
+
+        if (weaponSprites[weaponIndex].name == MagnetSpriteName)
+        {
+            visibleMovableObjects = movableObjects.Where(x => FilterVisibleMovableObjects(x)).OrderBy(x => Vector3.Distance(x.transform.position, transform.position)).ToArray();
+            if (visibleMovableObjects.Length != 0)
+            {
+                currentMovableObject = 0;
+            }
+            else
+            {
+                currentMovableObject = -1;
+                firingStage = FiringStage.notFiring;
+                aimLaserRenderer.enabled = false;
+            }
+        }
     }
 
     private void Fire()
@@ -484,17 +545,82 @@ public class Player : MonoBehaviour
 
         canDash = false;
         dashCooldownTimer.Start(dashCooldown);
-        DashClicked = true;
+        dashLoaderBorder.GetComponent<CircularProgressBar>().StartProgressBar(dashCooldown);
+        IsDashing = true;
     }
 
     private void DrawDebugRays()
     {
-#if DRAW_DEBUG_RAYS
-        #region Debug rays for dashing
-        Debug.DrawRay(transform.position + Vector3.up, transform.forward * dashDistance, Color.red);
-        Debug.DrawRay(transform.position + Vector3.up + transform.forward * dashDistance, Vector3.down * 5, Color.red);
-        #endregion
-#endif
+        if (gameInput.DrawDebugRays)
+        {
+            #region Debug rays for dashing
+            Debug.DrawRay(transform.position + Vector3.up, transform.forward * dashDistance, Color.red);
+            Debug.DrawRay(transform.position + Vector3.up + transform.forward * dashDistance, Vector3.down * 5, Color.red);
+            #endregion
+        }
+    }
+
+    private void FireProjectileCommon()
+    {
+        loaderBorder.GetComponent<CircularProgressBar>().StartProgressBar(3.0f);
+
+        canFire = false;
+        fireCooldownTimer.Start(3.0f);
+
+        canAct = false;
+        actionCooldownTimer.Start(1.0f);
+
+        canMove = false;
+        movementCooldownTimer.Start(0.4f);
+
+        canTurn = false;
+        turningCooldownTimer.Start(0.4f);
+
+        firingStageCooldown.Start(0.1f);
+        firingStage = FiringStage.knockback;
+    }
+
+    private void FireDamageProjectile()
+    {
+        var startingPosition = aimLaserRenderer.GetPosition(0);
+        var endingPosition = aimLaserRenderer.GetPosition(1);
+        Vector3 projectilePosition = aimLaserRenderer.transform.TransformPoint(startingPosition) + transform.forward;
+        var rotation = transform.rotation;
+        GameObject projectile = Instantiate(damageProjectilePrefab, projectilePosition, rotation * Quaternion.Euler(90, 0, 0));
+        var projectileScript = projectile.GetComponent<ProjectileScript>();
+        projectileScript.endingPosition = aimLaserRenderer.transform.TransformPoint(endingPosition);
+        FireProjectileCommon();
+    }
+
+    private void FireIceProjectile()
+    {
+        var startingPosition = aimLaserRenderer.GetPosition(0);
+        var endingPosition = aimLaserRenderer.GetPosition(1);
+        Vector3 projectilePosition = aimLaserRenderer.transform.TransformPoint(startingPosition) + transform.forward;
+        var rotation = transform.rotation;
+        GameObject projectile = Instantiate(iceProjectilePrefab, projectilePosition, rotation * Quaternion.Euler(90, 0, 0));
+        var projectileScript = projectile.GetComponent<ProjectileScript>();
+        projectileScript.endingPosition = aimLaserRenderer.transform.TransformPoint(endingPosition);
+        FireProjectileCommon();
+    }
+
+    private void FireMagnetProjectile()
+    {
+        if (currentMovableObject != -1)
+        {
+            var obj = visibleMovableObjects[currentMovableObject];
+            if (obj.TryGetComponent<Rigidbody>(out var rb))
+            {
+                rb.excludeLayers = LayerMask.GetMask();
+                rb.freezeRotation = false;
+            }
+            else
+            {
+                Debug.LogError("Movable object does not have a rigidbody!");
+            }
+        }
+        currentMovableObject = -1;
+        FireProjectileCommon();
     }
 
     private void FiringSequence()
@@ -504,7 +630,25 @@ public class Player : MonoBehaviour
         {
             //stop movement while aiming projectile
             case FiringStage.aiming:
-                aimLaserRenderer.SetPosition(1, new Vector3(0, .1f, 100));
+                if (weaponSprites[weaponIndex].name == MagnetSpriteName)
+                {
+                    const int nPoints = 100;
+                    if (currentMovableObject == -1) return;
+                    var source = aimLaserRenderer.GetPosition(0);
+                    var target = aimLaserRenderer.transform.InverseTransformPoint(visibleMovableObjects[currentMovableObject].transform.position);
+                    aimLaserRenderer.positionCount = nPoints;
+                    for (int i = 1; i < nPoints - 1; i++)
+                    {
+                        var intermediate = Vector3.Lerp(source, target, i / 100f) + VectorExtensions.Random(0.5f);
+                        aimLaserRenderer.SetPosition(i, intermediate);
+                    }
+                    aimLaserRenderer.SetPosition(nPoints - 1, target);
+                }
+                else
+                {
+                    aimLaserRenderer.positionCount = 2;
+                    aimLaserRenderer.SetPosition(1, new Vector3(0.05f, .5f, -100));
+                }
                 canMove = false;
                 break;
             //hold still while charging projectile
@@ -522,51 +666,32 @@ public class Player : MonoBehaviour
                 break;
             //fire projectile
             case FiringStage.firing:
-                var projectileSpawnDistance = 2f;
-                var startingPosition = aimLaserRenderer.GetPosition(0);
-                var endingPosition = aimLaserRenderer.GetPosition(1);
-                Vector3 projectilePosition = aimLaserRenderer.transform.TransformPoint(startingPosition) + (transform.forward * projectileSpawnDistance);
-
-                GameObject projectile = Instantiate(projectilePrefab, projectilePosition, transform.rotation);
-                var projectileScript = projectile.GetComponent<ProjectileScript>();
-                projectileScript.endingPosition = aimLaserRenderer.transform.TransformPoint(endingPosition);
-
-                canFire = false;
-                fireCooldownTimer.Start(3.0f);
-
-                canAct = false;
-                actionCooldownTimer.Start(1.0f);
-
-                canMove = false;
-                movementCooldownTimer.Start(0.4f);
-
-                canTurn = false;
-                turningCooldownTimer.Start(0.4f);
-
-                firingStageCooldown.Start(0.1f);
-                firingStage = FiringStage.knockback;
+                if (weaponSprites[weaponIndex].name == GunSpriteName)
+                {
+                    FireDamageProjectile();
+                }
+                else if (weaponSprites[weaponIndex].name == IceSpriteName)
+                {
+                    FireIceProjectile();
+                }
+                else if (weaponSprites[weaponIndex].name == MagnetSpriteName)
+                {
+                    FireMagnetProjectile();
+                }
                 break;
             //knockback
             case FiringStage.knockback:
                 float knockback = firingKnockbackSpeed * Time.deltaTime;
-
-                int random_number = UnityEngine.Random.Range(0, 100);
-
-                //FIX THIS :) nice
-                if (random_number == 69)
-                {
-                    Debug.Log("Nice");
-                    transform.position += new Vector3(knockback * -playerFacing.x, 0.0f, knockback * -playerFacing.z);
-                }
-                else
-                {
-                    rb.AddForce(75 * knockback * -playerFacing, ForceMode.VelocityChange);
-                }
-
+                rb.AddForce(75 * knockback * -playerFacing, ForceMode.VelocityChange);
                 break;
             default:
                 break;
         }
+    }
+
+    public void DashAnimationEnded()
+    {
+        executeDash = true;
     }
 
     private void Block()
@@ -581,8 +706,16 @@ public class Player : MonoBehaviour
 
     public void SwordDrawn()
     {
-        WeaponOnBack.SetActive(!IsWeaponEquipped);
-        WeaponInHand.SetActive(IsWeaponEquipped);
+        FindAndSetupLaser();
+    }
+
+    public void FindAndSetupLaser()
+    {
+        //setting up the aim laser
+        aimLaserRenderer = GetComponentInChildren<LineRenderer>();
+        aimLaserRenderer.positionCount = 2;
+        aimLaserRenderer.SetPosition(0, new Vector3(0.05f, 0.5f, -0.3f));
+        aimLaserRenderer.enabled = false;
     }
 
     public void AttackAnimationEnded()
@@ -595,7 +728,6 @@ public class Player : MonoBehaviour
         {
             AttackNumber = 0;
             IsAttacking = false;
-            swordCollider.enabled = false;
             canAttack = true;
             canMove = true;
         }
@@ -610,11 +742,17 @@ public class Player : MonoBehaviour
             sword.GetComponent<SkinnedMeshRenderer>().SwitchMaterial(glowMaterial, swordBaseMaterial);
             swordBack.GetComponent<SkinnedMeshRenderer>().SwitchMaterial(glowMaterial, swordBackBaseMaterial);
             IsSwordGlowing = false;
-#if SLOW_DOWN_ATTACK
-            Time.timeScale = 1.0f;
-            Time.fixedDeltaTime = fixedDeltaTime;
-#endif
+            if (gameInput.SlowDownAttack)
+            {
+                Time.timeScale = 1.0f;
+                Time.fixedDeltaTime = fixedDeltaTime;
+            }
         }
+    }
+
+    public void SetSwordSolidity(bool isSolid)
+    {
+        swordCollider.enabled = isSolid;
     }
 
     public void StartFalling()
@@ -624,12 +762,11 @@ public class Player : MonoBehaviour
 
     public Action OnPlayerAttack;
 
-    private void Dashing()
+    public void ExecuteDash()
     {
-        if (DashClicked)
+        if (executeDash)
         {
-            DashClicked = false;
-            var notPlayerLayer = ~LayerMask.GetMask("playerLayer");
+            var notPlayerLayer = ~LayerMask.GetMask("playerLayer", "enemyLayer");
             var hasHit = Physics.Raycast(transform.position + Vector3.up, transform.forward, out RaycastHit hit, dashDistance, notPlayerLayer);
             var groundLayer = LayerMask.NameToLayer("groundLayer");
             Vector3 newPosition;
@@ -666,7 +803,7 @@ public class Player : MonoBehaviour
 
             rb.isKinematic = true;
             var Xoffsets = new float[] { -.5f, .5f };
-            for (int i = 1; i < 5; i++)
+            for (int i = 1; i < 4; i++)
             {
                 var startingPosition = transform.position + (0.5f * i * Vector3.up);
                 var endingPosition = newPosition + (0.5f * i * Vector3.up);
@@ -680,6 +817,16 @@ public class Player : MonoBehaviour
             }
             transform.position = newPosition;
         }
+        executeDash = false;
+    }
+
+    private void StartDashing()
+    {
+        if (IsDashing)
+        {
+            animator.SetDash();
+            IsDashing = false;
+        }
         else
         {
             rb.isKinematic = false;
@@ -691,11 +838,244 @@ public class Player : MonoBehaviour
         CanCombo = ComboState.CanCombo;
         sword.GetComponent<SkinnedMeshRenderer>().SwitchMaterial(swordBaseMaterial, glowMaterial);
         swordBack.GetComponent<SkinnedMeshRenderer>().SwitchMaterial(swordBackBaseMaterial, glowMaterial);
-#if SLOW_DOWN_ATTACK
-        Time.timeScale = slowDownFactor;
-        Time.fixedDeltaTime = fixedDeltaTime * Time.timeScale;
-#endif
+        if (gameInput.SlowDownAttack)
+        {
+            Time.timeScale = slowDownFactor;
+            Time.fixedDeltaTime = fixedDeltaTime * Time.timeScale;
+        }
         IsSwordGlowing = true;
         DebugExt.LogCombo($"Can combo at time {Time.time} for {AttackNumber}");
+    }
+
+    public void PickupItem()
+    {
+        weaponSprites.Add(TouchedPowerup.Powerup);
+        respawner.AddPowerup(TouchedPowerup.Powerup);
+        Destroy(TouchedPowerup.gameObject);
+        canMove = true;
+        isPickingUpItem = false;
+        TouchedPowerup = null;
+    }
+
+    private void FlashPlayer()
+    {
+        foreach (var renderer in renderers)
+        {
+            renderer.enabled = !renderer.enabled;
+        }
+    }
+
+    private void StaggerFromHit(Vector3 direction)
+    {
+        healthSlider.value = Math.Clamp(healthSlider.value - 1, healthSlider.minValue, healthSlider.maxValue);
+        InvokeRepeating(nameof(FlashPlayer), 0, 0.1f);
+        isStaggered = true;
+        staggerTimer.Start(1.0f); 
+        rb.AddForce(direction * 5_000, ForceMode.Impulse);
+    }
+
+    public void OnTriggerEnter(Collider other)
+    {
+        if (isStaggered) return;
+        var direction = (transform.position - other.transform.position).normalized;
+        if (other.gameObject.name == "ProjectileEnemy(Clone)")
+        {
+            Debug.Log("Player hit by enemy projectile");
+            StaggerFromHit(direction);
+        } else if (other.gameObject.name == "Arm_L" || other.gameObject.name == "Arm_R")
+        {
+            Debug.Log("Player hit by enemy");
+            StaggerFromHit(direction);
+        }
+    }
+
+    public void OnDestroy()
+    {
+        StopAllCoroutines();
+        gameInput.UnregisterPlayer(this);
+    }
+
+    #region Input actions
+
+    public void OnMove(InputAction.CallbackContext context) { }
+
+    public void OnMousePosition(InputAction.CallbackContext context) { }
+
+    public void OnAttack(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            OnPlayerAttack?.Invoke();
+            IsAttacking = true;
+            canMove = false;
+            Attack();
+        }
+    }
+    public void OnFire(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            Aim();
+        }
+        else if (context.canceled)
+        {
+            Fire();
+        }
+    }
+    public void OnBlock(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            Block();
+        }
+    }
+    public void OnRun(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            if (gameInput.HoldDownToRun)
+            {
+                IsRunning = true;
+                movementSpeed = runSpeed;
+            }
+            else
+            {
+                if (IsWalking)
+                {
+                    IsRunning = !IsRunning;
+                    if (IsRunning)
+                    {
+                        movementSpeed = runSpeed;
+                    }
+                    else
+                    {
+                        movementSpeed = walkSpeed;
+                    }
+                }
+            }
+        }
+        else if (context.canceled)
+        {
+            if (gameInput.HoldDownToRun)
+            {
+                IsRunning = false;
+                movementSpeed = walkSpeed;
+            }
+        }
+    }
+
+    public void OnDash(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            Dash();
+        }
+    }
+    public void OnFakeHit(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            if (healthSlider.value == healthSlider.minValue)
+            {
+                healthSlider.value = healthSlider.maxValue;
+            }
+            else
+            {
+                healthSlider.value--;
+            }
+        }
+    }
+
+    public void OnInteract(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            if (TouchedPowerup != null && canMove)
+            {
+                animator.SetPickup();
+                canMove = false;
+                isPickingUpItem = true;
+            }
+            var handler = dialogBox.GetComponent<DialogHandler>();
+            if (handler.IsInDialog && handler.IsDialogDismissable)
+            {
+                handler.DismissDialog();
+            }
+        }
+    }
+
+    public void OnChangeEquippedWeapon(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            if (firingStage != FiringStage.notFiring)
+                return;
+            float value = context.ReadValue<float>();
+            var direction = value > 0 ? Direction.Down : Direction.Up;
+            if (direction == Direction.Down)
+            {
+                weaponIndex = (weaponIndex + 1) % weaponSprites.Count;
+            }
+            else
+            {
+                weaponIndex = (weaponIndex - 1 + weaponSprites.Count) % weaponSprites.Count;
+            }
+            uiWeaponImage.sprite = weaponSprites[weaponIndex];
+            var renderer = swordPartWithLine.GetComponent<SkinnedMeshRenderer>();
+            var materialToSwitch = weaponMaterials.First(mat => renderer.sharedMaterials.Contains(mat));
+            if (weaponSprites[weaponIndex].name == GunSpriteName)
+            {
+                var newMaterial = weaponMaterials.First(mat => mat.name == "GlowLaser");
+                renderer.SwitchMaterial(materialToSwitch, newMaterial);
+                aimLaserRenderer.sharedMaterial = newMaterial;
+                outlineEffect.enabled.value = false;
+                currentMovableObject = -1;
+            }
+            else if (weaponSprites[weaponIndex].name == IceSpriteName)
+            {
+                var newMaterial = weaponMaterials.First(mat => mat.name == "light");
+                renderer.SwitchMaterial(materialToSwitch, newMaterial);
+                aimLaserRenderer.sharedMaterial = newMaterial;
+                outlineEffect.enabled.value = false;
+                currentMovableObject = -1;
+            }
+            else if (weaponSprites[weaponIndex].name == MagnetSpriteName)
+            {
+                var newMaterial = weaponMaterials.First(mat => mat.name == "GlowMagnet");
+                renderer.SwitchMaterial(materialToSwitch, newMaterial);
+                aimLaserRenderer.sharedMaterial = newMaterial;
+                outlineEffect.enabled.value = true;
+            }
+        }
+    }
+
+    public void OnSwitchAimedObject(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            if (firingStage != FiringStage.aiming || currentMovableObject == -1 || visibleMovableObjects.Length == 0)
+                return;
+            currentMovableObject = (currentMovableObject + 1) % visibleMovableObjects.Length;
+            while (!visibleMovableObjects[currentMovableObject].activeSelf)
+            {
+                currentMovableObject = (currentMovableObject + 1) % visibleMovableObjects.Length;
+            }
+        }
+    }
+
+    #endregion
+
+
+    public void TriggerDialog(string dialogId)
+    {
+        var dialog = DialogData.GetDialog(dialogId);
+        var handler = dialogBox.GetComponent<DialogHandler>();
+        handler.SetDialog(dialog.TransformText(gameInput.CurrentControl.value), dialog.WriteDuration, dialog.LingerTime);
+    }
+
+    public void SetPowerupsOnRespawn(List<Sprite> sprites)
+    {
+        weaponSprites.Clear();
+        weaponSprites.AddRange(sprites);
     }
 }

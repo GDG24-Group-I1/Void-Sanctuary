@@ -28,7 +28,7 @@ public class ButtonTrigger : MonoBehaviour
     void OnTriggerEnter(Collider other)
     {
         // Controlla se l'oggetto che ha attivato il trigger è il giocatore o un oggetto specifico
-        if (other.gameObject.name == "Projectile(Clone)" || other.gameObject.CompareTag("Sword"))
+        if (other.gameObject.CompareTag("Projectile") || other.gameObject.CompareTag("Sword"))
         {
             cambioColore();
             platform.StartMoving();

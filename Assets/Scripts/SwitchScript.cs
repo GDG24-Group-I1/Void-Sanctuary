@@ -29,7 +29,7 @@ public class SwitchScript : MonoBehaviour
     {
         if (onCooldown)
             return;
-        if (other.gameObject.name == "Projectile(Clone)" || other.gameObject.CompareTag("Sword"))
+        if (other.gameObject.CompareTag("Projectile") || other.gameObject.CompareTag("Sword"))
         {
             // broken is used to disable single use switches after use
             onCooldown = true;

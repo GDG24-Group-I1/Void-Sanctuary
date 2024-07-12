@@ -4,10 +4,6 @@ using UnityEngine;
 
 enum PlayerState
 {
-    Idle = 0,
-    Walking = 1,
-    Running = 2,
-    DrawingWeapon = 3,
     IdleWithWeapon = 4,
     WalkingWithWeapon = 5,
     RunningWithWeapon = 6,
@@ -15,32 +11,31 @@ enum PlayerState
     FallingTransition = 8,
     Falling = 9,
     Dashing = 10,
+    AimingWithWeapon = 11,
 }
 
 public class PlayerAnimator : MonoBehaviour
 {
-    [SerializeField] private Player player;
-
+    private Player player;
     private Animator animator;
     private const string PLAYER_STATE = "PlayerState";
     private const string ATTACK_NUMBER = "AttackNumber";
     private PlayerState currentState;
-    private PlayerState previousState;
     private int previousAttackNumber = 0;
 
     private void Awake()
     {
         animator = GetComponent<Animator>();
-        currentState = PlayerState.Idle;
-        previousState = PlayerState.Idle;
+        currentState = PlayerState.IdleWithWeapon;
+        player = gameObject.GetComponentInParent<Player>();
     }
 
     private void Update()
     {
         PlayerState newState = GetPlayerState();
+
         if (newState != currentState)
         {
-            previousState = currentState;
             currentState = newState;
             animator.SetInteger(PLAYER_STATE, (int)currentState);
         }
@@ -55,57 +50,49 @@ public class PlayerAnimator : MonoBehaviour
     {
         bool isWalking = player.IsWalking;
         bool isRunning = player.IsRunning;
-        bool isWeaponEquipped = player.IsWeaponEquipped;
         bool isAttacking = player.IsAttacking;
+        bool isAiming = player.firingStage != FiringStage.notFiring;
 
         if (player.IsFalling == AnimationState.Transition) return PlayerState.FallingTransition;
 
         if (player.IsFalling == AnimationState.Playing) return PlayerState.Falling;
 
-        // if (player.IsDashing) return PlayerState.Dashing;
-
-        if (isWeaponEquipped)
+        if (isAiming)
         {
-            animator.SetBool("WeaponEquipped", true);
-            if(isAttacking)
-            {
-                return PlayerState.Attacking;
-            }
-            else if(isRunning)
-            {
-                return PlayerState.RunningWithWeapon;
-            }
-            else if(isWalking)
-            {
-                return PlayerState.WalkingWithWeapon;
-            }
-            else
-            {
-                return PlayerState.IdleWithWeapon;
-            }
+            return PlayerState.AimingWithWeapon;
+        }
+        else if (isAttacking)
+        {
+            return PlayerState.Attacking;
+        }
+        else if (isRunning)
+        {
+            return PlayerState.RunningWithWeapon;
+        }
+        else if (isWalking)
+        {
+            return PlayerState.WalkingWithWeapon;
         }
         else
         {
-            animator.SetBool("WeaponEquipped", false);
-            if(isRunning)
-            {
-                return PlayerState.Running;
-            }
-            else if(isWalking)
-            {
-                return PlayerState.Walking;
-            }
-            else
-            {
-                return PlayerState.Idle;
-            }
+            return PlayerState.IdleWithWeapon;
         }
-        
+
     }
 
     public Player GetPlayer()
     {
         return player;
+    }
+
+    public void SetDash()
+    {
+        animator.SetTrigger("Dashing");
+    }
+
+    public void SetPickup()
+    {
+        animator.SetTrigger("Pickup");
     }
 }
 

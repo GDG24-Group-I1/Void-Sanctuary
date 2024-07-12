@@ -16,7 +16,7 @@ public class InterrutoreAllarme : MonoBehaviour
     void OnTriggerEnter(Collider other)
     {
         
-        if (other.gameObject.name == "Projectile(Clone)" || other.gameObject.CompareTag("Sword"))
+        if (other.gameObject.CompareTag("Projectile") || other.gameObject.CompareTag("Sword"))
         {
     
            // Trova tutte le luci con il tag "Alarm"

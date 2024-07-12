@@ -3,37 +3,7 @@ guid: 546694580a30663408b9a310d023e620
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Laser
-    second: {fileID: 2100000, guid: 191fc1aae0963a94faf6a3b723ee7695, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Material
-    second: {fileID: 2100000, guid: ca63b80f3998879469651c777f313721, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: body
-    second: {fileID: 2100000, guid: fced193657ccfa845a7f79e35118605c, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: details
-    second: {fileID: 2100000, guid: 2ab8692f490918b4b8cced0fe3dc5ac6, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: faceDetails
-    second: {fileID: 2100000, guid: c678acc1f49d69e46beeeef2d119d4d9, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: line
-    second: {fileID: 2100000, guid: ca63b80f3998879469651c777f313721, type: 2}
+  externalObjects: {}
   materials:
     materialImportMode: 2
     materialName: 0

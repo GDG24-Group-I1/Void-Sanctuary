@@ -15,6 +15,11 @@ TagManager:
   - CubeSwitch
   - rooms
   - Ligth
+  - InputHandler
+  - Projectile
+  - Enemy
+  - MovableObject
+  - EnemyObj
   layers:
   - Default
   - TransparentFX
@@ -31,9 +36,8 @@ TagManager:
   - playerLayer
   - 
   - 
-  - 
-  - 
-  - 
+  - enemyLayer
+  - iceLayer
   - 
   - 
   - 

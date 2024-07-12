@@ -13,6 +13,7 @@ public class ComboScript : StateMachineBehaviour
     /// Adjustment to the combo window in seconds, this is to account for the time it takes for the animation to transition
     /// </summary>
     [SerializeField] private float windowAdjustment;
+    [SerializeField] private float swordSolidThreshold;
 
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -35,6 +36,10 @@ public class ComboScript : StateMachineBehaviour
     {
         if (animator.IsInTransition(layerIndex)) { player.StopSwordGlowing(); return; };
         if (player.CanCombo == ComboState.PressedEarly || player.CanCombo == ComboState.Pressed) return;
+        if (stateInfo.normalizedTime >= swordSolidThreshold)
+        {
+            player.SetSwordSolidity(true);
+        }
         if (stateInfo.normalizedTime >= comboWindow && player.CanCombo == ComboState.NotPressed) {
             player.SetCanCombo();
         }
@@ -55,6 +60,7 @@ public class ComboScript : StateMachineBehaviour
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
+        player.SetSwordSolidity(false);
         player.AttackAnimationEnded();
     }
 

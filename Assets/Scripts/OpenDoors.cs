@@ -23,6 +23,7 @@ public class OpenDoors : MonoBehaviour
         if (other.CompareTag("Player") && unlocked)
         {
             // Attiva l'animazione per aprire la porta
+            animator.ResetTrigger("close");
             animator.SetTrigger("open");
         }
     }
@@ -32,6 +33,7 @@ public class OpenDoors : MonoBehaviour
         if (other.CompareTag("Player") && unlocked)
         {
             // Chiudi la porta quando il giocatore esce dal trigger
+            animator.ResetTrigger("open");
             animator.SetTrigger("close");
         }
     }

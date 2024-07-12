@@ -16,7 +16,7 @@ public class animateButton : MonoBehaviour
     void OnTriggerEnter(Collider other)
     {
         
-        if (other.gameObject.name == "Projectile(Clone)" || other.gameObject.CompareTag("Sword"))
+        if (other.gameObject.CompareTag("Projectile") || other.gameObject.CompareTag("Sword"))
         {
             pulsante.cambioColore();
              animator.SetTrigger("attiva");
