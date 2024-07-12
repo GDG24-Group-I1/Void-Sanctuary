@@ -103,7 +103,7 @@ MonoBehaviour:
   IceCube: {fileID: 0}
   ignoreLayers:
     serializedVersion: 2
-    m_Bits: 36471
+    m_Bits: 35959
   endingPosition: {x: 0, y: 0, z: 0}
 --- !u!54 &1609808747299697749
 Rigidbody:
@@ -121,10 +121,10 @@ Rigidbody:
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 5632
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 100471
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 0

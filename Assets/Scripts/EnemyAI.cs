@@ -234,7 +234,7 @@ public class EnemyAI : MonoBehaviour
     private void RangedAttack()
     {
         //Debug.Log("Ranged attacking player");
-        Vector3 startingPosition = new Vector3(transform.position.x, projectileHeight, transform.position.z);
+        Vector3 projectilePosition = new Vector3(transform.position.x, projectileHeight, transform.position.z);
 
         Vector3 directionToPlayer = (player.position - transform.position).normalized;
 
@@ -243,15 +243,13 @@ public class EnemyAI : MonoBehaviour
 
         //Debug.Log($"Starting position: {startingPosition}, Ending position: {endingPosition}");
 
-        Vector3 projectilePosition = startingPosition;
-
         // Instantiate the projectile
         GameObject projectile = Instantiate(projectilePrefab, projectilePosition, Quaternion.LookRotation(directionToPlayer));
         projectile.transform.Rotate(90, 0, 0);
 
         if (projectile.TryGetComponent<ProjectileScript>(out var projectileScript))
         {
-            projectileScript.endingPosition = endingPosition;
+            projectileScript.SetTarget(endingPosition);
         }
         else
         {

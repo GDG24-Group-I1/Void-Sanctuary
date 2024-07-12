@@ -50,6 +50,11 @@ public class ProjectileScript : MonoBehaviour
         Destroy(gameObject);
     }
 
+    public void SetTarget(Vector3 target)
+    {
+        endingPosition = target;
+    }
+
     void projectileMove()
     {
         transform.position = Vector3.MoveTowards(transform.position, endingPosition, projectileSpeed * Time.deltaTime);
