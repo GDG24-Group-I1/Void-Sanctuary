@@ -36,15 +36,6 @@ public class ProjectileScript : MonoBehaviour
                 Instantiate(IceCube, other.transform.position, other.transform.rotation, other.transform);
                 enemyAi.IsFrozen = true;
             }
-        } else if (IceCube == null && isEnemy)
-        {
-            var enemyAi = other.gameObject.GetComponent<EnemyAI>();
-            if (enemyAi.IsFrozen)
-            {
-                Destroy(other.gameObject.transform.GetChild(other.gameObject.transform.childCount - 1).gameObject);
-                enemyAi.IsFrozen = false;
-            }
-            
         }
 
         Destroy(gameObject);
