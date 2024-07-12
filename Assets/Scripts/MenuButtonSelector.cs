@@ -1,11 +1,6 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
-using UnityEngine.InputSystem;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using static UnityEngine.InputSystem.InputAction;
 
 enum Direction
 {
@@ -15,74 +10,25 @@ enum Direction
 
 public class MenuButtonSelector : MonoBehaviour
 {
-    private GameInput input;
-    private int selectedObjectIndex;
-    private Selectable[] selectables;
+    private Selectable firstSelectable;
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
-        input = GameObject.FindWithTag("InputHandler").GetComponent<GameInput>();
-        input.OnChangeCurrentSelectedControl = ChangeSelectedObject;
-        input.OnCurrentSelectedControlClick = ClickSelectedObject;
-        selectedObjectIndex = 0;
-        var selectables = new List<Selectable>();
         for (int i = 0; i < transform.childCount; i++)
         {
-            var selectable = transform.GetChild(i).GetComponentInChildren<Selectable>();
-            if (selectable != null)
+            if (transform.GetChild(i).TryGetComponent<Selectable>(out var selectable))
             {
-                selectables.Add(selectable);
+                firstSelectable = selectable;
+                break;
             }
         }
-        this.selectables = selectables.ToArray();
-        SelectObject(this.selectables[selectedObjectIndex]);
     }
 
-    private void ClickSelectedObject(CallbackContext ctx)
+    private void OnEnable()
     {
-        // TODO: handle all controls
-        var currentSelectedObject = selectables[selectedObjectIndex].gameObject;
-        var button = currentSelectedObject.GetComponentInChildren<Button>();
-        var toggle = currentSelectedObject.GetComponentInChildren<Toggle>();
-        if (button != null)
+        if (EventSystem.current.currentSelectedGameObject == null && firstSelectable != null)
         {
-            button.onClick.Invoke();
-        } else if (toggle != null)
-        {
-            toggle.isOn = !toggle.isOn;
+            firstSelectable.Select();
         }
-    }
-
-    private void SelectObject(Selectable obj)
-    {
-        obj.Select();
-    }
-
-    private void SwitchObject(Direction dir)
-    {
-        var oldIndex = selectedObjectIndex;
-        if (dir == Direction.Down)
-        {
-            selectedObjectIndex = Math.Min(selectedObjectIndex + 1, selectables.Length - 1);
-        } else
-        {
-            selectedObjectIndex = Math.Max(selectedObjectIndex - 1, 0);
-        }
-        if (oldIndex != selectedObjectIndex)
-        {
-            var selectable = selectables[oldIndex];
-            if (selectable != null)
-            {
-                selectable.OnDeselect(null);
-            }
-            SelectObject(selectables[selectedObjectIndex]);
-        }
-    }
-
-    private void ChangeSelectedObject(CallbackContext ctx)
-    {
-        float value = ctx.ReadValue<float>();
-        SwitchObject(value > 0 ? Direction.Down : Direction.Up);
-        Debug.Log($"{selectables[selectedObjectIndex].gameObject.name}");
     }
 }
