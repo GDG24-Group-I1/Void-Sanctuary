@@ -17,7 +17,7 @@ public class MenuButtonSelector : MonoBehaviour
 {
     private GameInput input;
     private int selectedObjectIndex;
-    private GameObject currentSelectedObject;
+    private Selectable[] selectables;
     // Start is called before the first frame update
     void Start()
     {
@@ -25,13 +25,23 @@ public class MenuButtonSelector : MonoBehaviour
         input.OnChangeCurrentSelectedControl = ChangeSelectedObject;
         input.OnCurrentSelectedControlClick = ClickSelectedObject;
         selectedObjectIndex = 0;
-        currentSelectedObject = transform.GetChild(selectedObjectIndex).gameObject;
-        AddOutline(currentSelectedObject);
+        var selectables = new List<Selectable>();
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            var selectable = transform.GetChild(i).GetComponentInChildren<Selectable>();
+            if (selectable != null)
+            {
+                selectables.Add(selectable);
+            }
+        }
+        this.selectables = selectables.ToArray();
+        SelectObject(this.selectables[selectedObjectIndex]);
     }
 
     private void ClickSelectedObject(CallbackContext ctx)
     {
         // TODO: handle all controls
+        var currentSelectedObject = selectables[selectedObjectIndex].gameObject;
         var button = currentSelectedObject.GetComponentInChildren<Button>();
         var toggle = currentSelectedObject.GetComponentInChildren<Toggle>();
         if (button != null)
@@ -43,30 +53,9 @@ public class MenuButtonSelector : MonoBehaviour
         }
     }
 
-    private void AddOutline(GameObject obj)
+    private void SelectObject(Selectable obj)
     {
-        var outline = obj.GetComponentInChildren<UnityEngine.UI.Outline>();
-        if (outline != null)
-        {
-            outline.enabled = true;
-        } else
-        {
-            // FIXME: this does not handle tmp_text
-            var text = obj.GetComponentInChildren<Text>();
-            var image = obj.GetComponentInChildren<Image>();
-            if (image != null)
-            {
-                outline = image.gameObject.AddComponent<UnityEngine.UI.Outline>();
-            } else if (text != null)
-            {
-                outline = text.gameObject.AddComponent<UnityEngine.UI.Outline>();
-            }
-            if (outline != null)
-            {
-                outline.effectColor = Color.yellow;
-                outline.effectDistance = new Vector2(5, 5);
-            }
-        }
+        obj.Select();
     }
 
     private void SwitchObject(Direction dir)
@@ -74,20 +63,19 @@ public class MenuButtonSelector : MonoBehaviour
         var oldIndex = selectedObjectIndex;
         if (dir == Direction.Down)
         {
-            selectedObjectIndex = Math.Min(selectedObjectIndex + 1, transform.childCount - 1);
+            selectedObjectIndex = Math.Min(selectedObjectIndex + 1, selectables.Length - 1);
         } else
         {
             selectedObjectIndex = Math.Max(selectedObjectIndex - 1, 0);
         }
         if (oldIndex != selectedObjectIndex)
         {
-            var outline = currentSelectedObject.GetComponentInChildren<UnityEngine.UI.Outline>();
-            if (outline != null)
+            var selectable = selectables[oldIndex];
+            if (selectable != null)
             {
-                outline.enabled = false;
+                selectable.OnDeselect(null);
             }
-            currentSelectedObject = transform.GetChild(selectedObjectIndex).gameObject;
-            AddOutline(currentSelectedObject);
+            SelectObject(selectables[selectedObjectIndex]);
         }
     }
 
@@ -95,6 +83,6 @@ public class MenuButtonSelector : MonoBehaviour
     {
         float value = ctx.ReadValue<float>();
         SwitchObject(value > 0 ? Direction.Down : Direction.Up);
-        Debug.Log($"{currentSelectedObject.name}");
+        Debug.Log($"{selectables[selectedObjectIndex].gameObject.name}");
     }
 }

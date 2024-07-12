@@ -18,7 +18,12 @@ public class CircularProgressBar : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        progressBarImage.fillAmount = (Time.time - startTime) / (endTime - startTime);
+        var fillAmt = (Time.time - startTime) / (endTime - startTime);
+        if (float.IsNaN(fillAmt) || float.IsInfinity(fillAmt))
+        {
+            fillAmt = 1;
+        }
+        progressBarImage.fillAmount = fillAmt;
     }
 
     public void StartProgressBar(float seconds)
