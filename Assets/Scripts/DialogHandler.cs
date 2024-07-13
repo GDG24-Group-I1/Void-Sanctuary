@@ -94,4 +94,15 @@ public class DialogHandler : MonoBehaviour
         animator.ResetTrigger("Expand");
         animator.SetTrigger("Close");
     }
+
+    public void DismissDialogForced()
+    {
+        animator.updateMode = AnimatorUpdateMode.UnscaledTime;
+        DismissDialog();
+    }
+
+    public void RestoreUpdateMode()
+    {
+        animator.updateMode = AnimatorUpdateMode.Normal;
+    }
 }

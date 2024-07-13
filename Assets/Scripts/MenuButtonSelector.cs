@@ -8,9 +8,13 @@ enum Direction
    Down
 }
 
-public class MenuButtonSelector : MonoBehaviour
+public class MenuButtonSelector : MonoBehaviour, IDataPersistence
 {
     private Selectable firstSelectable;
+    [SerializeField] private Animator animator;
+    [SerializeField] private AudioSource audioSource;
+    private float volume;
+    [SerializeField] private Slider volumeSlider;
     // Start is called before the first frame update
     void Awake()
     {
@@ -30,5 +34,37 @@ public class MenuButtonSelector : MonoBehaviour
         {
             firstSelectable.Select();
         }
+    }
+
+    public void OnAudioChange(float value)
+    {
+        volume = value;
+        AudioListener.volume = volume;
+    }
+
+    public void TogglePauseMenu(bool open)
+    {
+        audioSource.Play();
+        if (open)
+        {
+            animator.ResetTrigger("Close");
+            animator.SetTrigger("Expand");
+        } else
+        {
+            animator.ResetTrigger("Expand");
+            animator.SetTrigger("Close");
+        }
+    }
+
+    public void LoadData(GameData data)
+    {
+        volume = data.savedSettings.volume;
+        AudioListener.volume = volume;
+        volumeSlider.value = volume;
+    }
+
+    public void SaveData(GameData data)
+    {
+        data.savedSettings.volume = volume;
     }
 }

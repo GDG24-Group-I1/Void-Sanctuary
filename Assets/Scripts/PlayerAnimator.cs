@@ -30,6 +30,11 @@ public class PlayerAnimator : MonoBehaviour
         player = gameObject.GetComponentInParent<Player>();
     }
 
+    private void Start()
+    {
+        animator.SetInteger(PLAYER_STATE, (int)currentState);
+    }
+
     private void Update()
     {
         PlayerState newState = GetPlayerState();

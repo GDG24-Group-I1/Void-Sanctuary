@@ -33,7 +33,7 @@ public enum FiringStage
     knockback
 }
 
-[RequireComponent(typeof(Rigidbody), typeof(FloorCollider))]
+[RequireComponent(typeof(Rigidbody), typeof(FloorCollider), typeof(AudioSource))]
 public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
 {
     private const float firingKnockbackSpeed = 0f;
@@ -62,6 +62,14 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
     [SerializeField] private List<Sprite> weaponSprites;
     [SerializeField] private Material[] weaponMaterials;
 
+    [Header("Sounds")]
+    [SerializeField] private AudioClip ouchSound;
+    [SerializeField] private AudioClip deathSound;
+    [SerializeField] private AudioClip dashSound;
+    [SerializeField] private AudioClip attackSound;
+    [SerializeField] private AudioClip shootSound;
+    [SerializeField] private AudioClip pickupSound;
+
     // these need to be public because they are set by the respawner script since they can't be set in the prefab
     [Header("Dynamic references to specific object instances in the scene\nNeed to be reset in the Respawner on death")]
     public Transform cameraTransform;
@@ -88,6 +96,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
     private Animator youDiedTextAnimator;
 
     private Rigidbody rb;
+    private AudioSource audioSource;
     private int frameNotGrounded;
     private bool isGrounded;
     private Collider[] previousWallsCollided = Array.Empty<Collider>();
@@ -185,6 +194,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
         gameInput.RegisterPlayer(this);
         movementSpeed = walkSpeed;
         rb = GetComponent<Rigidbody>();
+        audioSource = GetComponent<AudioSource>();
         healthSlider = healthBar.GetComponent<Slider>();
         healthSlider.value = healthSlider.maxValue;
         healthSlider.onValueChanged.AddListener((value) =>
@@ -487,6 +497,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
         if (!canAttack || !canAct)
             return;
 
+        audioSource.PlayOneShot(attackSound);
         canAct = false;
         actionCooldownTimer.Start(0.4f);
         canMove = false;
@@ -545,6 +556,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
 
         canDash = false;
         dashCooldownTimer.Start(dashCooldown);
+        audioSource.PlayOneShot(dashSound);
         dashLoaderBorder.GetComponent<CircularProgressBar>().StartProgressBar(dashCooldown);
         IsDashing = true;
     }
@@ -563,6 +575,8 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
     private void FireProjectileCommon()
     {
         loaderBorder.GetComponent<CircularProgressBar>().StartProgressBar(3.0f);
+
+        audioSource.PlayOneShot(shootSound);
 
         canFire = false;
         fireCooldownTimer.Start(3.0f);
@@ -867,7 +881,16 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
 
     private void StaggerFromHit(Vector3 direction)
     {
+        if (healthSlider.value == healthSlider.minValue) return;
         healthSlider.value = Math.Clamp(healthSlider.value - 1, healthSlider.minValue, healthSlider.maxValue);
+        if (healthSlider.value == healthSlider.minValue)
+        {
+            audioSource.PlayOneShot(deathSound);
+        }
+        else
+        {
+            audioSource.PlayOneShot(ouchSound);
+        }
         InvokeRepeating(nameof(FlashPlayer), 0, 0.1f);
         isStaggered = true;
         staggerTimer.Start(1.0f); 
@@ -992,6 +1015,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
         {
             if (TouchedPowerup != null && canMove)
             {
+                audioSource.PlayOneShot(pickupSound);
                 animator.SetPickup();
                 canMove = false;
                 isPickingUpItem = true;

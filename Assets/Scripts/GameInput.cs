@@ -14,6 +14,7 @@ public class GameInput : MonoBehaviour, IDataPersistence
     public bool HoldDownToRun { get; private set; } = true;
     public bool SlowDownAttack { get; private set; } = true;
     public bool DrawDebugRays { get; private set; } = false;
+    private bool isPaused = false;
 
     public Observable<ControlType> CurrentControl { get; } = ControlType.Mouse;
 
@@ -40,6 +41,7 @@ public class GameInput : MonoBehaviour, IDataPersistence
 
     private void Start()
     {
+        isPaused = false;
         pauseMenu = GameObjectExtensions.FindInactive("PauseMenu", "GameUI");
         dialogBox = GameObjectExtensions.FindInactive("DialogBox", "GameUI");
         if (pauseMenu != null)
@@ -57,7 +59,7 @@ public class GameInput : MonoBehaviour, IDataPersistence
             Time.timeScale = 1;
         else
             Time.timeScale = 0;
-        if (pauseMenu.activeSelf)
+        if (isPaused)
         {
             playerInputActions.Player.Enable();
             playerInputActions.MenuActionMap.Disable();
@@ -67,9 +69,18 @@ public class GameInput : MonoBehaviour, IDataPersistence
             playerInputActions.Player.Disable();
             playerInputActions.MenuActionMap.Enable();
         }
-        pauseMenu.SetActive(!pauseMenu.activeSelf);
-        dialogBox.SetActive(!dialogBox.activeSelf);
-        if (pauseMenu.activeSelf)
+        isPaused = !isPaused;
+        var dialogHandler = dialogBox.GetComponent<DialogHandler>();
+        if (isPaused)
+        {
+            dialogHandler.DismissDialogForced();
+            pauseMenu.SetActive(true);
+        } else
+        {
+            dialogHandler.RestoreUpdateMode();
+        }
+        pauseMenu.GetComponentInChildren<MenuButtonSelector>().TogglePauseMenu(isPaused);
+        if (isPaused)
         {
             pauseMenu.GetComponentInChildren<Toggle>().isOn = HoldDownToRun;
             switch (CurrentControl.value)
