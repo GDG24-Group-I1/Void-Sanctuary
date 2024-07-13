@@ -163,12 +163,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 4
     m_WrapAround: 0
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
+    m_SelectOnUp: {fileID: 1720854126094760593}
+    m_SelectOnDown: {fileID: 2067019072764745382}
     m_SelectOnLeft: {fileID: 0}
-    m_SelectOnRight: {fileID: 0}
+    m_SelectOnRight: {fileID: 1720854126094760593}
   m_Transition: 2
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
@@ -194,9 +194,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: GameInput, Assembly-CSharp
-        m_MethodName: OnExitGameButtonClicked
+      - m_Target: {fileID: 8582277895486915626}
+        m_TargetAssemblyTypeName: MenuButtonSelector, Assembly-CSharp
+        m_MethodName: OnExitGameClicked
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -407,11 +407,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 4
     m_WrapAround: 0
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
-    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnUp: {fileID: 7109746964301732497}
+    m_SelectOnDown: {fileID: 9060720008418446682}
+    m_SelectOnLeft: {fileID: 9060720008418446682}
     m_SelectOnRight: {fileID: 0}
   m_Transition: 2
   m_Colors:
@@ -441,8 +441,8 @@ MonoBehaviour:
   onValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: GameInput, Assembly-CSharp
+      - m_Target: {fileID: 8582277895486915626}
+        m_TargetAssemblyTypeName: MenuButtonSelector, Assembly-CSharp
         m_MethodName: OnDrawDebugRaysChanged
         m_Mode: 0
         m_Arguments:
@@ -676,12 +676,12 @@ RectTransform:
   - {fileID: 5843475741693412254}
   - {fileID: 3492371818876926292}
   - {fileID: 5895929335320961237}
+  - {fileID: 3116121509686239474}
+  - {fileID: 4196988361556650769}
   - {fileID: 8105923307957573020}
   - {fileID: 7453272963041777239}
   - {fileID: 494329172028952610}
   - {fileID: 6887175017950057348}
-  - {fileID: 4196988361556650769}
-  - {fileID: 3116121509686239474}
   m_Father: {fileID: 3600335442380934623}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -745,6 +745,9 @@ MonoBehaviour:
   xboxControllerView: {fileID: 8547772561338899736}
   psControllerView: {fileID: 4592314339277945535}
   mouseKeyboardView: {fileID: 3756991104154008008}
+  holdDownToRunToggle: {fileID: 6052505805003202255}
+  slowDownAttackToggle: {fileID: 7109746964301732497}
+  drawDebugRaysToggle: {fileID: 1720854126094760593}
 --- !u!95 &7656127653299125153
 Animator:
   serializedVersion: 5
@@ -946,11 +949,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 4
     m_WrapAround: 0
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
-    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnUp: {fileID: 6052505805003202255}
+    m_SelectOnDown: {fileID: 1720854126094760593}
+    m_SelectOnLeft: {fileID: 9060720008418446682}
     m_SelectOnRight: {fileID: 0}
   m_Transition: 2
   m_Colors:
@@ -980,9 +983,9 @@ MonoBehaviour:
   onValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: GameInput, Assembly-CSharp
-        m_MethodName: OnSlowDownAttackChanged
+      - m_Target: {fileID: 8582277895486915626}
+        m_TargetAssemblyTypeName: MenuButtonSelector, Assembly-CSharp
+        m_MethodName: OnSlowdownAttackChanged
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1954,13 +1957,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 4
     m_WrapAround: 0
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
+    m_SelectOnUp: {fileID: 9060720008418446682}
+    m_SelectOnDown: {fileID: 6052505805003202255}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
+  m_Transition: 2
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
@@ -1972,7 +1975,7 @@ MonoBehaviour:
   m_SpriteState:
     m_HighlightedSprite: {fileID: 0}
     m_PressedSprite: {fileID: 0}
-    m_SelectedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 21300000, guid: 340065c5fcecdf641b1589d89e7b7fda, type: 3}
     m_DisabledSprite: {fileID: 0}
   m_AnimationTriggers:
     m_NormalTrigger: Normal
@@ -1981,7 +1984,7 @@ MonoBehaviour:
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 0}
+  m_TargetGraphic: {fileID: 8215569481951132101}
   m_FillRect: {fileID: 6460456164857847266}
   m_HandleRect: {fileID: 0}
   m_Direction: 0
@@ -2432,14 +2435,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 1, b: 0.6826079, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 340065c5fcecdf641b1589d89e7b7fda, type: 3}
+  m_Sprite: {fileID: 21300000, guid: a705afe3c133da242be0947d8c2445ad, type: 3}
   m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -3198,11 +3201,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 4
     m_WrapAround: 0
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
-    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnUp: {fileID: 2067019072764745382}
+    m_SelectOnDown: {fileID: 7109746964301732497}
+    m_SelectOnLeft: {fileID: 9060720008418446682}
     m_SelectOnRight: {fileID: 0}
   m_Transition: 2
   m_Colors:
@@ -3232,8 +3235,8 @@ MonoBehaviour:
   onValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: GameInput, Assembly-CSharp
+      - m_Target: {fileID: 8582277895486915626}
+        m_TargetAssemblyTypeName: MenuButtonSelector, Assembly-CSharp
         m_MethodName: OnHoldDownToRunChanged
         m_Mode: 0
         m_Arguments:
@@ -4212,24 +4215,6 @@ PrefabInstance:
     - target: {fileID: 2058089431770225356, guid: 7f86852dc54a0a14ca70de1fc6d0440e, type: 3}
       propertyPath: m_Name
       value: KeyboardControlsView
-      objectReference: {fileID: 0}
-    - target: {fileID: 2058089431770225356, guid: 7f86852dc54a0a14ca70de1fc6d0440e, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5619491674410353540, guid: 7f86852dc54a0a14ca70de1fc6d0440e, type: 3}
-      propertyPath: m_text
-      value: 'WASD: Movement / move magnetized item
-
-        SPACE: Dash
-
-        MOUSE
-        MOVE: Move laser aim
-
-        MOUSE LEFT: Melee attack
-
-        MOUSE RIGHT:
-        Hold to aim / release to shoot'
       objectReference: {fileID: 0}
     - target: {fileID: 8754648657830921169, guid: 7f86852dc54a0a14ca70de1fc6d0440e, type: 3}
       propertyPath: m_Pivot.x

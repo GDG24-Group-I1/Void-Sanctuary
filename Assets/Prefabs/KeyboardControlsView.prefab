@@ -323,10 +323,13 @@ MonoBehaviour:
 
     SPACE: Dash
 
-    MOUSE LEFT:
-    Melee attack
+    MOUSE MOVE:
+    Move laser aim
 
-    MOUSE RIGHT: Hold to aim / release to shoot'
+    MOUSE LEFT: Melee attack
+
+    MOUSE RIGHT: Hold to aim /
+    release to shoot'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 47f43f07b77d5304d9beeb108097e2ac, type: 2}
   m_sharedMaterial: {fileID: -351706805771253716, guid: 47f43f07b77d5304d9beeb108097e2ac, type: 2}

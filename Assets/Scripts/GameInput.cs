@@ -7,13 +7,10 @@ using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using static UnityEngine.InputSystem.InputAction;
 
-public class GameInput : MonoBehaviour, IDataPersistence
+public class GameInput : MonoBehaviour
 {
     private VoidSanctuaryActions playerInputActions;
     public bool IsKeyboardMovement { get; private set; }
-    public bool HoldDownToRun { get; private set; } = true;
-    public bool SlowDownAttack { get; private set; } = true;
-    public bool DrawDebugRays { get; private set; } = false;
     private bool isPaused = false;
 
     public Observable<ControlType> CurrentControl { get; } = ControlType.Mouse;
@@ -21,36 +18,26 @@ public class GameInput : MonoBehaviour, IDataPersistence
     private GameObject pauseMenu;
     private GameObject dialogBox;
 
-
-    public void LoadData(GameData data)
-    {
-        HoldDownToRun = data.savedSettings.holdDownToRun;
-        SlowDownAttack = data.savedSettings.slowDownAttack;
-        DrawDebugRays = data.savedSettings.drawDebugRays;
-    }
-
-    
-    public void SaveData(GameData data)
-    {
-        data.savedSettings.holdDownToRun = HoldDownToRun;
-        data.savedSettings.slowDownAttack = SlowDownAttack;
-        data.savedSettings.drawDebugRays = DrawDebugRays;
-    }
+    public bool PauseCooldown { get; set; }
 
     private void Start()
     {
         isPaused = false;
-        pauseMenu = GameObjectExtensions.FindInactive("PauseMenu", "GameUI");
-        dialogBox = GameObjectExtensions.FindInactive("DialogBox", "GameUI");
+        pauseMenu = GameObject.Find("PauseMenu");
+        dialogBox = GameObject.Find("DialogBox");
         if (pauseMenu != null)
         {
             pauseMenu.SetActive(false);
-            var images = pauseMenu.GetComponentsInChildren<Image>(true);
         }
+        PauseCooldown = false;
     }
 
     private void ChangePauseState()
     {
+        if (PauseCooldown)
+        {
+            return;
+        }
         if (Time.timeScale == 0)
             Time.timeScale = 1;
         else
@@ -76,10 +63,7 @@ public class GameInput : MonoBehaviour, IDataPersistence
             dialogHandler.RestoreUpdateMode();
         }
         pauseMenu.GetComponentInChildren<MenuButtonSelector>().TogglePauseMenu(isPaused, CurrentControl.value);
-        if (isPaused)
-        {
-            pauseMenu.GetComponentInChildren<Toggle>().isOn = HoldDownToRun;
-        }
+        PauseCooldown = true;
     }
 
     private void Awake()
@@ -161,25 +145,5 @@ public class GameInput : MonoBehaviour, IDataPersistence
     private void OnDestroy()
     {
         playerInputActions.Dispose();
-    }
-
-    public void OnExitGameButtonClicked()
-    {
-        Application.Quit();
-    }
-
-    public void OnHoldDownToRunChanged(bool value)
-    {
-        HoldDownToRun = value;
-    }
-
-    public void OnSlowDownAttackChanged(bool value)
-    {
-        SlowDownAttack = value;
-    }
-
-    public void OnDrawDebugRaysChanged(bool value)
-    {
-        DrawDebugRays = value;
     }
 }

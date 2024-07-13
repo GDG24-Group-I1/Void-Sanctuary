@@ -55,8 +55,17 @@ public class DataPersistenceManager : MonoBehaviour
     }
     public void RegisterDataPersistenceObject(IDataPersistence obj)
     {
+        if (dataPersistenceObjects.Contains(obj))
+        {
+            return;
+        }
         dataPersistenceObjects.Add(obj);
         obj.LoadData(gameData);
+    }
+    public void UnregisterDataPersistenceObject(IDataPersistence obj)
+    {
+        obj.SaveData(gameData);
+        dataPersistenceObjects.Remove(obj);
     }
     public void NewGame()
     {
@@ -72,7 +81,7 @@ public class DataPersistenceManager : MonoBehaviour
         }
         foreach (IDataPersistence dataPersistence in dataPersistenceObjects)
         {
-            dataPersistence.LoadData(gameData);
+            dataPersistence?.LoadData(gameData);
         }
 
     }
@@ -80,7 +89,7 @@ public class DataPersistenceManager : MonoBehaviour
     {
         foreach (IDataPersistence dataPersistence in dataPersistenceObjects)
         {
-            dataPersistence.SaveData(gameData);
+            dataPersistence?.SaveData(gameData);
         }
         dataHandler.Save(gameData);
     }

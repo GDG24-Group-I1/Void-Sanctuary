@@ -4,6 +4,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assertions;
 
+public enum TimerType
+{
+    Scaled,
+    Realtime
+}
+
 public class Timer
 {
     private readonly MonoBehaviour ownerObject;
@@ -11,8 +17,10 @@ public class Timer
 
     public float Duration { get; private set; } = 0f;
     public Func<float?> OnTimerElapsed;
+
+    private readonly TimerType timerType;
     
-    public Timer(MonoBehaviour owner) { ownerObject = owner; }
+    public Timer(MonoBehaviour owner, TimerType type = TimerType.Scaled) { ownerObject = owner; timerType = type; }
 
     public void Start(float durationSeconds)
     {
@@ -57,7 +65,10 @@ public class Timer
 
     private IEnumerator TimerCoroutine()
     {
-        yield return new WaitForSeconds(Duration);
+        if (timerType == TimerType.Scaled)
+            yield return new WaitForSeconds(Duration);
+        else
+            yield return new WaitForSecondsRealtime(Duration);
         OnElapsed();
     }
 }

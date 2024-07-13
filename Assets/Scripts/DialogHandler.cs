@@ -98,11 +98,13 @@ public class DialogHandler : MonoBehaviour
     public void DismissDialogForced()
     {
         animator.updateMode = AnimatorUpdateMode.UnscaledTime;
+        dismissButton.GetComponent<Button>().enabled = false;
         DismissDialog();
     }
 
     public void RestoreUpdateMode()
     {
         animator.updateMode = AnimatorUpdateMode.Normal;
+        dismissButton.GetComponent<Button>().enabled = true;
     }
 }

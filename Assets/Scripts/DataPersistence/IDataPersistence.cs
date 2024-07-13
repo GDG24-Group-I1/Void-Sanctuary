@@ -6,5 +6,7 @@ using UnityEngine.Playables;
 public interface IDataPersistence
 {
     void LoadData(GameData data);
-    void SaveData(GameData data);
+    void SaveData(GameData data) {
+        // default implementation does nothing.
+    }
 }

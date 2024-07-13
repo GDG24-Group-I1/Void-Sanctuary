@@ -34,7 +34,7 @@ public enum FiringStage
 }
 
 [RequireComponent(typeof(Rigidbody), typeof(FloorCollider), typeof(AudioSource))]
-public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
+public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataPersistence
 {
     private const float firingKnockbackSpeed = 0f;
     private const int maxWallsCollided = 10;
@@ -152,6 +152,11 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
     private PlayerAnimator animator;
     Renderer[] renderers;
 
+    private GameData gameData;
+    public void LoadData(GameData data)
+    {
+        gameData = data;
+    }
 
     private void ResetPlayer()
     {
@@ -183,6 +188,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
         Assert.IsNotNull(dashLoaderBorder, "DASH LOADER BORDER IS NOT SET IN PLAYER OBJECT IN THE SCENE, PUT THE Canvas->DashLoader->DashLoaderBorder IN THE Dash Loader Border SLOT ON THIS GAME OBJECT");
         Assert.IsNotNull(uiWeaponImage, "UI WEAPON IMAGE IS NOT SET IN PLAYER OBJECT IN THE SCENE, PUT THE Canvas->UiWeaponImage IN THE UI Weapon Image SLOT ON THIS GAME OBJECT");
         Assert.IsNotNull(youDiedText, "YOU DIED TEXT IS NOT SET IN PLAYER OBJECT IN THE SCENE, PUT THE Canvas->YouDiedText IN THE You Died Text SLOT ON THIS GAME OBJECT");
+        DataPersistenceManager.GetInstance().RegisterDataPersistenceObject(this);
         youDiedTextAnimator = youDiedText.GetComponent<Animator>();
         movableObjects = GameObject.FindGameObjectsWithTag("MovableObject");
         visibleMovableObjects = Array.Empty<GameObject>();
@@ -563,7 +569,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
 
     private void DrawDebugRays()
     {
-        if (gameInput.DrawDebugRays)
+        if (gameData.savedSettings.drawDebugRays)
         {
             #region Debug rays for dashing
             Debug.DrawRay(transform.position + Vector3.up, transform.forward * dashDistance, Color.red);
@@ -751,7 +757,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
             sword.GetComponent<SkinnedMeshRenderer>().SwitchMaterial(glowMaterial, swordBaseMaterial);
             swordBack.GetComponent<SkinnedMeshRenderer>().SwitchMaterial(glowMaterial, swordBackBaseMaterial);
             IsSwordGlowing = false;
-            if (gameInput.SlowDownAttack)
+            if (gameData.savedSettings.slowDownAttack)
             {
                 Time.timeScale = 1.0f;
                 Time.fixedDeltaTime = fixedDeltaTime;
@@ -847,7 +853,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
         CanCombo = ComboState.CanCombo;
         sword.GetComponent<SkinnedMeshRenderer>().SwitchMaterial(swordBaseMaterial, glowMaterial);
         swordBack.GetComponent<SkinnedMeshRenderer>().SwitchMaterial(swordBackBaseMaterial, glowMaterial);
-        if (gameInput.SlowDownAttack)
+        if (gameData.savedSettings.slowDownAttack)
         {
             Time.timeScale = slowDownFactor;
             Time.fixedDeltaTime = fixedDeltaTime * Time.timeScale;
@@ -911,6 +917,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
     {
         StopAllCoroutines();
         gameInput.UnregisterPlayer(this);
+        DataPersistenceManager.GetInstance().UnregisterDataPersistenceObject(this);
     }
 
     #region Input actions
@@ -944,7 +951,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
     {
         if (context.performed)
         {
-            if (gameInput.HoldDownToRun)
+            if (gameData.savedSettings.holdDownToRun)
             {
                 IsRunning = true;
                 movementSpeed = runSpeed;
@@ -967,7 +974,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
         }
         else if (context.canceled)
         {
-            if (gameInput.HoldDownToRun)
+            if (gameData.savedSettings.holdDownToRun)
             {
                 IsRunning = false;
                 movementSpeed = walkSpeed;

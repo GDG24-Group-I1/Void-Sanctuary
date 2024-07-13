@@ -10,39 +10,33 @@ enum Direction
 
 public class MenuButtonSelector : MonoBehaviour, IDataPersistence
 {
-    private Selectable firstSelectable;
     [SerializeField] private Animator animator;
     [SerializeField] private AudioSource audioSource;
-    private float volume;
+    private GameData gameData;
     [SerializeField] private Slider volumeSlider;
     [SerializeField] private GameObject xboxControllerView;
     [SerializeField] private GameObject psControllerView;
     [SerializeField] private GameObject mouseKeyboardView;
-    // Start is called before the first frame update
-    void Awake()
+    [SerializeField] private Toggle holdDownToRunToggle;
+    [SerializeField] private Toggle slowDownAttackToggle;
+    [SerializeField] private Toggle drawDebugRaysToggle;
+
+    private GameInput inputHandler;
+
+    private void Start()
     {
-        for (int i = 0; i < transform.childCount; i++)
-        {
-            if (transform.GetChild(i).TryGetComponent<Selectable>(out var selectable))
-            {
-                firstSelectable = selectable;
-                break;
-            }
-        }
+        inputHandler = GameObject.FindWithTag("InputHandler").GetComponent<GameInput>();
     }
 
-    private void OnEnable()
+    public GameInput GetGameInput()
     {
-        if (EventSystem.current.currentSelectedGameObject == null && firstSelectable != null)
-        {
-            firstSelectable.Select();
-        }
+        return inputHandler;
     }
 
     public void OnAudioChange(float value)
     {
-        volume = value;
-        AudioListener.volume = volume;
+        gameData.savedSettings.volume = value;
+        AudioListener.volume = value;
     }
 
     public void TogglePauseMenu(bool open, ControlType currentControlType)
@@ -64,13 +58,28 @@ public class MenuButtonSelector : MonoBehaviour, IDataPersistence
 
     public void LoadData(GameData data)
     {
-        volume = data.savedSettings.volume;
-        AudioListener.volume = volume;
-        volumeSlider.value = volume;
+        gameData = data;
+        AudioListener.volume = gameData.savedSettings.volume;
+        volumeSlider.value = gameData.savedSettings.volume;
+        holdDownToRunToggle.isOn = gameData.savedSettings.holdDownToRun;
+        slowDownAttackToggle.isOn = gameData.savedSettings.slowDownAttack;
+        drawDebugRaysToggle.isOn = gameData.savedSettings.drawDebugRays;
     }
 
-    public void SaveData(GameData data)
+    public void OnHoldDownToRunChanged(bool value)
     {
-        data.savedSettings.volume = volume;
+        gameData.savedSettings.holdDownToRun = value;
+    }
+    public void OnSlowdownAttackChanged(bool value)
+    {
+        gameData.savedSettings.slowDownAttack = value;
+    }
+    public void OnDrawDebugRaysChanged(bool value)
+    {
+        gameData.savedSettings.drawDebugRays = value;
+    }
+    public void OnExitGameClicked()
+    {
+        Application.Quit();
     }
 }
