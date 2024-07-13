@@ -114,15 +114,6 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Block"",
-                    ""type"": ""Button"",
-                    ""id"": ""d194de29-76dd-49ee-91a4-a63fc09d3148"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
                     ""name"": ""Run"",
                     ""type"": ""Button"",
                     ""id"": ""d68017b5-7edf-4c0a-bb56-e0a9f63cc63e"",
@@ -135,15 +126,6 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
                     ""name"": ""Dash"",
                     ""type"": ""Button"",
                     ""id"": ""6f452dbe-afcb-4cff-be87-053005122fcc"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""FakeHit"",
-                    ""type"": ""Button"",
-                    ""id"": ""d3f3c4e0-bb56-4eac-8040-8721091e2fe0"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -310,28 +292,6 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""cea987b3-ef84-4a5b-a7fe-1e07dd15f912"",
-                    ""path"": ""<Mouse>/middleButton"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Block"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""1973698b-f14f-4359-8c12-4b8095b90451"",
-                    ""path"": ""<Gamepad>/leftShoulder"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Block"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""604d7e94-9145-4175-9bfd-31513a0a14d0"",
                     ""path"": ""<Gamepad>/leftStickPress"",
                     ""interactions"": """",
@@ -371,17 +331,6 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Dash"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""4fdafc83-49f3-4080-a6d1-2a37336f6650"",
-                    ""path"": ""<Keyboard>/h"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""FakeHit"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -709,10 +658,8 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
         m_Player_Attack = m_Player.FindAction("Attack", throwIfNotFound: true);
         m_Player_Fire = m_Player.FindAction("Fire", throwIfNotFound: true);
-        m_Player_Block = m_Player.FindAction("Block", throwIfNotFound: true);
         m_Player_Run = m_Player.FindAction("Run", throwIfNotFound: true);
         m_Player_Dash = m_Player.FindAction("Dash", throwIfNotFound: true);
-        m_Player_FakeHit = m_Player.FindAction("FakeHit", throwIfNotFound: true);
         m_Player_MousePosition = m_Player.FindAction("MousePosition", throwIfNotFound: true);
         m_Player_Interact = m_Player.FindAction("Interact", throwIfNotFound: true);
         m_Player_ChangeEquippedWeapon = m_Player.FindAction("ChangeEquippedWeapon", throwIfNotFound: true);
@@ -840,10 +787,8 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Move;
     private readonly InputAction m_Player_Attack;
     private readonly InputAction m_Player_Fire;
-    private readonly InputAction m_Player_Block;
     private readonly InputAction m_Player_Run;
     private readonly InputAction m_Player_Dash;
-    private readonly InputAction m_Player_FakeHit;
     private readonly InputAction m_Player_MousePosition;
     private readonly InputAction m_Player_Interact;
     private readonly InputAction m_Player_ChangeEquippedWeapon;
@@ -855,10 +800,8 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
         public InputAction @Move => m_Wrapper.m_Player_Move;
         public InputAction @Attack => m_Wrapper.m_Player_Attack;
         public InputAction @Fire => m_Wrapper.m_Player_Fire;
-        public InputAction @Block => m_Wrapper.m_Player_Block;
         public InputAction @Run => m_Wrapper.m_Player_Run;
         public InputAction @Dash => m_Wrapper.m_Player_Dash;
-        public InputAction @FakeHit => m_Wrapper.m_Player_FakeHit;
         public InputAction @MousePosition => m_Wrapper.m_Player_MousePosition;
         public InputAction @Interact => m_Wrapper.m_Player_Interact;
         public InputAction @ChangeEquippedWeapon => m_Wrapper.m_Player_ChangeEquippedWeapon;
@@ -881,18 +824,12 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
             @Fire.started += instance.OnFire;
             @Fire.performed += instance.OnFire;
             @Fire.canceled += instance.OnFire;
-            @Block.started += instance.OnBlock;
-            @Block.performed += instance.OnBlock;
-            @Block.canceled += instance.OnBlock;
             @Run.started += instance.OnRun;
             @Run.performed += instance.OnRun;
             @Run.canceled += instance.OnRun;
             @Dash.started += instance.OnDash;
             @Dash.performed += instance.OnDash;
             @Dash.canceled += instance.OnDash;
-            @FakeHit.started += instance.OnFakeHit;
-            @FakeHit.performed += instance.OnFakeHit;
-            @FakeHit.canceled += instance.OnFakeHit;
             @MousePosition.started += instance.OnMousePosition;
             @MousePosition.performed += instance.OnMousePosition;
             @MousePosition.canceled += instance.OnMousePosition;
@@ -918,18 +855,12 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
             @Fire.started -= instance.OnFire;
             @Fire.performed -= instance.OnFire;
             @Fire.canceled -= instance.OnFire;
-            @Block.started -= instance.OnBlock;
-            @Block.performed -= instance.OnBlock;
-            @Block.canceled -= instance.OnBlock;
             @Run.started -= instance.OnRun;
             @Run.performed -= instance.OnRun;
             @Run.canceled -= instance.OnRun;
             @Dash.started -= instance.OnDash;
             @Dash.performed -= instance.OnDash;
             @Dash.canceled -= instance.OnDash;
-            @FakeHit.started -= instance.OnFakeHit;
-            @FakeHit.performed -= instance.OnFakeHit;
-            @FakeHit.canceled -= instance.OnFakeHit;
             @MousePosition.started -= instance.OnMousePosition;
             @MousePosition.performed -= instance.OnMousePosition;
             @MousePosition.canceled -= instance.OnMousePosition;
@@ -1031,10 +962,8 @@ public partial class @VoidSanctuaryActions: IInputActionCollection2, IDisposable
         void OnMove(InputAction.CallbackContext context);
         void OnAttack(InputAction.CallbackContext context);
         void OnFire(InputAction.CallbackContext context);
-        void OnBlock(InputAction.CallbackContext context);
         void OnRun(InputAction.CallbackContext context);
         void OnDash(InputAction.CallbackContext context);
-        void OnFakeHit(InputAction.CallbackContext context);
         void OnMousePosition(InputAction.CallbackContext context);
         void OnInteract(InputAction.CallbackContext context);
         void OnChangeEquippedWeapon(InputAction.CallbackContext context);

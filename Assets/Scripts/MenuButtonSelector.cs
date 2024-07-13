@@ -15,6 +15,9 @@ public class MenuButtonSelector : MonoBehaviour, IDataPersistence
     [SerializeField] private AudioSource audioSource;
     private float volume;
     [SerializeField] private Slider volumeSlider;
+    [SerializeField] private GameObject xboxControllerView;
+    [SerializeField] private GameObject psControllerView;
+    [SerializeField] private GameObject mouseKeyboardView;
     // Start is called before the first frame update
     void Awake()
     {
@@ -42,8 +45,11 @@ public class MenuButtonSelector : MonoBehaviour, IDataPersistence
         AudioListener.volume = volume;
     }
 
-    public void TogglePauseMenu(bool open)
+    public void TogglePauseMenu(bool open, ControlType currentControlType)
     {
+        xboxControllerView.SetActive(currentControlType == ControlType.XboxController || currentControlType == ControlType.OtherController);
+        psControllerView.SetActive(currentControlType == ControlType.PSController);
+        mouseKeyboardView.SetActive(currentControlType == ControlType.Mouse);
         audioSource.Play();
         if (open)
         {

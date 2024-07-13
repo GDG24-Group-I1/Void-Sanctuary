@@ -20,8 +20,6 @@ public class GameInput : MonoBehaviour, IDataPersistence
 
     private GameObject pauseMenu;
     private GameObject dialogBox;
-    private Image psControllerImage;
-    private Image xboxControllerImage;
 
 
     public void LoadData(GameData data)
@@ -48,8 +46,6 @@ public class GameInput : MonoBehaviour, IDataPersistence
         {
             pauseMenu.SetActive(false);
             var images = pauseMenu.GetComponentsInChildren<Image>(true);
-            psControllerImage = images.First(x => x.name == "PSController");
-            xboxControllerImage = images.First(x => x.name == "XboxController");
         }
     }
 
@@ -79,26 +75,10 @@ public class GameInput : MonoBehaviour, IDataPersistence
         {
             dialogHandler.RestoreUpdateMode();
         }
-        pauseMenu.GetComponentInChildren<MenuButtonSelector>().TogglePauseMenu(isPaused);
+        pauseMenu.GetComponentInChildren<MenuButtonSelector>().TogglePauseMenu(isPaused, CurrentControl.value);
         if (isPaused)
         {
             pauseMenu.GetComponentInChildren<Toggle>().isOn = HoldDownToRun;
-            switch (CurrentControl.value)
-            {
-                case ControlType.Mouse:
-                    psControllerImage.color = psControllerImage.color.CopyWithAlpha(0.3f);
-                    xboxControllerImage.color = xboxControllerImage.color.CopyWithAlpha(0.3f);
-                    break;
-                case ControlType.PSController:
-                    psControllerImage.color = psControllerImage.color.CopyWithAlpha(1f);
-                    xboxControllerImage.color = xboxControllerImage.color.CopyWithAlpha(0.3f);
-                    break;
-                case ControlType.OtherController:
-                case ControlType.XboxController:
-                    psControllerImage.color = psControllerImage.color.CopyWithAlpha(0.3f);
-                    xboxControllerImage.color = xboxControllerImage.color.CopyWithAlpha(1f);
-                    break;
-            }
         }
     }
 

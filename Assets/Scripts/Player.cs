@@ -708,11 +708,6 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
         executeDash = true;
     }
 
-    private void Block()
-    {
-
-    }
-
     public void SwordAnimationEnded()
     {
         canMove = true;
@@ -945,13 +940,6 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
             Fire();
         }
     }
-    public void OnBlock(InputAction.CallbackContext context)
-    {
-        if (context.performed)
-        {
-            Block();
-        }
-    }
     public void OnRun(InputAction.CallbackContext context)
     {
         if (context.performed)
@@ -992,20 +980,6 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions
         if (context.performed)
         {
             Dash();
-        }
-    }
-    public void OnFakeHit(InputAction.CallbackContext context)
-    {
-        if (context.performed)
-        {
-            if (healthSlider.value == healthSlider.minValue)
-            {
-                healthSlider.value = healthSlider.maxValue;
-            }
-            else
-            {
-                healthSlider.value--;
-            }
         }
     }
 
