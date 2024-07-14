@@ -899,15 +899,62 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4738550822783615780, guid: 695ac3a8e03d19f49965ced9cc8c03ce, type: 3}
+      propertyPath: m_Name
+      value: Point light plant_door_exit
+      objectReference: {fileID: 0}
+    - target: {fileID: 6721588149058953074, guid: 695ac3a8e03d19f49965ced9cc8c03ce, type: 3}
+      propertyPath: unlocked
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6721588149058953074, guid: 695ac3a8e03d19f49965ced9cc8c03ce, type: 3}
+      propertyPath: doorLight
+      value: 
+      objectReference: {fileID: 3555966832040774793}
+    - target: {fileID: 8820222085620403982, guid: 695ac3a8e03d19f49965ced9cc8c03ce, type: 3}
+      propertyPath: requiredInputs
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 9087818826114105233, guid: 695ac3a8e03d19f49965ced9cc8c03ce, type: 3}
       propertyPath: m_Name
       value: Room3
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 206625139310449152, guid: 695ac3a8e03d19f49965ced9cc8c03ce, type: 3}
+    - {fileID: 1190263700589429272, guid: 695ac3a8e03d19f49965ced9cc8c03ce, type: 3}
+    - {fileID: 567451246994557493, guid: 695ac3a8e03d19f49965ced9cc8c03ce, type: 3}
+    - {fileID: 646046528497306000, guid: 695ac3a8e03d19f49965ced9cc8c03ce, type: 3}
+    - {fileID: 1671933200526909084, guid: 695ac3a8e03d19f49965ced9cc8c03ce, type: 3}
+    - {fileID: 215219173723582314, guid: 695ac3a8e03d19f49965ced9cc8c03ce, type: 3}
+    - {fileID: 1311942844416672219, guid: 695ac3a8e03d19f49965ced9cc8c03ce, type: 3}
+    - {fileID: 3168786109657525545, guid: 695ac3a8e03d19f49965ced9cc8c03ce, type: 3}
+    - {fileID: 4781240635250136720, guid: 695ac3a8e03d19f49965ced9cc8c03ce, type: 3}
+    - {fileID: 5070046479608072204, guid: 695ac3a8e03d19f49965ced9cc8c03ce, type: 3}
+    - {fileID: 806033144649119027, guid: 695ac3a8e03d19f49965ced9cc8c03ce, type: 3}
+    - {fileID: 2443148323275221031, guid: 695ac3a8e03d19f49965ced9cc8c03ce, type: 3}
+    - {fileID: 3925971723801090128, guid: 695ac3a8e03d19f49965ced9cc8c03ce, type: 3}
+    - {fileID: 448541880198019324, guid: 695ac3a8e03d19f49965ced9cc8c03ce, type: 3}
+    - {fileID: 6297442343316235270, guid: 695ac3a8e03d19f49965ced9cc8c03ce, type: 3}
+    - {fileID: 5623409988277063957, guid: 695ac3a8e03d19f49965ced9cc8c03ce, type: 3}
+    - {fileID: 5291359726912402594, guid: 695ac3a8e03d19f49965ced9cc8c03ce, type: 3}
+    - {fileID: 3564495093644266197, guid: 695ac3a8e03d19f49965ced9cc8c03ce, type: 3}
+    - {fileID: 3206238728767748545, guid: 695ac3a8e03d19f49965ced9cc8c03ce, type: 3}
+    - {fileID: 2678538167429831410, guid: 695ac3a8e03d19f49965ced9cc8c03ce, type: 3}
+    - {fileID: 4306838172283700024, guid: 695ac3a8e03d19f49965ced9cc8c03ce, type: 3}
+    - {fileID: 2757912635161794111, guid: 695ac3a8e03d19f49965ced9cc8c03ce, type: 3}
+    - {fileID: 3353288637509544319, guid: 695ac3a8e03d19f49965ced9cc8c03ce, type: 3}
+    - {fileID: 8600799111967904482, guid: 695ac3a8e03d19f49965ced9cc8c03ce, type: 3}
+    - {fileID: 8394922411452524111, guid: 695ac3a8e03d19f49965ced9cc8c03ce, type: 3}
+    - {fileID: 498360126536396661, guid: 695ac3a8e03d19f49965ced9cc8c03ce, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 695ac3a8e03d19f49965ced9cc8c03ce, type: 3}
+--- !u!108 &3555966832040774793 stripped
+Light:
+  m_CorrespondingSourceObject: {fileID: 4738550822789458376, guid: 695ac3a8e03d19f49965ced9cc8c03ce, type: 3}
+  m_PrefabInstance: {fileID: 8114327782288041281}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &6191291963855733705 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2697657399250429576, guid: 695ac3a8e03d19f49965ced9cc8c03ce, type: 3}
