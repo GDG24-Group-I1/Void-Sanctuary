@@ -105,6 +105,8 @@ Transform:
   - {fileID: 7622094230797838988}
   - {fileID: 3113462557467817431}
   - {fileID: 8835445765895654395}
+  - {fileID: 3299591386449850930}
+  - {fileID: 3908237941077207347}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &6841637157162484512
@@ -1519,28 +1521,8 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 265799939950006820, guid: 15e6df38370639647a0f19839b5943f4, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 7315749090538454984}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 15e6df38370639647a0f19839b5943f4, type: 3}
---- !u!1 &6180236891942651289 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 265799939950006820, guid: 15e6df38370639647a0f19839b5943f4, type: 3}
-  m_PrefabInstance: {fileID: 6229836277715031997}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &7315749090538454984
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6180236891942651289}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 262b3cf86f9245443a120f06d949910e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &6180236891942981357 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 265799939950205264, guid: 15e6df38370639647a0f19839b5943f4, type: 3}
@@ -2199,28 +2181,8 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 265799939950006820, guid: 15e6df38370639647a0f19839b5943f4, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 5626443099496907166}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 15e6df38370639647a0f19839b5943f4, type: 3}
---- !u!1 &8620470375136430836 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 265799939950006820, guid: 15e6df38370639647a0f19839b5943f4, type: 3}
-  m_PrefabInstance: {fileID: 8363852465917090000}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &5626443099496907166
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8620470375136430836}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 262b3cf86f9245443a120f06d949910e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &8620470375136756096 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 265799939950205264, guid: 15e6df38370639647a0f19839b5943f4, type: 3}

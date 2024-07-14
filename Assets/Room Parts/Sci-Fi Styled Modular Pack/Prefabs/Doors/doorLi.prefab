@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 265799939951953754}
   - component: {fileID: 265799939959438960}
   - component: {fileID: 4598551353887356189}
-  - component: {fileID: 8721256081049187018}
   m_Layer: 0
   m_Name: door_1_left
   m_TagString: Untagged
@@ -129,23 +128,6 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: 2107a071ee618844a887d2f12ada9fd3, type: 3}
---- !u!114 &8721256081049187018
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 265799939949924586}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4650848efa5f25a4e8f89f93488ae290, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  targetLight: {fileID: 0}
-  newColor: {r: 0, g: 0, b: 0, a: 0}
-  cubeSwitchActivated: 0
-  swordSwitchActivated: 0
-  animator: {fileID: 0}
 --- !u!1 &265799939950006820
 GameObject:
   m_ObjectHideFlags: 0
@@ -312,6 +294,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 262b3cf86f9245443a120f06d949910e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  unlocked: 1
+  requiredInputs: 5
+  doorLight: {fileID: 0}
   animator: {fileID: 0}
 --- !u!1 &265799939950012826
 GameObject:

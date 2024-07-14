@@ -8248,7 +8248,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: ac1e3b0d5825f134bbe2e6f828a4bdf3, type: 3}
       propertyPath: m_TagString
-      value: DraggableCube
+      value: MovableObject
       objectReference: {fileID: 0}
     - target: {fileID: 6745302439343835087, guid: ac1e3b0d5825f134bbe2e6f828a4bdf3, type: 3}
       propertyPath: m_Enabled
@@ -10021,7 +10021,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: ac1e3b0d5825f134bbe2e6f828a4bdf3, type: 3}
       propertyPath: m_TagString
-      value: DraggableCube
+      value: MovableObject
       objectReference: {fileID: 0}
     - target: {fileID: 6745302439343835087, guid: ac1e3b0d5825f134bbe2e6f828a4bdf3, type: 3}
       propertyPath: m_Enabled
@@ -17739,7 +17739,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: ac1e3b0d5825f134bbe2e6f828a4bdf3, type: 3}
       propertyPath: m_TagString
-      value: DraggableCube
+      value: MovableObject
       objectReference: {fileID: 0}
     - target: {fileID: 6745302439343835087, guid: ac1e3b0d5825f134bbe2e6f828a4bdf3, type: 3}
       propertyPath: m_Enabled
@@ -18962,7 +18962,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: ac1e3b0d5825f134bbe2e6f828a4bdf3, type: 3}
       propertyPath: m_TagString
-      value: DraggableCube
+      value: MovableObject
       objectReference: {fileID: 0}
     - target: {fileID: 6745302439343835087, guid: ac1e3b0d5825f134bbe2e6f828a4bdf3, type: 3}
       propertyPath: m_Enabled
@@ -19713,7 +19713,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: ac1e3b0d5825f134bbe2e6f828a4bdf3, type: 3}
       propertyPath: m_TagString
-      value: DraggableCube
+      value: MovableObject
       objectReference: {fileID: 0}
     - target: {fileID: 6745302439343835087, guid: ac1e3b0d5825f134bbe2e6f828a4bdf3, type: 3}
       propertyPath: m_Enabled
