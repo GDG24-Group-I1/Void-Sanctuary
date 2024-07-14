@@ -20,8 +20,15 @@ public class PauseMenuAnimScript : StateMachineBehaviour
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         // have to reach for the parent because we are the Panel but we want to disable PauseMenu
-        animator.GetComponent<MenuButtonSelector>().GetGameInput().PauseCooldown = false;
-        animator.transform.parent.gameObject.SetActive(false);
+        if (animator.TryGetComponent<MenuButtonSelector>(out var menuButtonSelector))
+        {
+            menuButtonSelector.GetGameInput().PauseCooldown = false;
+            animator.transform.parent.gameObject.SetActive(false);
+        } else
+        {
+            animator.transform.parent.GetChild(0).gameObject.SetActive(true); // enable the main menu again
+            animator.gameObject.SetActive(false);
+        }
     }
 
     // OnStateMove is called right after Animator.OnAnimatorMove()

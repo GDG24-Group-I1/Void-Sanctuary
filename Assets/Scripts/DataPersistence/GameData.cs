@@ -10,7 +10,6 @@ public struct SavedSettings
 {
     public bool holdDownToRun;
     public bool slowDownAttack;
-    public bool drawDebugRays;
     public float volume;
 }
 
@@ -40,7 +39,6 @@ public class GameData
         {
             holdDownToRun = true,
             slowDownAttack = true,
-            drawDebugRays = false,
             volume = 1f
         };
         playerData = new()

@@ -554,7 +554,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
 
     private void DrawDebugRays()
     {
-        if (gameData.savedSettings.drawDebugRays)
+        if (false)
         {
             #region Debug rays for dashing
             Debug.DrawRay(transform.position + Vector3.up, transform.forward * dashDistance, Color.red);

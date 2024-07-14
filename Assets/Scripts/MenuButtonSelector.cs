@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 enum Direction
@@ -63,7 +64,6 @@ public class MenuButtonSelector : MonoBehaviour, IDataPersistence
         volumeSlider.value = gameData.savedSettings.volume;
         holdDownToRunToggle.isOn = gameData.savedSettings.holdDownToRun;
         slowDownAttackToggle.isOn = gameData.savedSettings.slowDownAttack;
-        drawDebugRaysToggle.isOn = gameData.savedSettings.drawDebugRays;
     }
 
     public void OnHoldDownToRunChanged(bool value)
@@ -74,12 +74,8 @@ public class MenuButtonSelector : MonoBehaviour, IDataPersistence
     {
         gameData.savedSettings.slowDownAttack = value;
     }
-    public void OnDrawDebugRaysChanged(bool value)
-    {
-        gameData.savedSettings.drawDebugRays = value;
-    }
     public void OnExitGameClicked()
     {
-        Application.Quit();
+        SceneManager.LoadScene("MainMenu");
     }
 }
