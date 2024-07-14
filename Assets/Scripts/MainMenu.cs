@@ -54,6 +54,7 @@ public class MainMenu : MonoBehaviour, IDataPersistence
 
     public void OnSettingsClicked()
     {
+        videoPlayer.gameObject.SetActive(false);
         var settingsPaneAnimator = settingsPane.GetComponent<Animator>();
         menuButtonsPane.SetActive(false);
         settingsPane.SetActive(true);
@@ -82,6 +83,10 @@ public class MainMenu : MonoBehaviour, IDataPersistence
         settingsPaneAnimator.ResetTrigger("Expand");
         settingsPaneAnimator.SetTrigger("Close");
         EventSystem.current.SetSelectedGameObject(menuButtonsPane.GetComponentInChildren<Button>().gameObject);
+        videoPlayer.gameObject.SetActive(true);
+        videoPlayer.sendFrameReadyEvents = true;
+        videoPlayer.frameReady += OnFrameReady;
+        videoPlayer.Play();
     }
 
     public void OnVolumeSliderChange(float volume)
