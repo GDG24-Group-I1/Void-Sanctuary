@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Assertions;
 using UnityEngine.UI;
 
 public enum EnemyType
@@ -17,19 +18,13 @@ struct EnemyData
     public Vector3 position;
 }
 
-public class Respawner : MonoBehaviour
+public class Respawner : MonoBehaviour, IDataPersistence
 {
     [SerializeField] private GameObject playerPrefab;
     [SerializeField] private GameObject enemySwordPrefab;
     [SerializeField] private GameObject enemyRangedPrefab;
-    private GameObject youDiedText;
-    private Transform cameraTransform;
-    private GameObject healthBar;
-    private GameObject loaderBorder;
-    private GameObject dashLoaderBorder;
     private GameObject playerObject;
-    private Image uiWeaponImage;
-    private readonly List<Sprite> powerupsEquipped = new();
+    [SerializeField] private Sprite[] availablePowerups;
     private Timer respawnTimer;
     private EnemyData[] enemies;
 
@@ -37,11 +32,27 @@ public class Respawner : MonoBehaviour
     [SerializeField] private float MaxAdjustment;
     [SerializeField] private float yDiffThreshold;
 
+    
+    [SerializeField] private Transform cameraTransform;
+    [SerializeField] private GameObject healthBar;
+    [SerializeField] private GameObject loaderBorder;
+    [SerializeField] private GameObject dashLoaderBorder;
+    [SerializeField] private Image uiWeaponImage;
+    [SerializeField] private GameObject youDiedText;
+
     private bool adjustingCamera;
+    private RespawnPoint[] respawnPoints;
+    private GameData gameData;
 
     // Start is called before the first frame update
     void Start()
     {
+        Assert.IsNotNull(cameraTransform, "CAMERA TRANSFORM IS NOT SET IN THE PLAYER RESPAWNER OBJECT IN THE SCENE, PUT THE TopDownCamera IN THE CameraTrasform SLOT ON THIS GAMEOBJECT");
+        Assert.IsNotNull(healthBar, "HEALTH BAR IS NOT SET IN THE PLAYER RESPAWNER OBJECT IN THE SCENE, PUT THE Canvas->HealthBar OBJECT IN THE Health Bar SLOT ON THIS GAME OBJECT");
+        Assert.IsNotNull(loaderBorder, "LOADER BORDER IS NOT SET IN PLAYER RESPAWNER OBJECT IN THE SCENE, PUT THE Canvas->Loader->LoaderBorder IN THE Loader Border SLOT ON THIS GAME OBJECT");
+        Assert.IsNotNull(dashLoaderBorder, "DASH LOADER BORDER IS NOT SET IN PLAYER RESPAWNER OBJECT IN THE SCENE, PUT THE Canvas->DashLoader->DashLoaderBorder IN THE Dash Loader Border SLOT ON THIS GAME OBJECT");
+        Assert.IsNotNull(uiWeaponImage, "UI WEAPON IMAGE IS NOT SET IN PLAYER RESPAWNER OBJECT IN THE SCENE, PUT THE Canvas->UiWeaponImage IN THE UI Weapon Image SLOT ON THIS GAME OBJECT");
+        Assert.IsNotNull(youDiedText, "YOU DIED TEXT IS NOT SET IN PLAYER RESPAWNER OBJECT IN THE SCENE, PUT THE Canvas->YouDiedText IN THE You Died Text SLOT ON THIS GAME OBJECT");
         respawnTimer = new Timer(this)
         {
             OnTimerElapsed = () =>
@@ -50,24 +61,36 @@ public class Respawner : MonoBehaviour
                 return null;
             }
         };
-        playerObject = GameObject.FindGameObjectWithTag("Player");
-        var player = playerObject.GetComponent<Player>();
-        youDiedText = player.youDiedText;
-        cameraTransform = player.cameraTransform;
-        healthBar = player.healthBar;
-        loaderBorder = player.loaderBorder;
-        dashLoaderBorder = player.dashLoaderBorder;
-        uiWeaponImage = player.uiWeaponImage;
-        enemies = GameObject.FindGameObjectsWithTag("EnemyObj").Select(x => new EnemyData { 
+        enemies = GameObject.FindGameObjectsWithTag("EnemyObj").Select(x => new EnemyData
+        {
             instance = x,
             type = x.GetComponent<EnemyAI>().Type,
             position = x.transform.position
         }).ToArray();
+        respawnPoints = GameObject.FindGameObjectsWithTag("RespawnPoint").Select(x => x.GetComponent<RespawnPoint>()).ToArray();
+        var powerups = GameObject.FindGameObjectsWithTag("Powerup");
+        foreach (var powerup in powerups)
+        {
+            if (powerup.TryGetComponent<PowerUpHolder>(out var powerupHolder))
+            {
+                if (gameData.playerData.obtainedPowerups.Contains(powerupHolder.Powerup.name))
+                {
+                    Debug.Log($"Destroying powerup {powerup.name} because it was already obtained");
+                    Destroy(powerup);
+                }
+            }
+        }
+        RespawnPlayerCallback();
     }
 
     private void Update()
     {
         FollowCameraToPlayer();
+    }
+
+    public void LoadData(GameData data)
+    {
+        gameData = data;
     }
 
     private void FollowCameraToPlayer()
@@ -102,15 +125,17 @@ public class Respawner : MonoBehaviour
 
     private void RespawnPlayerCallback()
     {
-        playerObject = Instantiate(playerPrefab, Vector3.zero, Quaternion.identity);
+        var respawnPoint = respawnPoints.FirstOrDefault(x => x.respawnPointID == gameData.playerData.lastRespawnPointID);
+        Debug.Log($"Respawning player at respawn point {gameData.playerData.lastRespawnPointID}");
+        playerObject = Instantiate(playerPrefab, respawnPoint == null ? Vector3.zero : respawnPoint.transform.position, Quaternion.identity);
         var player = playerObject.GetComponent<Player>();
-        player.youDiedText = youDiedText;
-        player.cameraTransform = cameraTransform;
-        player.healthBar = healthBar;
-        player.loaderBorder = loaderBorder;
-        player.dashLoaderBorder = dashLoaderBorder;
-        player.uiWeaponImage = uiWeaponImage;
-        player.SetPowerupsOnRespawn(powerupsEquipped);
+        player.YouDiedText = youDiedText;
+        player.CameraTransform = cameraTransform;
+        player.HealthBar = healthBar;
+        player.LoaderBorder = loaderBorder;
+        player.DashLoaderBorder = dashLoaderBorder;
+        player.UiWeaponImage = uiWeaponImage;
+        player.SetPowerupsOnRespawn(availablePowerups.Where(x => gameData.playerData.obtainedPowerups.Contains(x.name)));
         for (int i = 0; i < enemies.Length; i++)
         {
             ref var enemyData = ref enemies[i];
@@ -123,15 +148,5 @@ public class Respawner : MonoBehaviour
             enemyData.instance.GetComponent<EnemyAI>().player = playerObject.transform;
 
         }
-    }
-
-    public void ClearPowerups()
-    {
-        powerupsEquipped.Clear();
-    }
-
-    public void AddPowerup(Sprite sprite)
-    {
-        powerupsEquipped.Add(sprite);
     }
 }

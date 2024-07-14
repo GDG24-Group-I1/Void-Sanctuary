@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using Unity.VisualScripting;
+using UnityEngine.Assertions;
 
 public class EditorScripting : EditorWindow
 {
@@ -23,6 +24,11 @@ public class EditorScripting : EditorWindow
             toggled = newValue;
             ChangePrefabButtonClicked();
         }
+        var button = GUILayout.Button("Generate unique IDs for Doors", GUILayout.Height(50), GUILayout.Width(250));
+        if (button)
+        {
+            GenerateDoorIds();
+        }
         EditorGUILayout.EndVertical();
     }
 
@@ -36,10 +42,34 @@ public class EditorScripting : EditorWindow
         }
     }
 
+    private void GenerateDoorIds()
+    {
+        var prefabPaths = AssetDatabase.FindAssets("Rooms t:Prefab", new[] { "Assets/Prefabs" });
+        Assert.IsTrue(prefabPaths.Length == 1);
+        var prefabPath = AssetDatabase.GUIDToAssetPath(prefabPaths[0]);
+        var rooms = PrefabUtility.LoadPrefabContents(prefabPath);
+        var doors = rooms.GetComponentsInChildren<OpenDoors>();
+        var doors2 = rooms.GetComponentsInChildren<SwitchPorta>();
+        for (int i = 0; i < doors.Length; i++)
+        {
+            if (doors[i].doorId == null || doors[i].doorId == "")
+            {
+                doors[i].doorId = System.Guid.NewGuid().ToString();
+            }
+        }
+        for (int i = 0; i < doors2.Length; i++)
+        {
+            if (doors2[i].doorId == null || doors2[i].doorId == "")
+            {
+                doors2[i].doorId = System.Guid.NewGuid().ToString();
+            }
+        }
+        PrefabUtility.SaveAsPrefabAsset(rooms, prefabPath);
+    }
+
     private void ChangeStateOfLightAndRenderersInPrefab(string prefabPath)
     {
         var room = PrefabUtility.LoadPrefabContents(prefabPath);
-        var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(prefabPath);
         Renderer[] renderers = room.GetComponentsInChildren<Renderer>();
         foreach (Renderer renderer in renderers)
         {

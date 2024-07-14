@@ -14,12 +14,25 @@ public struct SavedSettings
     public float volume;
 }
 
+[Serializable]
+public struct SavedPlayerData
+{
+    public int lastRespawnPointID;
+    public List<string> obtainedPowerups;
+}
+
+[Serializable]
+public struct DoorStatus
+{
+    public Dictionary<string, bool> doorsMap;
+}
 
 [Serializable]
 public class GameData
 {
     public SavedSettings savedSettings;
-
+    public SavedPlayerData playerData;
+    public DoorStatus doorStatus;
 
     public GameData()
     {
@@ -30,5 +43,14 @@ public class GameData
             drawDebugRays = false,
             volume = 1f
         };
+        playerData = new()
+        {
+            lastRespawnPointID = 0,
+            obtainedPowerups = new List<string>()
+            {
+                "GunTransparent"
+            }
+        };
+        doorStatus = new() { doorsMap = new Dictionary<string, bool>() };
     }
 }

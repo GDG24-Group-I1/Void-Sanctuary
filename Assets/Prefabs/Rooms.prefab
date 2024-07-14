@@ -53,9 +53,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 6831206214783111699}
     m_Modifications:
+    - target: {fileID: 1871647740093121, guid: e959cf44f33eb044887a57e0ad2cdb0f, type: 3}
+      propertyPath: doorId
+      value: c4a0cd56-8ffc-4fad-aecb-4d036ee1a429
+      objectReference: {fileID: 0}
     - target: {fileID: 1759496726002701636, guid: e959cf44f33eb044887a57e0ad2cdb0f, type: 3}
       propertyPath: m_Name
       value: cryo room
+      objectReference: {fileID: 0}
+    - target: {fileID: 5044384692071670980, guid: e959cf44f33eb044887a57e0ad2cdb0f, type: 3}
+      propertyPath: doorId
+      value: accbbcb2-5a37-47aa-a7be-95898006715a
+      objectReference: {fileID: 0}
+    - target: {fileID: 8054799571173018841, guid: e959cf44f33eb044887a57e0ad2cdb0f, type: 3}
+      propertyPath: doorId
+      value: cb8a0296-64da-49ee-be23-01be8c27c0e2
       objectReference: {fileID: 0}
     - target: {fileID: 8662672477907036730, guid: e959cf44f33eb044887a57e0ad2cdb0f, type: 3}
       propertyPath: m_LocalPosition.x
@@ -115,6 +127,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 6831206214783111699}
     m_Modifications:
+    - target: {fileID: 759690600430007244, guid: 8d5f0aed9c417e5449f8fdd518182062, type: 3}
+      propertyPath: doorId
+      value: e136ec26-ac83-4a45-903e-178ea50ebdb7
+      objectReference: {fileID: 0}
+    - target: {fileID: 4603176881101478793, guid: 8d5f0aed9c417e5449f8fdd518182062, type: 3}
+      propertyPath: doorId
+      value: 6f10572f-595c-4ec7-a0cf-670cd45d1ee8
+      objectReference: {fileID: 0}
     - target: {fileID: 7254747211166438524, guid: 8d5f0aed9c417e5449f8fdd518182062, type: 3}
       propertyPath: m_LocalPosition.x
       value: 52.546017
@@ -217,6 +237,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4616661049882329318, guid: 096cc5014b6f4904aa215c5365c25672, type: 3}
+      propertyPath: doorId
+      value: 28997159-11b0-481f-b0f9-b75c0418bd27
+      objectReference: {fileID: 0}
+    - target: {fileID: 4727956400016999718, guid: 096cc5014b6f4904aa215c5365c25672, type: 3}
+      propertyPath: doorId
+      value: c919d48b-75c5-4b91-bbac-a88193358bb5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6245219815702617305, guid: 096cc5014b6f4904aa215c5365c25672, type: 3}
+      propertyPath: doorId
+      value: e7562dfa-7ca3-4762-82fc-5122c83f7dae
+      objectReference: {fileID: 0}
     - target: {fileID: 9087818826114105233, guid: 096cc5014b6f4904aa215c5365c25672, type: 3}
       propertyPath: m_Name
       value: generator Room
@@ -283,6 +315,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: corridor2-3
       objectReference: {fileID: 0}
+    - target: {fileID: 3410956897025088755, guid: 5c6c3796a0c9e21498a187da7f982a79, type: 3}
+      propertyPath: doorId
+      value: 228e74a9-efa6-413d-ba2c-f3bf930035ed
+      objectReference: {fileID: 0}
+    - target: {fileID: 6798040169829863948, guid: 5c6c3796a0c9e21498a187da7f982a79, type: 3}
+      propertyPath: doorId
+      value: 17359ae6-19bb-48a9-8cc5-993f4ebf7cf0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8441744878362093326, guid: 5c6c3796a0c9e21498a187da7f982a79, type: 3}
+      propertyPath: doorId
+      value: 00d7853e-dc13-43fc-8641-80e2bf3f6517
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -340,6 +384,10 @@ PrefabInstance:
     - target: {fileID: 2697657399250429576, guid: 206988a1e088f7848bbd8060d7dd54c9, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4616661049882329318, guid: 206988a1e088f7848bbd8060d7dd54c9, type: 3}
+      propertyPath: doorId
+      value: 9d62b5b7-471c-466f-853e-87440854d0e5
       objectReference: {fileID: 0}
     - target: {fileID: 9087818826114105233, guid: 206988a1e088f7848bbd8060d7dd54c9, type: 3}
       propertyPath: m_Name
@@ -407,6 +455,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: corridor4-5
       objectReference: {fileID: 0}
+    - target: {fileID: 6798040169829863948, guid: b779bc57f93202e4691ff89f98934761, type: 3}
+      propertyPath: doorId
+      value: 0770f32f-b23b-44f4-84ef-bab55ecdead2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7474266626021413767, guid: b779bc57f93202e4691ff89f98934761, type: 3}
+      propertyPath: doorId
+      value: 8cd13b7f-a0ec-40a6-92c0-26dd9d0b3787
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -425,6 +481,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 6831206214783111699}
     m_Modifications:
+    - target: {fileID: 4251361975375645238, guid: f8052dbe95f23ad40bbf8c769209951b, type: 3}
+      propertyPath: doorId
+      value: 48b3ed54-fa79-4389-8eba-c25a21778b12
+      objectReference: {fileID: 0}
     - target: {fileID: 4847212243886568555, guid: f8052dbe95f23ad40bbf8c769209951b, type: 3}
       propertyPath: m_LocalPosition.x
       value: 167.08669
@@ -468,6 +528,10 @@ PrefabInstance:
     - target: {fileID: 4847212243886803461, guid: f8052dbe95f23ad40bbf8c769209951b, type: 3}
       propertyPath: m_Name
       value: Corridor_L
+      objectReference: {fileID: 0}
+    - target: {fileID: 7784810952162591572, guid: f8052dbe95f23ad40bbf8c769209951b, type: 3}
+      propertyPath: doorId
+      value: f98897a7-301d-44a8-85b2-7924fca936ff
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -527,6 +591,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4387534959517199848, guid: 313cfacaa36db7742924b2b02704fdea, type: 3}
+      propertyPath: doorId
+      value: 728bb892-0b4b-41f4-a678-11d37e801449
+      objectReference: {fileID: 0}
+    - target: {fileID: 5614914606502196100, guid: 313cfacaa36db7742924b2b02704fdea, type: 3}
+      propertyPath: doorId
+      value: 9b47eaf6-8c67-44d3-965a-40b23c2202d7
+      objectReference: {fileID: 0}
     - target: {fileID: 9087818826114105233, guid: 313cfacaa36db7742924b2b02704fdea, type: 3}
       propertyPath: m_Name
       value: room maintenance
@@ -549,6 +621,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 6831206214783111699}
     m_Modifications:
+    - target: {fileID: 759690600430007244, guid: 99696a742be4af44bafe470ea05d3e28, type: 3}
+      propertyPath: doorId
+      value: 2001766d-8c29-481e-a17f-22c83387caa4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2074893971403109112, guid: 99696a742be4af44bafe470ea05d3e28, type: 3}
+      propertyPath: doorId
+      value: 76b4dfe7-b824-4863-90dd-3f96c1816418
+      objectReference: {fileID: 0}
+    - target: {fileID: 2676564742701527923, guid: 99696a742be4af44bafe470ea05d3e28, type: 3}
+      propertyPath: doorId
+      value: 05ceffb1-8b69-4a91-addc-58c05e345c1a
+      objectReference: {fileID: 0}
+    - target: {fileID: 4603176881101478793, guid: 99696a742be4af44bafe470ea05d3e28, type: 3}
+      propertyPath: doorId
+      value: 7cbc6d8f-1f73-4282-ac5e-b61672918ed6
+      objectReference: {fileID: 0}
     - target: {fileID: 7254747211166438524, guid: 99696a742be4af44bafe470ea05d3e28, type: 3}
       propertyPath: m_LocalPosition.x
       value: 52.39645
@@ -611,9 +699,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 6831206214783111699}
     m_Modifications:
+    - target: {fileID: 1871647740093121, guid: 34a83b935b80352499e60b0cae9f0d9e, type: 3}
+      propertyPath: doorId
+      value: 709a03f3-4d64-405e-bede-d5a5dfb09ea4
+      objectReference: {fileID: 0}
     - target: {fileID: 1759496726002701636, guid: 34a83b935b80352499e60b0cae9f0d9e, type: 3}
       propertyPath: m_Name
       value: Room2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8219130223105147714, guid: 34a83b935b80352499e60b0cae9f0d9e, type: 3}
+      propertyPath: doorId
+      value: 20554252-624e-422c-a949-06958344f008
       objectReference: {fileID: 0}
     - target: {fileID: 8662672477907036730, guid: 34a83b935b80352499e60b0cae9f0d9e, type: 3}
       propertyPath: m_LocalPosition.x
@@ -713,6 +809,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4387534959517199848, guid: 7aebc25346d9c054ea91eb2cfb11ecb0, type: 3}
+      propertyPath: doorId
+      value: d01cf4d4-5ea9-4069-a356-c1306b18b3ec
+      objectReference: {fileID: 0}
+    - target: {fileID: 5614914606502196100, guid: 7aebc25346d9c054ea91eb2cfb11ecb0, type: 3}
+      propertyPath: doorId
+      value: c48f850d-3ce2-4200-9e4e-f987d32a1d70
+      objectReference: {fileID: 0}
     - target: {fileID: 9087818826114105233, guid: 7aebc25346d9c054ea91eb2cfb11ecb0, type: 3}
       propertyPath: m_Name
       value: room down
@@ -735,6 +839,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 6831206214783111699}
     m_Modifications:
+    - target: {fileID: 1334512514902681320, guid: ef132df0a84b80c45a0a45d738eeb4d4, type: 3}
+      propertyPath: doorId
+      value: 786b76e5-912a-4a8e-96ef-81cfd08ed53a
+      objectReference: {fileID: 0}
     - target: {fileID: 2697657399250429576, guid: ef132df0a84b80c45a0a45d738eeb4d4, type: 3}
       propertyPath: m_LocalPosition.x
       value: -10.730022
@@ -797,6 +905,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 6831206214783111699}
     m_Modifications:
+    - target: {fileID: 1947562734853794803, guid: 900b526c160d6cd498b28ecafe593b9f, type: 3}
+      propertyPath: doorId
+      value: b7552ebc-c66e-4d5e-8af4-276ce0f05357
+      objectReference: {fileID: 0}
+    - target: {fileID: 4134776605467157662, guid: 900b526c160d6cd498b28ecafe593b9f, type: 3}
+      propertyPath: doorId
+      value: 452745a5-4a99-4530-908d-feab71404beb
+      objectReference: {fileID: 0}
     - target: {fileID: 4376322641946142179, guid: 900b526c160d6cd498b28ecafe593b9f, type: 3}
       propertyPath: m_Name
       value: corridor1-2
@@ -904,6 +1020,10 @@ PrefabInstance:
       value: Point light plant_door_exit
       objectReference: {fileID: 0}
     - target: {fileID: 6721588149058953074, guid: 695ac3a8e03d19f49965ced9cc8c03ce, type: 3}
+      propertyPath: doorId
+      value: aa0c2b1a-5c74-4b4f-a562-d7e00ae8031f
+      objectReference: {fileID: 0}
+    - target: {fileID: 6721588149058953074, guid: 695ac3a8e03d19f49965ced9cc8c03ce, type: 3}
       propertyPath: unlocked
       value: 0
       objectReference: {fileID: 0}
@@ -911,6 +1031,10 @@ PrefabInstance:
       propertyPath: doorLight
       value: 
       objectReference: {fileID: 3555966832040774793}
+    - target: {fileID: 8820222085620403982, guid: 695ac3a8e03d19f49965ced9cc8c03ce, type: 3}
+      propertyPath: doorId
+      value: 2234f84b-48ad-4fa9-afc0-d934872eace9
+      objectReference: {fileID: 0}
     - target: {fileID: 8820222085620403982, guid: 695ac3a8e03d19f49965ced9cc8c03ce, type: 3}
       propertyPath: requiredInputs
       value: 0

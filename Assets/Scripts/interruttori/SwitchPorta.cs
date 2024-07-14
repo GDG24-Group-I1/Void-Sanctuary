@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class SwitchPorta : MonoBehaviour
+public class SwitchPorta : MonoBehaviour, IDataPersistence
 {
     public Light targetLight; // La luce che cambierà colore
     public Color newColor; // Il nuovo colore per la luce
@@ -11,6 +11,28 @@ public class SwitchPorta : MonoBehaviour
     public bool cubeSwitchActivated = false;
     public bool swordSwitchActivated = false;
     private Animator animator; // Riferimento all'Animator
+
+    public string doorId;
+    public void LoadData(GameData data)
+    {
+        if (data.doorStatus.doorsMap.ContainsKey(doorId))
+        {
+            var res = data.doorStatus.doorsMap[doorId];
+            cubeSwitchActivated = res;
+            swordSwitchActivated = res;
+            CheckSwitches();
+        }
+        else
+        {
+            data.doorStatus.doorsMap.Add(doorId, cubeSwitchActivated && swordSwitchActivated);
+            CheckSwitches();
+        }
+    }
+
+    public void SaveData(GameData data)
+    {
+        data.doorStatus.doorsMap[doorId] = cubeSwitchActivated && swordSwitchActivated;
+    }
 
     void Start()
     {

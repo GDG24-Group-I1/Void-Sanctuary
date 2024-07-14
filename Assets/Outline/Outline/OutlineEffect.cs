@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.PostProcessing;
@@ -62,7 +63,7 @@ public sealed class OutlineRenderer : PostProcessEffectRenderer<OutlineEffect>
     {
         //TODO: Find a smart way of filtering objects with outline
         var renderers = GameObject.FindGameObjectsWithTag(settings.Tag)
-            .Select((g) => g.GetComponent<MeshRenderer>());        
+            .SelectMany((g) => g.GetComponentsInChildren<MeshRenderer>());        
         context.command.GetTemporaryRT(m_objectsID, -1, -1, 24, FilterMode.Bilinear);
         var depthId = context.camera.actualRenderingPath == RenderingPath.Forward 
             ? BuiltinRenderTextureType.Depth : BuiltinRenderTextureType.ResolvedDepth;

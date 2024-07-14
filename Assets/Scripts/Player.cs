@@ -70,14 +70,12 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
     [SerializeField] private AudioClip shootSound;
     [SerializeField] private AudioClip pickupSound;
 
-    // these need to be public because they are set by the respawner script since they can't be set in the prefab
-    [Header("Dynamic references to specific object instances in the scene\nNeed to be reset in the Respawner on death")]
-    public Transform cameraTransform;
-    public GameObject healthBar;
-    public GameObject loaderBorder;
-    public GameObject dashLoaderBorder;
-    public Image uiWeaponImage;
-    public GameObject youDiedText;
+    public Transform CameraTransform { get; set; }
+    public GameObject HealthBar { get; set; }
+    public GameObject LoaderBorder { get; set; }
+    public GameObject DashLoaderBorder { get; set; }
+    public Image UiWeaponImage { get; set; }
+    public GameObject YouDiedText { get; set; }
 
     private GameObject[] movableObjects;
     private GameObject[] visibleMovableObjects;
@@ -92,7 +90,6 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
     private GameInput gameInput;
     private Slider healthSlider;
     private PostProcessEffectSettings outlineEffect;
-    private Respawner respawner;
     private Animator youDiedTextAnimator;
 
     private Rigidbody rb;
@@ -168,7 +165,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
         canDash = false;
         Animator animator = GetComponentInChildren<Animator>();
         animator.SetTrigger("Death");
-        youDiedText.SetActive(true);
+        YouDiedText.SetActive(true);
         youDiedTextAnimator.SetTrigger("PlayerDied");
         Destroy(gameObject, 3.0f);
     }
@@ -182,26 +179,20 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
 
     private void Start()
     {
-        Assert.IsNotNull(cameraTransform, "CAMERA TRANSFORM IS NOT SET IN THE PLAYER OBJECT IN THE SCENE, PUT THE TopDownCamera IN THE CameraTrasform SLOT ON THIS GAMEOBJECT");
-        Assert.IsNotNull(healthBar, "HEALTH BAR IS NOT SET IN THE PLAYER OBJECT IN THE SCENE, PUT THE Canvas->HealthBar OBJECT IN THE Health Bar SLOT ON THIS GAME OBJECT");
-        Assert.IsNotNull(loaderBorder, "LOADER BORDER IS NOT SET IN PLAYER OBJECT IN THE SCENE, PUT THE Canvas->Loader->LoaderBorder IN THE Loader Border SLOT ON THIS GAME OBJECT");
-        Assert.IsNotNull(dashLoaderBorder, "DASH LOADER BORDER IS NOT SET IN PLAYER OBJECT IN THE SCENE, PUT THE Canvas->DashLoader->DashLoaderBorder IN THE Dash Loader Border SLOT ON THIS GAME OBJECT");
-        Assert.IsNotNull(uiWeaponImage, "UI WEAPON IMAGE IS NOT SET IN PLAYER OBJECT IN THE SCENE, PUT THE Canvas->UiWeaponImage IN THE UI Weapon Image SLOT ON THIS GAME OBJECT");
-        Assert.IsNotNull(youDiedText, "YOU DIED TEXT IS NOT SET IN PLAYER OBJECT IN THE SCENE, PUT THE Canvas->YouDiedText IN THE You Died Text SLOT ON THIS GAME OBJECT");
         DataPersistenceManager.GetInstance().RegisterDataPersistenceObject(this);
-        youDiedTextAnimator = youDiedText.GetComponent<Animator>();
+        youDiedTextAnimator = YouDiedText.GetComponent<Animator>();
         movableObjects = GameObject.FindGameObjectsWithTag("MovableObject");
         visibleMovableObjects = Array.Empty<GameObject>();
         currentMovableObject = -1;
         outlineEffect = Camera.main.GetComponent<PostProcessVolume>().profile.settings.First(x => x.name.StartsWith("OutlineEffect"));
         outlineEffect.enabled.value = false;
-        uiWeaponImage.sprite = weaponSprites[weaponIndex];
+        UiWeaponImage.sprite = weaponSprites[weaponIndex];
         gameInput = GameObject.FindWithTag("InputHandler").GetComponent<GameInput>();
         gameInput.RegisterPlayer(this);
         movementSpeed = walkSpeed;
         rb = GetComponent<Rigidbody>();
         audioSource = GetComponent<AudioSource>();
-        healthSlider = healthBar.GetComponent<Slider>();
+        healthSlider = HealthBar.GetComponent<Slider>();
         healthSlider.value = healthSlider.maxValue;
         healthSlider.onValueChanged.AddListener((value) =>
         {
@@ -218,12 +209,6 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
         swordPartWithLine = sword.transform.parent.Find("Cube").gameObject;
         swordCollider = sword.GetComponent<BoxCollider>();
         dialogBox = GameObject.Find("DialogBox");
-        respawner = GameObject.FindGameObjectWithTag("Respawner").GetComponent<Respawner>();
-        respawner.ClearPowerups();
-        foreach (var spr in weaponSprites)
-        {
-            respawner.AddPowerup(spr);
-        }
         renderers = GetComponentsInChildren<Renderer>().Where(x => x is not LineRenderer).ToArray();
 
         deathTimer = new Timer(this)
@@ -377,7 +362,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
 
     private void CheckIfPlayerIsHidden()
     {
-        Vector3 cameraPosition = cameraTransform.position;
+        Vector3 cameraPosition = CameraTransform.position;
         var playerCentrum = new Vector3(transform.position.x, 1, transform.position.z);
         Vector3 directionToPlayer = playerCentrum - cameraPosition;
         float distanceToPlayer = Vector3.Distance(cameraPosition, playerCentrum);
@@ -408,7 +393,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
         Vector2 movementVector = gameInput.GetMovementVectorNormalized();
         Vector3 moveDir = new(movementVector.x, 0, movementVector.y);
         Vector3 rotateDir;
-        moveDir = cameraTransform.forward * moveDir.z + cameraTransform.right * moveDir.x;
+        moveDir = CameraTransform.forward * moveDir.z + CameraTransform.right * moveDir.x;
         moveDir.Normalize();
         moveDir.y = 0;
         rotateDir = moveDir;
@@ -484,7 +469,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
         else if (firingStage == FiringStage.aiming)
         {
             var mousePosition = gameInput.GetMousePosition();
-            var distance = Vector3.Distance(transform.position, cameraTransform.position);
+            var distance = Vector3.Distance(transform.position, CameraTransform.position);
             var worldPosition = Camera.main.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, distance));
             transform.LookAt(worldPosition.CopyWith(y: transform.position.y));
         }
@@ -563,7 +548,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
         canDash = false;
         dashCooldownTimer.Start(dashCooldown);
         audioSource.PlayOneShot(dashSound);
-        dashLoaderBorder.GetComponent<CircularProgressBar>().StartProgressBar(dashCooldown);
+        DashLoaderBorder.GetComponent<CircularProgressBar>().StartProgressBar(dashCooldown);
         IsDashing = true;
     }
 
@@ -580,7 +565,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
 
     private void FireProjectileCommon()
     {
-        loaderBorder.GetComponent<CircularProgressBar>().StartProgressBar(3.0f);
+        LoaderBorder.GetComponent<CircularProgressBar>().StartProgressBar(3.0f);
 
         audioSource.PlayOneShot(shootSound);
 
@@ -865,7 +850,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
     public void PickupItem()
     {
         weaponSprites.Add(TouchedPowerup.Powerup);
-        respawner.AddPowerup(TouchedPowerup.Powerup);
+        gameData.playerData.obtainedPowerups.Add(TouchedPowerup.Powerup.name);
         Destroy(TouchedPowerup.gameObject);
         canMove = true;
         isPickingUpItem = false;
@@ -1025,7 +1010,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
             {
                 weaponIndex = (weaponIndex - 1 + weaponSprites.Count) % weaponSprites.Count;
             }
-            uiWeaponImage.sprite = weaponSprites[weaponIndex];
+            UiWeaponImage.sprite = weaponSprites[weaponIndex];
             var renderer = swordPartWithLine.GetComponent<SkinnedMeshRenderer>();
             var materialToSwitch = weaponMaterials.First(mat => renderer.sharedMaterials.Contains(mat));
             if (weaponSprites[weaponIndex].name == GunSpriteName)
@@ -1078,7 +1063,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
         handler.SetDialog(dialog.TransformText(gameInput.CurrentControl.value), dialog.WriteDuration, dialog.LingerTime);
     }
 
-    public void SetPowerupsOnRespawn(List<Sprite> sprites)
+    public void SetPowerupsOnRespawn(IEnumerable<Sprite> sprites)
     {
         weaponSprites.Clear();
         weaponSprites.AddRange(sprites);

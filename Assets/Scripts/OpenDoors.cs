@@ -2,13 +2,32 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class OpenDoors : MonoBehaviour
+public class OpenDoors : MonoBehaviour, IDataPersistence
 {
     [SerializeField] private bool unlocked = true;
     [SerializeField] private int requiredInputs = 5;
     public Light doorLight;
     private int activeInputs = 0;
     public Animator animator;
+    public string doorId;
+
+    public void LoadData(GameData data)
+    {
+        if (data.doorStatus.doorsMap.ContainsKey(doorId))
+        {
+            unlocked = data.doorStatus.doorsMap[doorId];
+            changeLight();
+        } else
+        {
+            data.doorStatus.doorsMap.Add(doorId, unlocked);
+            changeLight();
+        }
+    }
+
+    public void SaveData(GameData data)
+    {
+        data.doorStatus.doorsMap[doorId] = unlocked;
+    }
 
     void Start()
     {
