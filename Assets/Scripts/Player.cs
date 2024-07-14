@@ -80,6 +80,9 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
     private GameObject[] movableObjects;
     private GameObject[] visibleMovableObjects;
     private int currentMovableObject;
+    private Rigidbody currentMovableObjectRigidBody;
+    private CubeGravity currentMovableObjectGravity;
+
     private bool IsSwordGlowing = false;
     private LineRenderer aimLaserRenderer;
     private GameObject sword;
@@ -183,7 +186,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
         youDiedTextAnimator = YouDiedText.GetComponent<Animator>();
         movableObjects = GameObject.FindGameObjectsWithTag("MovableObject");
         visibleMovableObjects = Array.Empty<GameObject>();
-        currentMovableObject = -1;
+        ResetMovableObject();
         outlineEffect = Camera.main.GetComponent<PostProcessVolume>().profile.settings.First(x => x.name.StartsWith("OutlineEffect"));
         outlineEffect.enabled.value = false;
         UiWeaponImage.sprite = weaponSprites[weaponIndex];
@@ -444,15 +447,12 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
 
         if (currentMovableObject != -1)
         {
-            var obj = visibleMovableObjects[currentMovableObject];
-            if (obj.TryGetComponent<Rigidbody>(out var rb))
+            if (currentMovableObjectRigidBody != null)
             {
                 Vector3 objTargetVelocity = objMoveDir * movementSpeed;
-                Vector3 objVelocityChange = objTargetVelocity - rb.velocity;
+                Vector3 objVelocityChange = objTargetVelocity - currentMovableObjectRigidBody.velocity;
                 objVelocityChange.y = 0;
-                rb.freezeRotation = true;
-                rb.excludeLayers = LayerMask.GetMask("playerLayer");
-                rb.AddForce(objVelocityChange, ForceMode.VelocityChange);
+                currentMovableObjectRigidBody.AddForce(objVelocityChange, ForceMode.VelocityChange);
             }
             else
             {
@@ -496,6 +496,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
 
     private bool FilterVisibleMovableObjects(GameObject obj)
     {
+        // FIXME: this sometimes doesn't work correctly! pog!
         if (!obj.activeSelf) return false;
         if (obj.TryGetComponent<Renderer>(out var renderer))
         {
@@ -519,14 +520,57 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
             if (visibleMovableObjects.Length != 0)
             {
                 currentMovableObject = 0;
+                SetMovableObject();
             }
             else
             {
-                currentMovableObject = -1;
+                ResetMovableObject();
                 firingStage = FiringStage.notFiring;
                 aimLaserRenderer.enabled = false;
             }
         }
+    }
+
+    private void SetMovableObject()
+    {
+        if (currentMovableObject != -1)
+        {
+            var obj = visibleMovableObjects[currentMovableObject];
+            if (obj.TryGetComponent(out currentMovableObjectRigidBody))
+            {
+                if (obj.TryGetComponent(out currentMovableObjectGravity))
+                {
+                    currentMovableObjectGravity.applyGravity = false;
+                }
+                currentMovableObjectRigidBody.freezeRotation = true;
+                currentMovableObjectRigidBody.useGravity = false;
+                currentMovableObjectRigidBody.excludeLayers = LayerMask.GetMask("playerLayer");
+            }
+            else
+            {
+                Debug.LogError("Movable object does not have a rigidbody!");
+            }
+        }
+    }
+
+    private void ResetMovableObject()
+    {
+        if (currentMovableObject != -1)
+        {
+            if (currentMovableObjectRigidBody != null)
+            {
+                currentMovableObjectRigidBody.excludeLayers = LayerMask.GetMask();
+                currentMovableObjectRigidBody.freezeRotation = false;
+                currentMovableObjectRigidBody.useGravity = true;
+                if (currentMovableObjectGravity != null)
+                {
+                    currentMovableObjectGravity.applyGravity = true;
+                }
+            }
+        }
+        currentMovableObject = -1;
+        currentMovableObjectGravity = null;
+        currentMovableObjectRigidBody = null;
     }
 
     private void Fire()
@@ -611,20 +655,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
 
     private void FireMagnetProjectile()
     {
-        if (currentMovableObject != -1)
-        {
-            var obj = visibleMovableObjects[currentMovableObject];
-            if (obj.TryGetComponent<Rigidbody>(out var rb))
-            {
-                rb.excludeLayers = LayerMask.GetMask();
-                rb.freezeRotation = false;
-            }
-            else
-            {
-                Debug.LogError("Movable object does not have a rigidbody!");
-            }
-        }
-        currentMovableObject = -1;
+        ResetMovableObject();
         FireProjectileCommon();
     }
 
@@ -1019,7 +1050,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
                 renderer.SwitchMaterial(materialToSwitch, newMaterial);
                 aimLaserRenderer.sharedMaterial = newMaterial;
                 outlineEffect.enabled.value = false;
-                currentMovableObject = -1;
+                ResetMovableObject();
             }
             else if (weaponSprites[weaponIndex].name == IceSpriteName)
             {
@@ -1027,7 +1058,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
                 renderer.SwitchMaterial(materialToSwitch, newMaterial);
                 aimLaserRenderer.sharedMaterial = newMaterial;
                 outlineEffect.enabled.value = false;
-                currentMovableObject = -1;
+                ResetMovableObject();
             }
             else if (weaponSprites[weaponIndex].name == MagnetSpriteName)
             {
@@ -1050,6 +1081,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
             {
                 currentMovableObject = (currentMovableObject + 1) % visibleMovableObjects.Length;
             }
+            SetMovableObject();
         }
     }
 

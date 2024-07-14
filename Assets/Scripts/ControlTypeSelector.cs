@@ -9,6 +9,7 @@ public class ControlTypeSelector : MonoBehaviour
     [SerializeField] private GameObject psControllerView;
 
 
+    // FIXME: this solution is not ideal. find a better way to detect input type changes in the main menu without having to port the entire input handler
     void OnActionChange(object obj, InputActionChange change)
     {
         if (change == InputActionChange.ActionPerformed && obj is InputAction action) {

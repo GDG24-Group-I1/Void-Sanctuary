@@ -76,6 +76,7 @@ public class MenuButtonSelector : MonoBehaviour, IDataPersistence
     }
     public void OnExitGameClicked()
     {
+        Time.timeScale = 1;
         SceneManager.LoadScene("MainMenu");
     }
 }

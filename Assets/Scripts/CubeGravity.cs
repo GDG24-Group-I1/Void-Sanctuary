@@ -6,6 +6,7 @@ public class CubeGravity : MonoBehaviour
 {
     private Rigidbody rb;
     public float gravity = 9.8f;
+    public bool applyGravity = true;
     
     void Start()
     {
@@ -16,6 +17,9 @@ public class CubeGravity : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        rb.AddForce(Vector3.down * gravity, ForceMode.VelocityChange);
+        if (applyGravity)
+        {
+            rb.AddForce(Vector3.down * gravity, ForceMode.VelocityChange);
+        }
     }
 }
