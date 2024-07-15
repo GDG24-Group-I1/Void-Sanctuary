@@ -9,6 +9,11 @@ public class levaTerra : MonoBehaviour
     [SerializeField] private bool forDoors = true; // if true, sends signal to a door, else to a platform
     [SerializeField] private string openingDoor = "door_exit"; // the door this lever will open (or platform it will activate)
     [SerializeField] private string closingDoor = "door_entrance"; // the door this lever will close
+
+    [SerializeField] private GameObject swordEnemyPrefab;
+    [SerializeField] private GameObject projectileEnemyPrefab;
+    [SerializeField] private Vector3[] enemySpawnPoints = { };
+    [SerializeField] private EnemyType[] enemySpawnTypes = { };
     public bool active = false;
     public Animator animator;
     void Start()
@@ -74,6 +79,12 @@ public class levaTerra : MonoBehaviour
                 {
                     doors.GetChild(i).gameObject.GetComponent<PlatformScript>().Input(1);
                 }
+        }
+
+        if(enemySpawnPoints.Length > 0)
+        {
+
+
         }
     }
 

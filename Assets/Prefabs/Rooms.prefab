@@ -109,7 +109,51 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 8829627303123085179, guid: e959cf44f33eb044887a57e0ad2cdb0f, type: 3}
+    - {fileID: 1494625591408334600, guid: e959cf44f33eb044887a57e0ad2cdb0f, type: 3}
+    - {fileID: 7895684511701039141, guid: e959cf44f33eb044887a57e0ad2cdb0f, type: 3}
+    - {fileID: 5093012083950538939, guid: e959cf44f33eb044887a57e0ad2cdb0f, type: 3}
+    - {fileID: 6126815711006419582, guid: e959cf44f33eb044887a57e0ad2cdb0f, type: 3}
+    - {fileID: 2984713731437708480, guid: e959cf44f33eb044887a57e0ad2cdb0f, type: 3}
+    - {fileID: 1616548315757555202, guid: e959cf44f33eb044887a57e0ad2cdb0f, type: 3}
+    - {fileID: 685950276927214922, guid: e959cf44f33eb044887a57e0ad2cdb0f, type: 3}
+    - {fileID: 7341830714051180905, guid: e959cf44f33eb044887a57e0ad2cdb0f, type: 3}
+    - {fileID: 828814951922467313, guid: e959cf44f33eb044887a57e0ad2cdb0f, type: 3}
+    - {fileID: 172732372567310934, guid: e959cf44f33eb044887a57e0ad2cdb0f, type: 3}
+    - {fileID: 1520713346152784205, guid: e959cf44f33eb044887a57e0ad2cdb0f, type: 3}
+    - {fileID: 3341766823409485690, guid: e959cf44f33eb044887a57e0ad2cdb0f, type: 3}
+    - {fileID: 6713164506713153949, guid: e959cf44f33eb044887a57e0ad2cdb0f, type: 3}
+    - {fileID: 572135286486437241, guid: e959cf44f33eb044887a57e0ad2cdb0f, type: 3}
+    - {fileID: 5943332989373850519, guid: e959cf44f33eb044887a57e0ad2cdb0f, type: 3}
+    - {fileID: 3620600736451782630, guid: e959cf44f33eb044887a57e0ad2cdb0f, type: 3}
+    - {fileID: 508783553226219220, guid: e959cf44f33eb044887a57e0ad2cdb0f, type: 3}
+    - {fileID: 2651240102154118123, guid: e959cf44f33eb044887a57e0ad2cdb0f, type: 3}
+    - {fileID: 1589755639350013385, guid: e959cf44f33eb044887a57e0ad2cdb0f, type: 3}
+    - {fileID: 2150721205843713227, guid: e959cf44f33eb044887a57e0ad2cdb0f, type: 3}
+    - {fileID: 1360768680177815093, guid: e959cf44f33eb044887a57e0ad2cdb0f, type: 3}
+    - {fileID: 3666301004991695171, guid: e959cf44f33eb044887a57e0ad2cdb0f, type: 3}
+    - {fileID: 5393509636917824582, guid: e959cf44f33eb044887a57e0ad2cdb0f, type: 3}
+    - {fileID: 4483894362833098002, guid: e959cf44f33eb044887a57e0ad2cdb0f, type: 3}
+    - {fileID: 308739757563531850, guid: e959cf44f33eb044887a57e0ad2cdb0f, type: 3}
+    - {fileID: 3343649735094014528, guid: e959cf44f33eb044887a57e0ad2cdb0f, type: 3}
+    - {fileID: 607704282932264761, guid: e959cf44f33eb044887a57e0ad2cdb0f, type: 3}
+    - {fileID: 976449267632780676, guid: e959cf44f33eb044887a57e0ad2cdb0f, type: 3}
+    - {fileID: 6415501969967631059, guid: e959cf44f33eb044887a57e0ad2cdb0f, type: 3}
+    - {fileID: 3408171146954473737, guid: e959cf44f33eb044887a57e0ad2cdb0f, type: 3}
+    - {fileID: 3169204554970780454, guid: e959cf44f33eb044887a57e0ad2cdb0f, type: 3}
+    - {fileID: 5014485787752819539, guid: e959cf44f33eb044887a57e0ad2cdb0f, type: 3}
+    - {fileID: 3376733233474698743, guid: e959cf44f33eb044887a57e0ad2cdb0f, type: 3}
+    - {fileID: 4574749844217565488, guid: e959cf44f33eb044887a57e0ad2cdb0f, type: 3}
+    - {fileID: 3449065560143542230, guid: e959cf44f33eb044887a57e0ad2cdb0f, type: 3}
+    - {fileID: 7985864288211062029, guid: e959cf44f33eb044887a57e0ad2cdb0f, type: 3}
+    - {fileID: 4761373590925451427, guid: e959cf44f33eb044887a57e0ad2cdb0f, type: 3}
+    - {fileID: 7667172989182362654, guid: e959cf44f33eb044887a57e0ad2cdb0f, type: 3}
+    - {fileID: 5266944002904724910, guid: e959cf44f33eb044887a57e0ad2cdb0f, type: 3}
+    - {fileID: 6644048315172133573, guid: e959cf44f33eb044887a57e0ad2cdb0f, type: 3}
+    - {fileID: 303632451564828796, guid: e959cf44f33eb044887a57e0ad2cdb0f, type: 3}
+    - {fileID: 5900635074730765939, guid: e959cf44f33eb044887a57e0ad2cdb0f, type: 3}
+    - {fileID: 9071189598541032337, guid: e959cf44f33eb044887a57e0ad2cdb0f, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -603,7 +647,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: room maintenance
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2928467465491685856, guid: 313cfacaa36db7742924b2b02704fdea, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
