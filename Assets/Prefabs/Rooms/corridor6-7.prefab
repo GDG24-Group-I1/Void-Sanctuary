@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2752533558240982152}
   - component: {fileID: 3499756718960805781}
+  - component: {fileID: 1390139505426021211}
   m_Layer: 0
   m_Name: corridor6-7
   m_TagString: rooms
@@ -60,6 +61,18 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 14.637696, y: 8.139156, z: 130.54755}
   m_Center: {x: -3.8697171, y: -3.5695782, z: -8.727661}
+--- !u!114 &1390139505426021211
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3109924205210917595}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26122340b513a024a8ba90083ef7b219, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &68222828191378361
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3688,7 +3701,9 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 8268117415113827932, guid: 272093faf14a33f469439072c1f19895, type: 3}
+    - {fileID: 5657200970031333298, guid: 272093faf14a33f469439072c1f19895, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 6601767808915856352, guid: 272093faf14a33f469439072c1f19895, type: 3}
