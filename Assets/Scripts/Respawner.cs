@@ -136,6 +136,12 @@ public class Respawner : MonoBehaviour, IDataPersistence
         player.DashLoaderBorder = dashLoaderBorder;
         player.UiWeaponImage = uiWeaponImage;
         player.SetPowerupsOnRespawn(availablePowerups.Where(x => gameData.playerData.obtainedPowerups.Contains(x.name)));
+        var staticEnemies = enemies.Where(x => x.instance != null).Select(x => x.instance).ToArray();
+        var activeEnemies = GameObject.FindGameObjectsWithTag("EnemyObj").Where(x => !staticEnemies.Contains(x));
+        foreach(var enemy in activeEnemies)
+        {
+            enemy.GetComponent<EnemyAI>().player = player.transform;
+        }
         for (int i = 0; i < enemies.Length; i++)
         {
             ref var enemyData = ref enemies[i];

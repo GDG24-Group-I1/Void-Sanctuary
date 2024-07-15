@@ -1390,7 +1390,8 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2345728, guid: 339299a7e2fdedf47b7788ab1a25c9df, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -1749,6 +1750,10 @@ MonoBehaviour:
   forDoors: 1
   openingDoor: door_exit
   closingDoor: door_entrance
+  swordEnemyPrefab: {fileID: 0}
+  projectileEnemyPrefab: {fileID: 0}
+  enemySpawnPoints: []
+  enemySpawnTypes: 
   active: 0
   animator: {fileID: 0}
 --- !u!95 &4960302339531143847
@@ -2259,7 +2264,8 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2345728, guid: 339299a7e2fdedf47b7788ab1a25c9df, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -2341,7 +2347,8 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2345728, guid: 339299a7e2fdedf47b7788ab1a25c9df, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -2423,7 +2430,8 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2345728, guid: 339299a7e2fdedf47b7788ab1a25c9df, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -2579,7 +2587,8 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2345728, guid: 339299a7e2fdedf47b7788ab1a25c9df, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -5069,7 +5078,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -90
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2305926, guid: 9c0a6df65fcfba243abb2cf9260b869f, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -5639,7 +5649,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -90
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2305926, guid: 9c0a6df65fcfba243abb2cf9260b869f, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -6759,7 +6770,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -90
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2305926, guid: 9c0a6df65fcfba243abb2cf9260b869f, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -7005,7 +7017,8 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2345728, guid: 339299a7e2fdedf47b7788ab1a25c9df, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -7251,7 +7264,8 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2345728, guid: 339299a7e2fdedf47b7788ab1a25c9df, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -7433,8 +7447,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   unlocked: 1
   requiredInputs: 0
-  light: {fileID: 3157359968206628366}
+  doorLight: {fileID: 0}
   animator: {fileID: 0}
+  doorId: 
 --- !u!4 &2028807204832141584 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 451040, guid: ea798cfb4939d4441b95d1bd39d0767f, type: 3}
@@ -8230,7 +8245,8 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2345728, guid: 339299a7e2fdedf47b7788ab1a25c9df, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -8394,7 +8410,8 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2345728, guid: 339299a7e2fdedf47b7788ab1a25c9df, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -8579,11 +8596,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8b5797a18349fb546be8acddc71151ff, type: 3}
---- !u!108 &2582568550525977878 stripped
-Light:
-  m_CorrespondingSourceObject: {fileID: 10828764, guid: 8b5797a18349fb546be8acddc71151ff, type: 3}
-  m_PrefabInstance: {fileID: 2582568550532611786}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2582568550532206442 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 405920, guid: 8b5797a18349fb546be8acddc71151ff, type: 3}
@@ -9282,8 +9294,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   unlocked: 0
   requiredInputs: 0
-  light: {fileID: 2582568550525977878}
+  doorLight: {fileID: 0}
   animator: {fileID: 0}
+  doorId: 
 --- !u!1001 &2919457880075116972
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9774,7 +9787,8 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2345728, guid: 339299a7e2fdedf47b7788ab1a25c9df, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -10046,11 +10060,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 405920, guid: 8b5797a18349fb546be8acddc71151ff, type: 3}
   m_PrefabInstance: {fileID: 3157359968195943890}
   m_PrefabAsset: {fileID: 0}
---- !u!108 &3157359968206628366 stripped
-Light:
-  m_CorrespondingSourceObject: {fileID: 10828764, guid: 8b5797a18349fb546be8acddc71151ff, type: 3}
-  m_PrefabInstance: {fileID: 3157359968195943890}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &3157479290687721900
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10123,7 +10132,8 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2345728, guid: 339299a7e2fdedf47b7788ab1a25c9df, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -10621,6 +10631,11 @@ MonoBehaviour:
   forDoors: 1
   openingDoor: door_exit
   closingDoor: door_entrance
+  swordEnemyPrefab: {fileID: 4188234102827016206, guid: 9dac9a6f59137ee4c877ffa14b7324f7, type: 3}
+  projectileEnemyPrefab: {fileID: 8123513749073689288, guid: 2a02a2f46a8a06f4098f8e17d53709a8, type: 3}
+  enemySpawnPoints:
+  - {x: -4, y: 2, z: -32}
+  enemySpawnTypes: 00000000
   active: 0
   animator: {fileID: 0}
 --- !u!95 &6733254789930450922
@@ -12296,7 +12311,8 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2345728, guid: 339299a7e2fdedf47b7788ab1a25c9df, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -13038,7 +13054,8 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2345728, guid: 339299a7e2fdedf47b7788ab1a25c9df, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -14332,7 +14349,8 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2345728, guid: 339299a7e2fdedf47b7788ab1a25c9df, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -14588,6 +14606,10 @@ MonoBehaviour:
   forDoors: 1
   openingDoor: door_exit
   closingDoor: door_entrance
+  swordEnemyPrefab: {fileID: 0}
+  projectileEnemyPrefab: {fileID: 0}
+  enemySpawnPoints: []
+  enemySpawnTypes: 
   active: 0
   animator: {fileID: 0}
 --- !u!95 &69401128278372673
@@ -15490,7 +15512,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -90
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2305926, guid: 9c0a6df65fcfba243abb2cf9260b869f, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -16072,7 +16095,8 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2345728, guid: 339299a7e2fdedf47b7788ab1a25c9df, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -16183,11 +16207,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8b5797a18349fb546be8acddc71151ff, type: 3}
---- !u!108 &4976303104650553953 stripped
-Light:
-  m_CorrespondingSourceObject: {fileID: 10828764, guid: 8b5797a18349fb546be8acddc71151ff, type: 3}
-  m_PrefabInstance: {fileID: 4976303104660836797}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &4976303104660971549 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 405920, guid: 8b5797a18349fb546be8acddc71151ff, type: 3}
@@ -16542,8 +16561,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   unlocked: 0
   requiredInputs: 5
-  light: {fileID: 4976303104650553953}
+  doorLight: {fileID: 0}
   animator: {fileID: 0}
+  doorId: 
 --- !u!1001 &5103927426370337840
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -17208,6 +17228,10 @@ MonoBehaviour:
   forDoors: 1
   openingDoor: door_exit
   closingDoor: door_entrance
+  swordEnemyPrefab: {fileID: 0}
+  projectileEnemyPrefab: {fileID: 0}
+  enemySpawnPoints: []
+  enemySpawnTypes: 
   active: 0
   animator: {fileID: 0}
 --- !u!95 &8398621972074008046
@@ -17813,7 +17837,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -90
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2305926, guid: 9c0a6df65fcfba243abb2cf9260b869f, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -18461,7 +18486,8 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2345728, guid: 339299a7e2fdedf47b7788ab1a25c9df, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -20085,7 +20111,8 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2345728, guid: 339299a7e2fdedf47b7788ab1a25c9df, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -20233,7 +20260,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -90
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2305926, guid: 9c0a6df65fcfba243abb2cf9260b869f, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -21235,7 +21263,8 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2345728, guid: 339299a7e2fdedf47b7788ab1a25c9df, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -21563,7 +21592,8 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2345728, guid: 339299a7e2fdedf47b7788ab1a25c9df, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -22141,7 +22171,8 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2345728, guid: 339299a7e2fdedf47b7788ab1a25c9df, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -22535,7 +22566,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -90
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2305926, guid: 9c0a6df65fcfba243abb2cf9260b869f, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -23207,7 +23239,8 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2345728, guid: 339299a7e2fdedf47b7788ab1a25c9df, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -23543,7 +23576,8 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2345728, guid: 339299a7e2fdedf47b7788ab1a25c9df, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -24183,7 +24217,8 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2345728, guid: 339299a7e2fdedf47b7788ab1a25c9df, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -24265,7 +24300,8 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2345728, guid: 339299a7e2fdedf47b7788ab1a25c9df, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -24651,6 +24687,10 @@ MonoBehaviour:
   forDoors: 1
   openingDoor: door_exit
   closingDoor: door_entrance
+  swordEnemyPrefab: {fileID: 0}
+  projectileEnemyPrefab: {fileID: 0}
+  enemySpawnPoints: []
+  enemySpawnTypes: 
   active: 0
   animator: {fileID: 8735818581210408026}
 --- !u!95 &8735818581210408026
@@ -25256,7 +25296,8 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2345728, guid: 339299a7e2fdedf47b7788ab1a25c9df, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -25846,7 +25887,8 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2345728, guid: 339299a7e2fdedf47b7788ab1a25c9df, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -26244,7 +26286,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -90
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2305926, guid: 9c0a6df65fcfba243abb2cf9260b869f, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -28837,7 +28880,8 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2345728, guid: 339299a7e2fdedf47b7788ab1a25c9df, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

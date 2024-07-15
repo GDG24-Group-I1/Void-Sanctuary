@@ -166,7 +166,8 @@ public class EnemyAI : MonoBehaviour
     private void ChasePlayer()
     {
         agent.stoppingDistance = stopDistance;
-        agent.SetDestination(player.position);
+        if (player != null)
+            agent.SetDestination(player.position);
     }
 
     private void AttackPlayer()

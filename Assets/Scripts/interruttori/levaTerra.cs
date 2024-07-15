@@ -12,8 +12,9 @@ public class levaTerra : MonoBehaviour
 
     [SerializeField] private GameObject swordEnemyPrefab;
     [SerializeField] private GameObject projectileEnemyPrefab;
-    [SerializeField] private Vector3[] enemySpawnPoints = { };
-    [SerializeField] private EnemyType[] enemySpawnTypes = { };
+    [SerializeField] private Vector3[] enemySpawnPoints = { new Vector3(124.5f, 35, -116.5f), new Vector3(88.5f, 35, -116.5f), new Vector3(124.5f, 35, -142.5f), new Vector3(88.5f, 35, -142.5f) };
+    [SerializeField] private EnemyType[] enemySpawnTypes = { EnemyType.Ranged, EnemyType.Ranged, EnemyType.Ranged, EnemyType.Ranged };
+    [SerializeField] private Transform parentRoom;
     public bool active = false;
     public Animator animator;
     void Start()
@@ -31,12 +32,12 @@ public class levaTerra : MonoBehaviour
                 active = true;
                 changeLightColor();
                 animator.SetTrigger("attivo");
-                sendSignal();
+                SendSignal();
             }
         }
     }
 
-    void sendSignal()
+    void SendSignal()
     {
         if (forDoors)
         {
@@ -45,21 +46,26 @@ public class levaTerra : MonoBehaviour
             Transform doors = null;
 
             for (int i = 0; i < switchesAndDoors.childCount; i++)
+            {
                 if (switchesAndDoors.GetChild(i).name == "Doors")
                     doors = switchesAndDoors.GetChild(i);
+            }
 
             if (doors == null)
                 return;
 
             for (int i = 0; i < doors.childCount; i++)
-                if (doors.GetChild(i).name == openingDoor)
+            {
+                var door = doors.GetChild(i);
+                if (door.name == openingDoor)
                 {
-                    doors.GetChild(i).gameObject.GetComponent<OpenDoors>().Input(1);
+                    door.gameObject.GetComponent<OpenDoors>().Input(1);
                 }
-                else if (doors.GetChild(i).name == closingDoor)
+                else if (door.name == closingDoor)
                 {
-                    doors.GetChild(i).gameObject.GetComponent<OpenDoors>().Input(-1);
+                    door.gameObject.GetComponent<OpenDoors>().Input(-1);
                 }
+            }
         }
         else
         {
@@ -67,9 +73,10 @@ public class levaTerra : MonoBehaviour
             var switchesAndDoors = switches.parent;
             Transform doors = null;
 
-            for (int i = 0; i < switchesAndDoors.childCount; i++)
+            for (int i = 0; i < switchesAndDoors.childCount; i++){
                 if (switchesAndDoors.GetChild(i).name == "Doors")
                     doors = switchesAndDoors.GetChild(i);
+            }
 
             if (doors == null)
                 return;
@@ -83,8 +90,26 @@ public class levaTerra : MonoBehaviour
 
         if(enemySpawnPoints.Length > 0)
         {
+            if (enemySpawnPoints.Length != enemySpawnTypes.Length)
+                return;
 
-
+            GameObject enemy;
+            Transform player = GameObject.FindGameObjectWithTag("Player").gameObject.transform;
+            for (int i = 0; i < enemySpawnPoints.Length; i++)
+            {
+                if (enemySpawnTypes[i] == EnemyType.Melee)
+                {
+                    enemy = Instantiate(swordEnemyPrefab, enemySpawnPoints[i], Quaternion.Euler(90, 0, 0));
+                    enemy.transform.SetParent(parentRoom, true);
+                    enemy.GetComponent<EnemyAI>().player = player;
+                }
+                else if (enemySpawnTypes[i] == EnemyType.Ranged)
+                {
+                    enemy = Instantiate(projectileEnemyPrefab, enemySpawnPoints[i], Quaternion.Euler(90, 0, 0));
+                    enemy.transform.SetParent(parentRoom, true);
+                    enemy.GetComponent<EnemyAI>().player = player;
+                }
+            }
         }
     }
 
