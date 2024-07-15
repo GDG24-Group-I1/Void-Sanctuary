@@ -494,15 +494,22 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
         canMove = false;
     }
 
+    private readonly Plane[] frustumPlanes = new Plane[6];
     private bool FilterVisibleMovableObjects(GameObject obj)
     {
-        // FIXME: this sometimes doesn't work correctly! pog!
         if (!obj.activeSelf) return false;
-        if (obj.TryGetComponent<Renderer>(out var renderer))
+        if (obj.TryGetComponent<Collider>(out var collider))
         {
-            if (!renderer.isVisible) return false;
+            GeometryUtility.CalculateFrustumPlanes(Camera.main, frustumPlanes);
+            if (!GeometryUtility.TestPlanesAABB(frustumPlanes, collider.bounds))
+            {
+                return false;
+            }
         }
-        // Debug.DrawLine(sword.transform.position, obj.transform.position, Color.red, 10f);
+        else
+        {
+            Debug.LogWarning($"Movable object {obj.name} does not have a collider");
+        }
         var hit = Physics.Linecast(sword.transform.position, obj.transform.position, LayerMask.GetMask("groundLayer", "wallLayer"));
         return !hit;
     }
@@ -611,8 +618,6 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
     {
         LoaderBorder.GetComponent<CircularProgressBar>().StartProgressBar(3.0f);
 
-        audioSource.PlayOneShot(shootSound);
-
         canFire = false;
         fireCooldownTimer.Start(3.0f);
 
@@ -638,6 +643,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
         GameObject projectile = Instantiate(damageProjectilePrefab, projectilePosition, rotation * Quaternion.Euler(90, 0, 0));
         var projectileScript = projectile.GetComponent<ProjectileScript>();
         projectileScript.endingPosition = aimLaserRenderer.transform.TransformPoint(endingPosition);
+        audioSource.PlayOneShot(shootSound);
         FireProjectileCommon();
     }
 
@@ -650,6 +656,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
         GameObject projectile = Instantiate(iceProjectilePrefab, projectilePosition, rotation * Quaternion.Euler(90, 0, 0));
         var projectileScript = projectile.GetComponent<ProjectileScript>();
         projectileScript.endingPosition = aimLaserRenderer.transform.TransformPoint(endingPosition);
+        audioSource.PlayOneShot(shootSound);
         FireProjectileCommon();
     }
 
@@ -1074,9 +1081,11 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
     {
         if (context.performed)
         {
-            if (firingStage != FiringStage.aiming || currentMovableObject == -1 || visibleMovableObjects.Length == 0)
+            if (firingStage != FiringStage.aiming || currentMovableObject == -1 || visibleMovableObjects.Length < 2)
                 return;
-            currentMovableObject = (currentMovableObject + 1) % visibleMovableObjects.Length;
+            var oldMovableObjectIndex = currentMovableObject;
+            ResetMovableObject();
+            currentMovableObject = (oldMovableObjectIndex + 1) % visibleMovableObjects.Length;
             while (!visibleMovableObjects[currentMovableObject].activeSelf)
             {
                 currentMovableObject = (currentMovableObject + 1) % visibleMovableObjects.Length;
