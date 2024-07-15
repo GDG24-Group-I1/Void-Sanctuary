@@ -6,9 +6,11 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.Video;
 
+[RequireComponent(typeof(AudioSource))]
 public class MainMenu : MonoBehaviour, IDataPersistence
 {
     [SerializeField] private VideoPlayer videoPlayer;
+    private AudioSource audioSource;
     // Start is called before the first frame update
     [SerializeField] private int frameToPause = 25;
     private GameData gameData;
@@ -31,10 +33,13 @@ public class MainMenu : MonoBehaviour, IDataPersistence
     }
     void Start()
     {
+        audioSource = GetComponent<AudioSource>();
         canvas.SetActive(false);
+        videoPlayer.SetDirectAudioMute(0, true);
         videoPlayer.sendFrameReadyEvents = true;
         videoPlayer.frameReady += OnFrameReady;
         videoPlayer.Play();
+        audioSource.Play();
     }
 
     private void OnFrameReady(VideoPlayer source, long frameIdx)
@@ -71,6 +76,8 @@ public class MainMenu : MonoBehaviour, IDataPersistence
 
     public void OnStartGameClicked()
     {
+        audioSource.Stop();
+        videoPlayer.SetDirectAudioMute(0, false);
         videoPlayer.Play();
         videoPlayer.loopPointReached += (e) => SceneManager.LoadScene("GameScene");
         canvas.SetActive(false);
