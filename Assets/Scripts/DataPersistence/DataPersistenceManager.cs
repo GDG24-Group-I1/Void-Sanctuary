@@ -43,16 +43,24 @@ public class DataPersistenceManager : MonoBehaviour
     private void OnEnable()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
+        SceneManager.sceneUnloaded += OnSceneUnloaded;
     }
     private void OnDisable()
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
+        SceneManager.sceneUnloaded -= OnSceneUnloaded;
     }
     public void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         dataPersistenceObjects = FindAllDataPersistanceObjects();
         LoadGame();
     }
+
+    public void OnSceneUnloaded(Scene scene)
+    {
+        SaveGame();
+    }
+
     public void RegisterDataPersistenceObject(IDataPersistence obj)
     {
         if (dataPersistenceObjects.Contains(obj))
@@ -94,9 +102,11 @@ public class DataPersistenceManager : MonoBehaviour
         dataHandler.Save(gameData);
     }
 
-    public void ResetGame()
+    public void ResetGame(ResetType resetType)
     {
+        gameData.ResetGameData(resetType);
         SaveGame();
+        LoadGame();
     }
 
     private void OnApplicationQuit()

@@ -18,6 +18,7 @@ public class MainMenu : MonoBehaviour, IDataPersistence
     [SerializeField] private GameObject controlsPane;
     [SerializeField] private GameObject creditsPane;
 
+    [SerializeField] private Slider volumeSlider;
     [SerializeField] private Toggle holdRunToggle;
     [SerializeField] private Toggle slowDownAttackToggle;
 
@@ -26,6 +27,7 @@ public class MainMenu : MonoBehaviour, IDataPersistence
         gameData = data;
         holdRunToggle.isOn = gameData.savedSettings.holdDownToRun;
         slowDownAttackToggle.isOn = gameData.savedSettings.slowDownAttack;
+        volumeSlider.value = gameData.savedSettings.volume;
     }
     void Start()
     {
@@ -115,6 +117,16 @@ public class MainMenu : MonoBehaviour, IDataPersistence
     public void OnSlowdownAttackChanged(bool value)
     {
         gameData.savedSettings.slowDownAttack = value;
+    }
+
+    public void OnResetSaveDataClicked()
+    {
+        DataPersistenceManager.GetInstance().ResetGame(ResetType.ResetSaveData);
+    }
+
+    public void OnResetSettingsClicked()
+    {
+        DataPersistenceManager.GetInstance().ResetGame(ResetType.ResetSettings);
     }
 
     #endregion
