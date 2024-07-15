@@ -19,6 +19,12 @@ public class DataPersistenceManager : MonoBehaviour
     [Header("File Storage Config")]
     [SerializeField] private string fileName;
 
+#if UNITY_EDITOR
+    [Header("Development settings")]
+    [SerializeField] private bool forceRespawnPoint;
+    [SerializeField] private int respawnPointId;
+#endif
+
     private GameData gameData;
     private List<IDataPersistence> dataPersistenceObjects;
     private FileDataHandler dataHandler;
@@ -87,6 +93,12 @@ public class DataPersistenceManager : MonoBehaviour
             Debug.Log("No data was found. Initializing data to defaults");
             NewGame();
         }
+#if UNITY_EDITOR
+        if (forceRespawnPoint)
+        {
+            gameData.playerData.lastRespawnPointID = respawnPointId;
+        }
+#endif
         foreach (IDataPersistence dataPersistence in dataPersistenceObjects)
         {
             dataPersistence?.LoadData(gameData);
