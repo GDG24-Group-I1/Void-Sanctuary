@@ -198,6 +198,10 @@ public class EnemyAI : MonoBehaviour
                     canAttack = false;
                     attackCooldownTimer.Start(attackCooldown);
                 }
+            } else // agent is already close to the player, but still moving, make it stop
+            {
+                // TODO: figure out if this is ok.
+                agent.SetDestination(transform.position);
             }
         }
     }
@@ -235,12 +239,13 @@ public class EnemyAI : MonoBehaviour
     private void RangedAttack()
     {
         //Debug.Log("Ranged attacking player");
-        Vector3 projectilePosition = new Vector3(transform.position.x, projectileHeight, transform.position.z);
+
+        Vector3 projectilePosition = new(transform.position.x, transform.position.y + projectileHeight, transform.position.z);
 
         Vector3 directionToPlayer = (player.position - transform.position).normalized;
 
         Vector3 endingPosition = transform.position + directionToPlayer * projectileRange;
-        endingPosition.y = projectileHeight;
+        endingPosition.y += projectileHeight;
 
         //Debug.Log($"Starting position: {startingPosition}, Ending position: {endingPosition}");
 

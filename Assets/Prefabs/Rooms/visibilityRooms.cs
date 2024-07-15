@@ -3,19 +3,25 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class visibilityRooms : MonoBehaviour {
-    // FIXME: this trigger is very small so you need to be very close to the door to trigger it
-    //        make it bigger
+    private Renderer[] renderers;
+    private Light[] lights;
+    private EnemyAI[] enemyAIs;
+    private bool isVisible;
 
-    private void Start()
+    private void Awake()
     {
-        SetRoomVisibility(gameObject, false);
+        renderers = GetComponentsInChildren<Renderer>();
+        lights = GetComponentsInChildren<Light>();
+        enemyAIs = GetComponentsInChildren<EnemyAI>();
+        // set the room visibility in Awake() so the Respawner doesn't accidentally spawn enemies in invisible rooms.
+        SetRoomVisibility(false);
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
-            SetRoomVisibility(gameObject, true);
+            SetRoomVisibility(true);
         }
     }
 
@@ -23,22 +29,41 @@ public class visibilityRooms : MonoBehaviour {
     {
         if (other.CompareTag("Player"))
         {
-           SetRoomVisibility(gameObject, false);
+           SetRoomVisibility(false);
         }
     }
 
-    private void SetRoomVisibility(GameObject room, bool isVisible)
+    private void OnTriggerStay(Collider other)
     {
-        Renderer[] renderers = room.GetComponentsInChildren<Renderer>();
+        if (other.CompareTag("Player") && !isVisible)
+        {
+            SetRoomVisibility(true);
+        }
+    }
+
+    public void SetRoomVisibility(bool isVisible)
+    {
+        this.isVisible = isVisible;
         foreach (Renderer renderer in renderers)
         {
-            renderer.enabled = isVisible;
+            if (renderer != null)
+            {
+                renderer.enabled = isVisible;
+            }
         }
-        // Imposta l'attivazione delle luci
-        Light[] lights = room.GetComponentsInChildren<Light>();
         foreach (Light light in lights)
         {
-            light.enabled = isVisible;
+            if (light != null)
+            {
+                light.enabled = isVisible;
+            }
+        }
+        foreach (EnemyAI enemyAI in enemyAIs)
+        {
+            if (enemyAI != null)
+            {
+                enemyAI.gameObject.SetActive(isVisible);
+            }
         }
     }
 }

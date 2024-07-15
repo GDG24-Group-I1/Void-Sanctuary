@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Assertions;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public enum EnemyType
@@ -14,6 +15,7 @@ public enum EnemyType
 struct EnemyData
 {
     public GameObject instance;
+    public Transform parent;
     public EnemyType type;
     public Vector3 position;
 }
@@ -44,6 +46,21 @@ public class Respawner : MonoBehaviour, IDataPersistence
     private RespawnPoint[] respawnPoints;
     private GameData gameData;
 
+    private visibilityRooms[] rooms;
+
+    void Awake()
+    {
+        rooms = SceneManager.GetActiveScene().GetRootGameObjects().SelectMany(x => x.GetComponentsInChildren<visibilityRooms>()).ToArray();
+        // find enemies as early as possible because otherwise they might not be found as they are deactivated by the room scripts.
+        enemies = GameObject.FindGameObjectsWithTag("EnemyObj").Select(x => new EnemyData
+        {
+            instance = x,
+            type = x.GetComponent<EnemyAI>().Type,
+            position = x.transform.position,
+            parent = x.transform.parent
+        }).ToArray();
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -61,12 +78,6 @@ public class Respawner : MonoBehaviour, IDataPersistence
                 return null;
             }
         };
-        enemies = GameObject.FindGameObjectsWithTag("EnemyObj").Select(x => new EnemyData
-        {
-            instance = x,
-            type = x.GetComponent<EnemyAI>().Type,
-            position = x.transform.position
-        }).ToArray();
         respawnPoints = GameObject.FindGameObjectsWithTag("RespawnPoint").Select(x => x.GetComponent<RespawnPoint>()).ToArray();
         var powerups = GameObject.FindGameObjectsWithTag("Powerup");
         foreach (var powerup in powerups)
@@ -125,6 +136,10 @@ public class Respawner : MonoBehaviour, IDataPersistence
 
     private void RespawnPlayerCallback()
     {
+        foreach (var room in rooms)
+        {
+            room.SetRoomVisibility(false);
+        }
         var respawnPoint = respawnPoints.FirstOrDefault(x => x.respawnPointID == gameData.playerData.lastRespawnPointID);
         Debug.Log($"Respawning player at respawn point {gameData.playerData.lastRespawnPointID}");
         playerObject = Instantiate(playerPrefab, respawnPoint == null ? Vector3.zero : respawnPoint.transform.position, Quaternion.identity);
@@ -136,21 +151,29 @@ public class Respawner : MonoBehaviour, IDataPersistence
         player.DashLoaderBorder = dashLoaderBorder;
         player.UiWeaponImage = uiWeaponImage;
         player.SetPowerupsOnRespawn(availablePowerups.Where(x => gameData.playerData.obtainedPowerups.Contains(x.name)));
+
         var staticEnemies = enemies.Where(x => x.instance != null).Select(x => x.instance).ToArray();
         var activeEnemies = GameObject.FindGameObjectsWithTag("EnemyObj").Where(x => !staticEnemies.Contains(x));
-        foreach(var enemy in activeEnemies)
+        foreach (var enemy in activeEnemies)
         {
             enemy.GetComponent<EnemyAI>().player = player.transform;
         }
         for (int i = 0; i < enemies.Length; i++)
         {
             ref var enemyData = ref enemies[i];
-            if (enemyData.instance != null)
+            if (enemyData.instance.activeSelf)
             {
-                Destroy(enemyData.instance);
+                if (enemyData.instance != null)
+                {
+                    Destroy(enemyData.instance);
+                }
+                var enemy = enemyData.type == EnemyType.Melee ? enemySwordPrefab : enemyRangedPrefab;
+                enemyData.instance = Instantiate(enemy, enemyData.position, Quaternion.identity);
+                if (enemyData.parent != null)
+                {
+                    enemyData.instance.transform.SetParent(enemyData.parent, true);
+                }
             }
-            var enemy = enemyData.type == EnemyType.Melee ? enemySwordPrefab : enemyRangedPrefab;
-            enemyData.instance = Instantiate(enemy, enemyData.position, Quaternion.identity);
             enemyData.instance.GetComponent<EnemyAI>().player = playerObject.transform;
 
         }
