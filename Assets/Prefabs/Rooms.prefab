@@ -2633,18 +2633,6 @@ PrefabInstance:
       propertyPath: m_LODs.Array.data[1].renderers.Array.data[0].renderer
       value: 
       objectReference: {fileID: 0}
-    - target: {fileID: 4503780679947133535, guid: 5c6c3796a0c9e21498a187da7f982a79, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -0.088
-      objectReference: {fileID: 0}
-    - target: {fileID: 4503780679947179317, guid: 5c6c3796a0c9e21498a187da7f982a79, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -0.088
-      objectReference: {fileID: 0}
-    - target: {fileID: 4503780679947216949, guid: 5c6c3796a0c9e21498a187da7f982a79, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -0.139
-      objectReference: {fileID: 0}
     - target: {fileID: 4503780679967444655, guid: 5c6c3796a0c9e21498a187da7f982a79, type: 3}
       propertyPath: m_LODs.Array.data[0].renderers.Array.data[0].renderer
       value: 
