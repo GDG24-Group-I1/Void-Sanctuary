@@ -2284,6 +2284,7 @@ MonoBehaviour:
   projectileEnemyPrefab: {fileID: 0}
   enemySpawnPoints: []
   enemySpawnTypes: 
+  parentRoom: {fileID: 0}
   active: 0
   animator: {fileID: 0}
 --- !u!4 &1152510188491574179 stripped
@@ -8966,7 +8967,7 @@ Animator:
   m_GameObject: {fileID: 4313214205326431759}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: d2f8b8002660a4b4696dc4064993b30c, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -8996,6 +8997,7 @@ MonoBehaviour:
   projectileEnemyPrefab: {fileID: 0}
   enemySpawnPoints: []
   enemySpawnTypes: 
+  parentRoom: {fileID: 0}
   active: 0
   animator: {fileID: 0}
 --- !u!1001 &4031579443672267366

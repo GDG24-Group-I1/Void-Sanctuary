@@ -99,6 +99,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
     private AudioSource audioSource;
     private int frameNotGrounded;
     private bool isGrounded = true;
+    private bool hasGroundUnderneath = true;
     private Collider[] previousWallsCollided = Array.Empty<Collider>();
     private readonly RaycastHit[] wallsCollided = new RaycastHit[maxWallsCollided];
 
@@ -218,7 +219,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
         dialogBox = GameObject.Find("DialogBox");
         renderers = GetComponentsInChildren<Renderer>().Where(x => x is not LineRenderer).ToArray();
         rb.freezeRotation = true;
-        movementCooldownTimer = new Timer(this)
+        movementCooldownTimer = new Timer()
         {
             OnTimerElapsed = () =>
             {
@@ -226,7 +227,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
                 return null;
             }
         };
-        turningCooldownTimer = new Timer(this)
+        turningCooldownTimer = new Timer()
         {
             OnTimerElapsed = () =>
             {
@@ -234,7 +235,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
                 return null;
             }
         };
-        actionCooldownTimer = new Timer(this)
+        actionCooldownTimer = new Timer()
         {
             OnTimerElapsed = () =>
             {
@@ -242,7 +243,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
                 return null;
             }
         };
-        fireCooldownTimer = new Timer(this)
+        fireCooldownTimer = new Timer()
         {
             OnTimerElapsed = () =>
             {
@@ -250,7 +251,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
                 return null;
             }
         };
-        firingStageCooldown = new Timer(this)
+        firingStageCooldown = new Timer()
         {
             OnTimerElapsed = () =>
             {
@@ -260,7 +261,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
                 return null;
             }
         };
-        dashCooldownTimer = new Timer(this)
+        dashCooldownTimer = new Timer()
         {
             OnTimerElapsed = () =>
             {
@@ -268,7 +269,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
                 return null;
             }
         };
-        staggerTimer = new Timer(this)
+        staggerTimer = new Timer()
         {
             OnTimerElapsed = () =>
             {
@@ -287,13 +288,9 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
     private void CheckGround()
     {
         var hit = Physics.Raycast(transform.position.ShiftBy(y: 0.1f), Vector3.down, out RaycastHit hitInfo, float.PositiveInfinity, groundLayerMask);
-        Debug.DrawRay(transform.position.ShiftBy(y: 0.1f), Vector3.down * 1000, Color.green, 0.1f);
+        hasGroundUnderneath = hit;
         var distance = Vector3.Distance(transform.position, hitInfo.point);
         var isGroundedNow = hit && distance < 0.5f;
-        if (isGrounded != isGroundedNow)
-        {
-            Debug.Log($"Player is {(isGroundedNow ? "grounded" : "not grounded")}");
-        }
         isGrounded = isGroundedNow;
         if (!isGrounded)
         {
@@ -406,8 +403,6 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
             rotateDir = Vector3.zero;
         }
 
-        // Handle ground detection
-
         // Handle movement
         Vector3 targetVelocity = moveDir * movementSpeed;
 
@@ -416,6 +411,12 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
 
         // Clamp velocity change to prevent abrupt changes
         velocityChange.y = 0;
+
+        // Handle ground detection
+        if (!isGrounded && hasGroundUnderneath)
+        {
+            velocityChange.y = -9.8f;
+        }
 
         rb.AddForce(velocityChange, ForceMode.VelocityChange);
 
@@ -914,11 +915,9 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
         var direction = (transform.position - other.transform.position).normalized;
         if (other.gameObject.name == "ProjectileEnemy(Clone)")
         {
-            Debug.Log("Player hit by enemy projectile");
             StaggerFromHit(direction);
         } else if (other.gameObject.name == "Arm_L" || other.gameObject.name == "Arm_R")
         {
-            Debug.Log("Player hit by enemy");
             StaggerFromHit(direction);
         }
     }

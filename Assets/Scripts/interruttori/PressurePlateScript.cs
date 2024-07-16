@@ -64,7 +64,7 @@ public class PressurePlateScript : MonoBehaviour
             if (doors.GetChild(i).name == targetObject)
             {
                 doors.GetChild(i).gameObject.GetComponent<OpenDoors>().Input(signal);
-                Debug.Log($"input: {signal}");
+                // Debug.Log($"input: {signal}");
             }
     }
 }

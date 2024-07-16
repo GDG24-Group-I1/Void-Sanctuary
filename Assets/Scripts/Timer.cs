@@ -19,8 +19,13 @@ public class Timer
     public Func<float?> OnTimerElapsed;
 
     private readonly TimerType timerType;
+
+    public bool IsRunning => timerCoroutine != null;
     
-    public Timer(MonoBehaviour owner, TimerType type = TimerType.Scaled) { ownerObject = owner; timerType = type; }
+    public Timer(TimerType type = TimerType.Scaled) { 
+        ownerObject = TimerHelperSingleton.GetInstance(); 
+        timerType = type; 
+    }
 
     public void Start(float durationSeconds)
     {
@@ -49,6 +54,7 @@ public class Timer
             Duration = 0f;
             Assert.IsNotNull(ownerObject, "Timer owner object is null");
             ownerObject.StopCoroutine(timerCoroutine);
+            timerCoroutine = null;
         }
     }
 
@@ -57,6 +63,7 @@ public class Timer
         Assert.IsNotNull(ownerObject, "Timer owner object is null");
         var ret = OnTimerElapsed?.Invoke();
         ownerObject.StopCoroutine(timerCoroutine);
+        timerCoroutine = null;
         if (ret != null)
         {
             Start(ret.Value);

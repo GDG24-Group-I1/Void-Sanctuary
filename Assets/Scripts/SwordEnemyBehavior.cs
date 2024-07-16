@@ -68,7 +68,7 @@ public class SwordEnemyBehavior : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         aggroRange = GetComponentInChildren<SphereCollider>().radius;
 
-        attackCooldownTimer = new Timer(this)
+        attackCooldownTimer = new Timer()
         {
             OnTimerElapsed = () =>
             {
@@ -76,7 +76,7 @@ public class SwordEnemyBehavior : MonoBehaviour
                 return null;
             }
         };
-        searchTimer = new Timer(this)
+        searchTimer = new Timer()
         {
             OnTimerElapsed = () =>
             {
@@ -89,7 +89,7 @@ public class SwordEnemyBehavior : MonoBehaviour
                 return null;
             }
         };
-        searchMoveTimer = new Timer(this)
+        searchMoveTimer = new Timer()
         {
             OnTimerElapsed = () =>
             {

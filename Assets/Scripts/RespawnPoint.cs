@@ -11,7 +11,7 @@ public class RespawnPoint : MonoBehaviour, IDataPersistence
     {
         if (other.CompareTag("Player"))
         {
-            Debug.Log($"Player entered respawn point {respawnPointID}");
+            // Debug.Log($"Player entered respawn point {respawnPointID}");
             gameData.playerData.lastRespawnPointID = respawnPointID;
         }
     }

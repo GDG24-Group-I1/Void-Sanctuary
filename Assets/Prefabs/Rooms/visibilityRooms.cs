@@ -2,44 +2,70 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class visibilityRooms : MonoBehaviour {
+
+enum VisibilityState
+{
+    Visible,
+    NotVisible
+}
+
+public class visibilityRooms : MonoBehaviour
+{
     private Renderer[] renderers;
     private Light[] lights;
     private EnemyAI[] enemyAIs;
-    private bool isVisible;
+
+    private VisibilityState visibilityState;
+    private Timer timer;
 
     private void Awake()
     {
+        visibilityState = VisibilityState.Visible;
         GetReferences();
+    }
+
+    public EnemyAI[] GetEnemyList()
+    {
+        return enemyAIs;
+    }
+
+    public void SetEnemyList(EnemyAI[] enemyList)
+    {
+        enemyAIs = enemyList;
     }
 
     private void GetReferences()
     {
-        if (renderers == null)
-        {
-            renderers = GetComponentsInChildren<Renderer>();
-        }
-        if (lights == null)
-        {
-            lights = GetComponentsInChildren<Light>();
-        }
-        if (enemyAIs == null)
-        {
-            enemyAIs = GetComponentsInChildren<EnemyAI>();
-        }
+        renderers ??= GetComponentsInChildren<Renderer>();
+        lights ??= GetComponentsInChildren<Light>();
+        enemyAIs ??= GetComponentsInChildren<EnemyAI>();
     }
 
     public void DeactivateRoomAtStart()
     {
         GetReferences();
-        SetRoomVisibility(false);
+        ForceSetRoomVisibility(false);
+    }
+
+    private void Start()
+    {
+        timer = new Timer()
+        {
+            OnTimerElapsed = () =>
+            {
+                SetRoomVisibility();
+                return null;
+            }
+        };
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
-            SetRoomVisibility(true);
+            timer.Stop();
+            visibilityState = VisibilityState.Visible;
+            SetRoomVisibility();
         }
     }
 
@@ -47,21 +73,23 @@ public class visibilityRooms : MonoBehaviour {
     {
         if (other.CompareTag("Player"))
         {
-           SetRoomVisibility(false);
+            visibilityState = VisibilityState.NotVisible;
+            if (!timer.IsRunning)
+            {
+                timer.Start(0.5f);
+            }
         }
     }
 
-    private void OnTriggerStay(Collider other)
+    public void ForceSetRoomVisibility(bool isVisible)
     {
-        if (other.CompareTag("Player") && !isVisible)
-        {
-            SetRoomVisibility(true);
-        }
+        visibilityState = isVisible ? VisibilityState.Visible : VisibilityState.NotVisible;
+        SetRoomVisibility();
     }
 
-    public void SetRoomVisibility(bool isVisible)
+    public void SetRoomVisibility()
     {
-        this.isVisible = isVisible;
+        bool isVisible = visibilityState == VisibilityState.Visible;
         foreach (Renderer renderer in renderers)
         {
             if (renderer != null)

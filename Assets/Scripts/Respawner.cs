@@ -20,6 +20,14 @@ struct EnemyData
     public Vector3 position;
 }
 
+struct RoomData
+{
+    public GameObject instance;
+    public RespawnPoint respawnPoint;
+    public visibilityRooms visibilityRooms;
+    public EnemyData[] enemyList;
+}
+
 public class Respawner : MonoBehaviour, IDataPersistence
 {
     [SerializeField] private GameObject playerPrefab;
@@ -28,13 +36,12 @@ public class Respawner : MonoBehaviour, IDataPersistence
     private GameObject playerObject;
     [SerializeField] private Sprite[] availablePowerups;
     private Timer respawnTimer;
-    private EnemyData[] enemies;
 
     // camera stuff
     [SerializeField] private float MaxAdjustment;
     [SerializeField] private float yDiffThreshold;
 
-    
+
     [SerializeField] private Transform cameraTransform;
     [SerializeField] private GameObject healthBar;
     [SerializeField] private GameObject loaderBorder;
@@ -44,25 +51,29 @@ public class Respawner : MonoBehaviour, IDataPersistence
 
     private bool adjustingCamera;
     private RespawnPoint[] respawnPoints;
+    private RoomData[] rooms;
     private GameData gameData;
-
-    private visibilityRooms[] rooms;
 
     void Awake()
     {
-        rooms = SceneManager.GetActiveScene().GetRootGameObjects().SelectMany(x => x.GetComponentsInChildren<visibilityRooms>()).ToArray();
-        // find enemies as early as possible because otherwise they might not be found as they are deactivated by the room scripts.
-        enemies = GameObject.FindGameObjectsWithTag("EnemyObj").Select(x => new EnemyData
-        {
-            instance = x,
-            type = x.GetComponent<EnemyAI>().Type,
-            position = x.transform.position,
-            parent = x.transform.parent
-        }).ToArray();
-        foreach (var item in rooms)
+        var roomObjects = SceneManager.GetActiveScene().GetRootGameObjects().SelectMany(x => x.GetComponentsInChildren<visibilityRooms>()).ToArray();
+        foreach (var item in roomObjects)
         {
             item.DeactivateRoomAtStart();
         }
+        rooms = roomObjects.Select(x => new RoomData
+        {
+            instance = x.gameObject,
+            respawnPoint = x.GetComponentInChildren<RespawnPoint>(),
+            visibilityRooms = x,
+            enemyList = x.GetEnemyList().Select(y => new EnemyData
+            {
+                instance = y.gameObject,
+                type = y.Type,
+                position = y.transform.position,
+                parent = y.transform.parent
+            }).ToArray()
+        }).ToArray();
     }
 
     // Start is called before the first frame update
@@ -74,7 +85,7 @@ public class Respawner : MonoBehaviour, IDataPersistence
         Assert.IsNotNull(dashLoaderBorder, "DASH LOADER BORDER IS NOT SET IN PLAYER RESPAWNER OBJECT IN THE SCENE, PUT THE Canvas->DashLoader->DashLoaderBorder IN THE Dash Loader Border SLOT ON THIS GAME OBJECT");
         Assert.IsNotNull(uiWeaponImage, "UI WEAPON IMAGE IS NOT SET IN PLAYER RESPAWNER OBJECT IN THE SCENE, PUT THE Canvas->UiWeaponImage IN THE UI Weapon Image SLOT ON THIS GAME OBJECT");
         Assert.IsNotNull(youDiedText, "YOU DIED TEXT IS NOT SET IN PLAYER RESPAWNER OBJECT IN THE SCENE, PUT THE Canvas->YouDiedText IN THE You Died Text SLOT ON THIS GAME OBJECT");
-        respawnTimer = new Timer(this)
+        respawnTimer = new Timer()
         {
             OnTimerElapsed = () =>
             {
@@ -136,13 +147,13 @@ public class Respawner : MonoBehaviour, IDataPersistence
     {
         youDiedText.SetActive(false);
         respawnTimer.Start(2f);
-    } 
+    }
 
     private void RespawnPlayerCallback()
     {
         foreach (var room in rooms)
         {
-            room.SetRoomVisibility(false);
+            room.visibilityRooms.ForceSetRoomVisibility(false);
         }
         var respawnPoint = respawnPoints.FirstOrDefault(x => x.respawnPointID == gameData.playerData.lastRespawnPointID);
         Debug.Log($"Respawning player at respawn point {gameData.playerData.lastRespawnPointID}");
@@ -156,30 +167,39 @@ public class Respawner : MonoBehaviour, IDataPersistence
         player.UiWeaponImage = uiWeaponImage;
         player.SetPowerupsOnRespawn(availablePowerups.Where(x => gameData.playerData.obtainedPowerups.Contains(x.name)));
 
-        var staticEnemies = enemies.Where(x => x.instance != null).Select(x => x.instance).ToArray();
+        var staticEnemies = rooms.SelectMany(x => x.enemyList).Where(x => x.instance != null).Select(x => x.instance).ToArray();
         var activeEnemies = GameObject.FindGameObjectsWithTag("EnemyObj").Where(x => !staticEnemies.Contains(x));
         foreach (var enemy in activeEnemies)
         {
             enemy.GetComponent<EnemyAI>().player = player.transform;
         }
-        for (int i = 0; i < enemies.Length; i++)
+        foreach (var room in rooms)
         {
-            ref var enemyData = ref enemies[i];
-            if (enemyData.instance.activeSelf)
+            var needsActive = room.respawnPoint != null && room.respawnPoint.respawnPointID == respawnPoint.respawnPointID;
+            var newEnemyList = new EnemyAI[room.enemyList.Length];
+            for (int i = 0; i < room.enemyList.Length; i++)
             {
-                if (enemyData.instance != null)
-                {
-                    Destroy(enemyData.instance);
-                }
-                var enemy = enemyData.type == EnemyType.Melee ? enemySwordPrefab : enemyRangedPrefab;
-                enemyData.instance = Instantiate(enemy, enemyData.position, Quaternion.identity);
-                if (enemyData.parent != null)
-                {
-                    enemyData.instance.transform.SetParent(enemyData.parent, true);
-                }
+                newEnemyList[i] = InstantiateEnemy(ref room.enemyList[i], needsActive);
             }
-            enemyData.instance.GetComponent<EnemyAI>().player = playerObject.transform;
-
+            room.visibilityRooms.SetEnemyList(newEnemyList);
         }
+    }
+
+    private EnemyAI InstantiateEnemy(ref EnemyData enemyData, bool active)
+    {
+        if (enemyData.instance != null)
+        {
+            Destroy(enemyData.instance);
+        }
+        var enemy = enemyData.type == EnemyType.Melee ? enemySwordPrefab : enemyRangedPrefab;
+        enemyData.instance = Instantiate(enemy, enemyData.position, Quaternion.identity);
+        if (enemyData.parent != null)
+        {
+            enemyData.instance.transform.SetParent(enemyData.parent, true);
+        }
+        var enemyAi = enemyData.instance.GetComponent<EnemyAI>();
+        enemyAi.player = playerObject.transform;
+        enemyData.instance.SetActive(active);
+        return enemyAi;
     }
 }

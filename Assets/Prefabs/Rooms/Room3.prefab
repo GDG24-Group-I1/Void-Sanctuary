@@ -1967,6 +1967,10 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: -1461304994638716399, guid: 52643d731232be9428b7284d556c7d8b, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: de9bbb5fe50961042a32e9f30d12a987, type: 2}
     - target: {fileID: 919132149155446097, guid: 52643d731232be9428b7284d556c7d8b, type: 3}
       propertyPath: m_Name
       value: plate (4)
@@ -1987,7 +1991,7 @@ PrefabInstance:
       addedObject: {fileID: 1585437752151140045}
     - targetCorrespondingSourceObject: {fileID: -516098083770646512, guid: 52643d731232be9428b7284d556c7d8b, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 5612697026572744321}
+      addedObject: {fileID: 2472788709641842916}
   m_SourcePrefab: {fileID: 100100000, guid: 52643d731232be9428b7284d556c7d8b, type: 3}
 --- !u!4 &150596147581208038 stripped
 Transform:
@@ -2046,7 +2050,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 2.0000002, y: 1.9999998, z: 1.9999999}
   m_Center: {x: 0, y: -0.0000009536743, z: 0.0000019073486}
---- !u!114 &5612697026572744321
+--- !u!114 &2472788709641842916
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2055,10 +2059,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 9028534858853704221}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b4606daf54cca654fb726b6a98b19132, type: 3}
+  m_Script: {fileID: 11500000, guid: 8c5a7341cf877e34095edb11a2332a9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetObject: door_exit
 --- !u!1001 &448541880200033276
 PrefabInstance:
   m_ObjectHideFlags: 0

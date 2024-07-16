@@ -82,16 +82,15 @@ public class EnemyAI : MonoBehaviour
         animator = GetComponentInChildren<Animator>();
         rb = GetComponent<Rigidbody>();
         IsFrozen = false;
-        attackCooldownTimer = new Timer(this)
+        attackCooldownTimer = new Timer()
         {
             OnTimerElapsed = () =>
             {
-                Debug.Log($"canAttack");
                 canAttack = true;
                 return null;
             }
         };
-        staggerTimer = new Timer(this)
+        staggerTimer = new Timer()
         {
             OnTimerElapsed = () =>
             {

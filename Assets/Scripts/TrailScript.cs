@@ -17,7 +17,7 @@ public class TrailScript : MonoBehaviour
     private void Start()
     {
         Assert.IsNotNull(PlayerTransform, "Player transform may not be null in TrailScript");
-        lingerTimer = new Timer(this)
+        lingerTimer = new Timer()
         {
             OnTimerElapsed = () =>
             {
