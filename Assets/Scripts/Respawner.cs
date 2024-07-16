@@ -59,6 +59,10 @@ public class Respawner : MonoBehaviour, IDataPersistence
             position = x.transform.position,
             parent = x.transform.parent
         }).ToArray();
+        foreach (var item in rooms)
+        {
+            item.DeactivateRoomAtStart();
+        }
     }
 
     // Start is called before the first frame update

@@ -13,7 +13,10 @@ public class visibilityRooms : MonoBehaviour {
         renderers = GetComponentsInChildren<Renderer>();
         lights = GetComponentsInChildren<Light>();
         enemyAIs = GetComponentsInChildren<EnemyAI>();
-        // set the room visibility in Awake() so the Respawner doesn't accidentally spawn enemies in invisible rooms.
+    }
+
+    public void DeactivateRoomAtStart()
+    {
         SetRoomVisibility(false);
     }
 
