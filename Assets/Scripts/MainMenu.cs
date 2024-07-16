@@ -14,11 +14,12 @@ public class MainMenu : MonoBehaviour, IDataPersistence
     // Start is called before the first frame update
     [SerializeField] private int frameToPause = 25;
     private GameData gameData;
-    [SerializeField] private GameObject canvas;
+    [SerializeField] private GameObject backgroundImage;
     [SerializeField] private GameObject menuButtonsPane;
     [SerializeField] private GameObject settingsPane;
     [SerializeField] private GameObject controlsPane;
     [SerializeField] private GameObject creditsPane;
+    [SerializeField] private Slider loadingSlider;
 
     [SerializeField] private Slider volumeSlider;
     [SerializeField] private Toggle holdRunToggle;
@@ -34,10 +35,12 @@ public class MainMenu : MonoBehaviour, IDataPersistence
     void Start()
     {
         audioSource = GetComponent<AudioSource>();
-        canvas.SetActive(false);
+        menuButtonsPane.SetActive(false);
         videoPlayer.SetDirectAudioMute(0, true);
         videoPlayer.sendFrameReadyEvents = true;
         videoPlayer.frameReady += OnFrameReady;
+        backgroundImage.SetActive(false);
+        loadingSlider.gameObject.SetActive(false);
         videoPlayer.Play();
         audioSource.Play();
     }
@@ -47,7 +50,7 @@ public class MainMenu : MonoBehaviour, IDataPersistence
         if (frameIdx == frameToPause)
         {
             source.Pause();
-            canvas.SetActive(true);
+            menuButtonsPane.SetActive(true);
             videoPlayer.sendFrameReadyEvents = false;
         }
     }
@@ -79,10 +82,27 @@ public class MainMenu : MonoBehaviour, IDataPersistence
         audioSource.Stop();
         videoPlayer.SetDirectAudioMute(0, false);
         videoPlayer.Play();
-        videoPlayer.loopPointReached += (e) => SceneManager.LoadScene("GameScene");
-        canvas.SetActive(false);
+        videoPlayer.loopPointReached += VideoPlayer_loopPointReached; 
+        menuButtonsPane.SetActive(false);
     }
+
+    private void VideoPlayer_loopPointReached(VideoPlayer source)
+    {
+        StartCoroutine(LoadGameAsync());
+        loadingSlider.gameObject.SetActive(true);
+    }
+
     #endregion
+
+    private IEnumerator LoadGameAsync()
+    {
+        AsyncOperation op = SceneManager.LoadSceneAsync("GameScene");
+        while (!op.isDone)
+        {
+            loadingSlider.value = op.progress;
+            yield return null;
+        }
+    }
 
 
     #region SettingsMenuButtons

@@ -26,7 +26,6 @@ public class PauseMenuAnimScript : StateMachineBehaviour
             animator.transform.parent.gameObject.SetActive(false);
         } else
         {
-            animator.transform.parent.GetChild(0).gameObject.SetActive(true); // enable the main menu again
             animator.gameObject.SetActive(false);
         }
     }
