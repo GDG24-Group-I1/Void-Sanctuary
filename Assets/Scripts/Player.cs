@@ -98,7 +98,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
     private Rigidbody rb;
     private AudioSource audioSource;
     private int frameNotGrounded;
-    private bool isGrounded;
+    private bool isGrounded = true;
     private Collider[] previousWallsCollided = Array.Empty<Collider>();
     private readonly RaycastHit[] wallsCollided = new RaycastHit[maxWallsCollided];
 
@@ -141,12 +141,12 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
     private bool executeDash = false;
     private bool isPickingUpItem = false;
     private bool isStaggered = false;
+    private bool isDead = false;
     private Timer movementCooldownTimer;
     private Timer turningCooldownTimer;
     private Timer actionCooldownTimer;
     private Timer fireCooldownTimer;
     private Timer firingStageCooldown;
-    private Timer deathTimer;
     private Timer dashCooldownTimer;
     private Timer staggerTimer;
     private PlayerAnimator animator;
@@ -160,6 +160,10 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
 
     private void ResetPlayer()
     {
+        Debug.Log("Player died");
+        audioSource.PlayOneShot(deathSound);
+        isDead = true;
+        rb.isKinematic = true;
         canMove = false;
         canTurn = false;
         canAct = false;
@@ -213,52 +217,12 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
         swordCollider = sword.GetComponent<BoxCollider>();
         dialogBox = GameObject.Find("DialogBox");
         renderers = GetComponentsInChildren<Renderer>().Where(x => x is not LineRenderer).ToArray();
-
-        deathTimer = new Timer(this)
-        {
-            OnTimerElapsed = () =>
-            {
-                // Reset player position, for now
-                // Later, add death logic here
-                if (IsFalling != AnimationState.None)
-                {
-                    Debug.Log("Player died");
-                    ResetPlayer();
-                    return null;
-                }
-                else
-                {
-                    IsFalling = AnimationState.Transition;
-                    return 4.0f;
-                }
-            }
-        };
-        var floorCollider = GetComponent<FloorCollider>();
-        floorCollider.CollisionEnterCallback = () =>
-        {
-            deathTimer?.Stop();
-            IsFalling = AnimationState.None;
-            frameNotGrounded = 0;
-            isGrounded = true;
-        };
-        floorCollider.CollisionExitCallback = () =>
-        {
-            deathTimer?.Start(1.0f);
-            isGrounded = false;
-        };
-        floorCollider.CollisionStayCallback = () =>
-        {
-            deathTimer?.Stop();
-            IsFalling = AnimationState.None;
-            frameNotGrounded = 0;
-            isGrounded = true;
-        };
         rb.freezeRotation = true;
         movementCooldownTimer = new Timer(this)
         {
             OnTimerElapsed = () =>
             {
-                canMove = true;
+                canMove = !isDead;
                 return null;
             }
         };
@@ -266,7 +230,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
         {
             OnTimerElapsed = () =>
             {
-                canTurn = true;
+                canTurn = !isDead;
                 return null;
             }
         };
@@ -274,7 +238,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
         {
             OnTimerElapsed = () =>
             {
-                canAct = true;
+                canAct = !isDead;
                 return null;
             }
         };
@@ -282,7 +246,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
         {
             OnTimerElapsed = () =>
             {
-                canFire = true;
+                canFire = !isDead;
                 return null;
             }
         };
@@ -300,7 +264,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
         {
             OnTimerElapsed = () =>
             {
-                canDash = true;
+                canDash = !isDead;
                 return null;
             }
         };
@@ -320,12 +284,38 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
         FindAndSetupLaser();
     }
 
-    private void FixedUpdate()
+    private void CheckGround()
     {
+        var hit = Physics.Raycast(transform.position.ShiftBy(y: 0.1f), Vector3.down, out RaycastHit hitInfo, float.PositiveInfinity, groundLayerMask);
+        Debug.DrawRay(transform.position.ShiftBy(y: 0.1f), Vector3.down * 1000, Color.green, 0.1f);
+        var distance = Vector3.Distance(transform.position, hitInfo.point);
+        var isGroundedNow = hit && distance < 0.5f;
+        if (isGrounded != isGroundedNow)
+        {
+            Debug.Log($"Player is {(isGroundedNow ? "grounded" : "not grounded")}");
+        }
+        isGrounded = isGroundedNow;
         if (!isGrounded)
         {
             frameNotGrounded++;
+            rb.drag = 0;
+            if (frameNotGrounded == thresholdFrameGrounded)
+            {
+                IsFalling = AnimationState.Transition;
+            }
         }
+        else
+        {
+            rb.drag = groundDrag;
+            IsFalling = AnimationState.None;
+            frameNotGrounded = 0;
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        if (isDead) return;
+        CheckGround();
         HandleMovement();
         StartDashing();
         ExecuteDash();
@@ -392,6 +382,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
 
     private void HandleMovement()
     {
+        if (isDead) return;
         // Get input for movement
         Vector2 movementVector = gameInput.GetMovementVectorNormalized();
         Vector3 moveDir = new(movementVector.x, 0, movementVector.y);
@@ -426,15 +417,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
         // Clamp velocity change to prevent abrupt changes
         velocityChange.y = 0;
 
-        if (frameNotGrounded == thresholdFrameGrounded)
-        {
-            velocityChange.y = -9.8f;
-        }
-
         rb.AddForce(velocityChange, ForceMode.VelocityChange);
-
-        // Apply drag if grounded
-        rb.drag = frameNotGrounded < thresholdFrameGrounded ? groundDrag : 0.1f;
 
         // Check if the player is walking
         IsWalking = moveDir != Vector3.zero;
@@ -552,6 +535,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
                 currentMovableObjectRigidBody.freezeRotation = true;
                 currentMovableObjectRigidBody.useGravity = false;
                 currentMovableObjectRigidBody.excludeLayers = LayerMask.GetMask("playerLayer");
+                currentMovableObjectRigidBody.constraints = RigidbodyConstraints.FreezePositionY;
             }
             else
             {
@@ -569,6 +553,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
                 currentMovableObjectRigidBody.excludeLayers = LayerMask.GetMask();
                 currentMovableObjectRigidBody.freezeRotation = false;
                 currentMovableObjectRigidBody.useGravity = true;
+                currentMovableObjectRigidBody.constraints = RigidbodyConstraints.None;
                 if (currentMovableObjectGravity != null)
                 {
                     currentMovableObjectGravity.applyGravity = true;
@@ -907,11 +892,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
     {
         if (healthSlider.value == healthSlider.minValue) return;
         healthSlider.value = Math.Clamp(healthSlider.value - 1, healthSlider.minValue, healthSlider.maxValue);
-        if (healthSlider.value == healthSlider.minValue)
-        {
-            audioSource.PlayOneShot(deathSound);
-        }
-        else
+        if (healthSlider.value != healthSlider.minValue)
         {
             audioSource.PlayOneShot(ouchSound);
         }
@@ -923,6 +904,12 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
 
     public void OnTriggerEnter(Collider other)
     {
+        if (isDead) return;
+        var layerValue = LayerMask.NameToLayer("deathLayer");
+        if (other.gameObject.layer == layerValue)
+        {
+           ResetPlayer();
+        }
         if (isStaggered) return;
         var direction = (transform.position - other.transform.position).normalized;
         if (other.gameObject.name == "ProjectileEnemy(Clone)")
@@ -951,7 +938,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
 
     public void OnAttack(InputAction.CallbackContext context)
     {
-        if (context.performed)
+        if (context.performed && !isDead && isGrounded)
         {
             OnPlayerAttack?.Invoke();
             IsAttacking = true;
@@ -961,6 +948,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
     }
     public void OnFire(InputAction.CallbackContext context)
     {
+        if (isDead || !isGrounded) return;
         if (context.performed)
         {
             Aim();
@@ -972,7 +960,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
     }
     public void OnRun(InputAction.CallbackContext context)
     {
-        if (context.performed)
+        if (context.performed && !isDead)
         {
             if (gameData.savedSettings.holdDownToRun)
             {
@@ -1007,7 +995,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
 
     public void OnDash(InputAction.CallbackContext context)
     {
-        if (context.performed)
+        if (context.performed && !isDead)
         {
             Dash();
         }
@@ -1015,7 +1003,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
 
     public void OnInteract(InputAction.CallbackContext context)
     {
-        if (context.performed)
+        if (context.performed && !isDead && isGrounded)
         {
             if (TouchedPowerup != null && canMove)
             {
@@ -1034,7 +1022,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
 
     public void OnChangeEquippedWeapon(InputAction.CallbackContext context)
     {
-        if (context.performed)
+        if (context.performed && !isDead)
         {
             if (firingStage != FiringStage.notFiring)
                 return;
@@ -1079,7 +1067,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
 
     public void OnSwitchAimedObject(InputAction.CallbackContext context)
     {
-        if (context.performed)
+        if (context.performed && !isDead)
         {
             if (firingStage != FiringStage.aiming || currentMovableObject == -1 || visibleMovableObjects.Length < 2)
                 return;
