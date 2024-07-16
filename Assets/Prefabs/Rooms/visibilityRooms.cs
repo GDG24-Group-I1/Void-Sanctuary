@@ -10,13 +10,28 @@ public class visibilityRooms : MonoBehaviour {
 
     private void Awake()
     {
-        renderers = GetComponentsInChildren<Renderer>();
-        lights = GetComponentsInChildren<Light>();
-        enemyAIs = GetComponentsInChildren<EnemyAI>();
+        GetReferences();
+    }
+
+    private void GetReferences()
+    {
+        if (renderers == null)
+        {
+            renderers = GetComponentsInChildren<Renderer>();
+        }
+        if (lights == null)
+        {
+            lights = GetComponentsInChildren<Light>();
+        }
+        if (enemyAIs == null)
+        {
+            enemyAIs = GetComponentsInChildren<EnemyAI>();
+        }
     }
 
     public void DeactivateRoomAtStart()
     {
+        GetReferences();
         SetRoomVisibility(false);
     }
 
