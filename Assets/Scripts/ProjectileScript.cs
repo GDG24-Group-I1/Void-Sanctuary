@@ -44,9 +44,9 @@ public class ProjectileScript : MonoBehaviour
             var blockScript = other.gameObject.GetComponent<CryoBlockScript>();
             if (!blockScript.isFrozen)
             {
-                Vector3 cubePos = new Vector3(other.transform.position.x + 4.5f, other.transform.position.y + 4.2f, other.transform.position.z - 1.8f);
-                //Vector3 cubePos = new Vector3(-3.8f, 4.2f, 0.9f);
-                Instantiate(IceCube, cubePos, other.transform.rotation, other.transform);
+                Vector3 cubePos = new Vector3(other.transform.position.x + 4.5f, other.transform.position.y + 3.5f, other.transform.position.z - 1.8f);
+                var iceCube = Instantiate(IceCube, cubePos, other.transform.rotation, other.transform);
+                iceCube.transform.localScale = new Vector3(iceCube.transform.localScale.x, iceCube.transform.localScale.y * 1.8f, iceCube.transform.localScale.z);
                 blockScript.isFrozen = true;
             }
         }

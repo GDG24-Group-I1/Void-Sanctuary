@@ -1497,9 +1497,25 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1743611532018528043, guid: e959cf44f33eb044887a57e0ad2cdb0f, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.61398906
+      objectReference: {fileID: 0}
+    - target: {fileID: 1743611532018528043, guid: e959cf44f33eb044887a57e0ad2cdb0f, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 3.26
+      objectReference: {fileID: 0}
     - target: {fileID: 1759496726002701636, guid: e959cf44f33eb044887a57e0ad2cdb0f, type: 3}
       propertyPath: m_Name
       value: cryo room
+      objectReference: {fileID: 0}
+    - target: {fileID: 2005269836582608443, guid: e959cf44f33eb044887a57e0ad2cdb0f, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.67983395
+      objectReference: {fileID: 0}
+    - target: {fileID: 2005269836582608443, guid: e959cf44f33eb044887a57e0ad2cdb0f, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 3.42
       objectReference: {fileID: 0}
     - target: {fileID: 2348480382280241213, guid: e959cf44f33eb044887a57e0ad2cdb0f, type: 3}
       propertyPath: m_Enabled
@@ -1516,6 +1532,14 @@ PrefabInstance:
     - target: {fileID: 3693050455699348870, guid: e959cf44f33eb044887a57e0ad2cdb0f, type: 3}
       propertyPath: m_Enabled
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3833147587119577247, guid: e959cf44f33eb044887a57e0ad2cdb0f, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.5507296
+      objectReference: {fileID: 0}
+    - target: {fileID: 3833147587119577247, guid: e959cf44f33eb044887a57e0ad2cdb0f, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 3.33
       objectReference: {fileID: 0}
     - target: {fileID: 4216422673059171114, guid: e959cf44f33eb044887a57e0ad2cdb0f, type: 3}
       propertyPath: m_Enabled

@@ -21,7 +21,8 @@ public class TrailScript : MonoBehaviour
         {
             OnTimerElapsed = () =>
             {
-                Destroy(gameObject);
+                if(this != null)
+                    Destroy(gameObject);
                 return null;
             }
         };
