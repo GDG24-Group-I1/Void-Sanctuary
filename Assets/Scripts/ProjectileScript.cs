@@ -38,6 +38,18 @@ public class ProjectileScript : MonoBehaviour
             }
         }
 
+        var isBlock = other.gameObject.CompareTag("FreezableBlock");
+        if (IceCube != null && isBlock)
+        {
+            var blockScript = other.gameObject.GetComponent<CryoBlockScript>();
+            if (!blockScript.isFrozen)
+            {
+                Instantiate(IceCube, other.transform.position, other.transform.rotation, other.transform);
+                blockScript.isFrozen = true;
+            }
+        }
+        Debug.Log(isBlock);
+
         Destroy(gameObject);
     }
 
