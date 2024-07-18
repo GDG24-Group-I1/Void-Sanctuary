@@ -378,21 +378,20 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
 
     private void DrawDashIndicator()
     {
-        if (!gameData.savedSettings.drawDashIndicator)
+        if (!canDash || !canMove || !gameData.savedSettings.drawDashIndicator)
         {
-            if (dashIndicator != null)
+            if (dashIndicator != null && dashIndicator.activeSelf)
             {
-                Destroy(dashIndicator);
-                dashIndicator = null;
+                dashIndicator.SetActive(false);
             }
             return;
         }
-        if (!canDash || !canMove) return;
         if (dashIndicator == null)
         {
             dashIndicator = Instantiate(dashIndicatorPrefab, calculatedDashPosition, Quaternion.identity);
         } else
         {
+            dashIndicator.SetActive(true);
             dashIndicator.transform.position = calculatedDashPosition;
         }
 
@@ -879,7 +878,14 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
     {
         if (IsDashing)
         {
-            animator.SetDash();
+            if (IsWalking || IsRunning)
+            {
+                executeDash = true;
+            }
+            else
+            {
+                animator.SetDash();
+            }
             IsDashing = false;
         }
         else
