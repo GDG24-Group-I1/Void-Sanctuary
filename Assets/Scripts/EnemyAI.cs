@@ -5,6 +5,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(Rigidbody))]
 public class EnemyAI : MonoBehaviour
@@ -46,7 +47,6 @@ public class EnemyAI : MonoBehaviour
     private float attackCooldown = 2f;
     public Timer attackCooldownTimer;
     public bool animationEnded = false;
-    public int enemyType;
 
     // range attack
     [SerializeField] private GameObject projectilePrefab;
@@ -73,9 +73,40 @@ public class EnemyAI : MonoBehaviour
     //
     Renderer[] renderers;
 
+    // only for boss
+    private Slider healthBar;
+
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
+        if (Type == EnemyType.Boss)
+        {
+            healthBar = GameObject.Find("GameUI").transform.Find("BossHealthBar").GetComponent<Slider>();
+            healthBar.gameObject.SetActive(false);
+        } else
+        {
+            healthBar = null;
+        }
+    }
+
+    private void OnEnable()
+    {
+        if (healthBar != null)
+        {
+            healthBar.gameObject.SetActive(true);
+            healthBar.minValue = 0;
+            healthBar.maxValue = health;
+            healthBar.value = health;
+            healthBar.wholeNumbers = true;
+        }
+    }
+
+    private void OnDisable()
+    {
+        if (healthBar != null)
+        {
+            healthBar.gameObject.SetActive(false);
+        }
     }
 
     private void Start()
@@ -121,25 +152,25 @@ public class EnemyAI : MonoBehaviour
         playerInAttackRange = Physics.CheckSphere(transform.position, attackRange, whatIsPlayer);
 
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
-        if (distanceToPlayer > distanceSwitchTypeAttack & enemyType == 2)
+        if (distanceToPlayer > distanceSwitchTypeAttack && Type == EnemyType.Boss)
         {
             attackRange = attackingDistanceRanged;
             stopRange = stoppingDistanceRanged;
             isMeleeAttacking = false;
         }
-        else if (distanceToPlayer <= distanceSwitchTypeAttack & enemyType == 2)
+        else if (distanceToPlayer <= distanceSwitchTypeAttack && Type == EnemyType.Boss)
         {
             stopRange = stoppingDistanceMelee;
             attackRange = attackingDistanceMelee;
             isMeleeAttacking = true;
         }
 
-        if (enemyType == 0)
+        if (Type == EnemyType.Melee)
         {
             stopRange = stoppingDistanceMelee;
             attackRange = attackingDistanceMelee;
         }
-        else
+        else if (Type == EnemyType.Ranged)
         {
             stopRange = stoppingDistanceRanged;
             attackRange = attackingDistanceRanged;
@@ -162,7 +193,7 @@ public class EnemyAI : MonoBehaviour
     private void Patroling()
     {
 
-        if (enemyType == 2)
+        if (Type == EnemyType.Boss)
         {
             animator.SetBool("isWalking", false);
             agent.isStopped = true;
@@ -203,7 +234,7 @@ public class EnemyAI : MonoBehaviour
 
     private void ChasePlayer()
     {
-        if(enemyType == 2)
+        if (Type == EnemyType.Boss)
         {
             animator.SetBool("isWalking", true);
         }
@@ -230,23 +261,23 @@ public class EnemyAI : MonoBehaviour
                 canAttack = false;
                 attackCooldownTimer.Start(attackCooldown);
             }
-            else 
+            else
             {
-                agent.isStopped = false;    
+                agent.isStopped = false;
             }
         }
     }
     private void DetermineAttackType(float distanceToPlayer)
     {
-        if (enemyType == 0)  // Melee enemy
+        if (Type == EnemyType.Melee)  // Melee enemy
         {
             MeleeAttack();
         }
-        else if (enemyType == 1)  // Regular ranged enemy
+        else if (Type == EnemyType.Ranged)  // Regular ranged enemy
         {
             RangedAttack();
         }
-        else if (enemyType == 2)  // Boss
+        else if (Type == EnemyType.Boss)  // Boss
         {
             if (isMeleeAttacking)
             {
@@ -270,6 +301,7 @@ public class EnemyAI : MonoBehaviour
 
     public void StaggerFromHit()
     {
+        healthBar.value = health;
         agent.isStopped = true;
         rb.MovePosition(transform.position + transform.forward * -1);
         if (health <= 0) return;
@@ -334,6 +366,7 @@ public class EnemyAI : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if (Type == EnemyType.Boss && isStaggered) return;
         if (health <= 0) return;
         if (other.gameObject.CompareTag("Sword"))
         {
@@ -386,6 +419,7 @@ public class EnemyAI : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
+        if (Type == EnemyType.Boss && isStaggered) return;
         if (health <= 0) return;
         if (collision.gameObject.name == "Projectile(Clone)")
         {
