@@ -106,10 +106,17 @@ public static class DialogData
 
     public static Dictionary<string, Dialog> Dialogs = new()
     {
-        {"Test1", new Dialog("This is a test dialog", 1f) },
-        {"Test2", new Dialog("This is a bit of a longer dialog\nEven with a newline!!!", 4f) },
-        {"RepeatTest1", new Dialog("I am supposed to be used as a test for repeated dialogs", 1.5f) },
-        {"PickupText", new Dialog("Use {MeleeAttack} to attack and and {RangedAttack} to start a ranged attack then aim with {Aim}", 2.5f, 2f) }
+        {"SpawnRoom", new Dialog("Numerous system malfunction detected \nProcede to the generator to assess damages", 2f, 1f) },
+        {"Room_2", new Dialog("The emergency lockdown has blocked the way forward \nOverride it", 2f, 1f) },
+        {"Corridor_2_3", new Dialog("Structural damage registered \nYou must find another way through", 2f, 1f) },
+        {"Room_3", new Dialog("Debris detected \n\nMaintenence units cleared for magnetic manipulation", 2f, 1f) },
+        {"MagnetPowerup_pickup", new Dialog("Magnetic manipulator acquired \nPress {SwitchPowerup} to change active ability, Hold {RangedAttack} to activate", 2f, 1f) },
+        {"Corridor_3_4", new Dialog("Hostile security units detected ahead \nPrepare for offensive maintenance", 2f, 1f) },
+        {"IcePowerup_pickup", new Dialog("Cryo beam acquired \nPress {SwitchPowerup} to change active ability", 2f, 1f) },
+        {"CryoRoom", new Dialog("Pathfinding algorithm suggest creating a bridge by halting the conveyors", 2f, 1f) },
+        {"GeneratorRoom", new Dialog("Begin generator reboot sequence \nWARNING: security will react to unautorized access", 2f, 1f) },
+        {"DownRoom", new Dialog("Generator succesfully restarted, procede to the bridge to verify system integrity", 2f, 1f) },
+        {"BossRoom", new Dialog("WARNING: high level security asset detected", 2f, 1f) }
     };
 
     public static Dialog GetDialog(string dialogId)

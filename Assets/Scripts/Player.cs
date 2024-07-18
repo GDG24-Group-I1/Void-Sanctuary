@@ -910,6 +910,11 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
 
     public void PickupItem()
     {
+        if (TouchedPowerup.Powerup.name == IceSpriteName)
+            TriggerDialog("IcePowerup_pickup");
+        else if (TouchedPowerup.Powerup.name == MagnetSpriteName)
+            TriggerDialog("MagnetPowerup_pickup");
+
         weaponSprites.Add(TouchedPowerup.Powerup);
         gameData.playerData.obtainedPowerups.Add(TouchedPowerup.Powerup.name);
         Destroy(TouchedPowerup.gameObject);
