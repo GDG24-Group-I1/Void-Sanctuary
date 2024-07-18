@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
@@ -15,6 +16,7 @@ public class levaTerra : MonoBehaviour
     [SerializeField] private Vector3[] enemySpawnPoints = { new Vector3(124.5f, 35, -136.5f), new Vector3(88.5f, 35, -136.5f), new Vector3(124.5f, 35, -162.5f), new Vector3(88.5f, 35, -162.5f) };
     [SerializeField] private EnemyType[] enemySpawnTypes = { EnemyType.Ranged, EnemyType.Ranged, EnemyType.Ranged, EnemyType.Ranged };
     [SerializeField] private Transform parentRoom;
+
     public bool active = false;
     public Animator animator;
     void Start()
@@ -110,6 +112,15 @@ public class levaTerra : MonoBehaviour
                     enemy.GetComponent<EnemyAI>().player = player;
                 }
             }
+        }
+    }
+
+    private void OnDrawGizmos()
+    {
+        foreach (var (point, type) in enemySpawnPoints.ZipPair(enemySpawnTypes))
+        {
+            Gizmos.color = type == EnemyType.Melee ? Color.red : Color.blue;
+            Gizmos.DrawWireSphere(point, 1f);
         }
     }
 

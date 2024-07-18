@@ -182,6 +182,11 @@ public class Respawner : MonoBehaviour, IDataPersistence
                 newEnemyList[i] = InstantiateEnemy(ref room.enemyList[i], needsActive);
             }
             room.visibilityRooms.SetEnemyList(newEnemyList);
+            var doors = room.instance.GetComponentsInChildren<OpenDoors>();
+            foreach (var door in doors)
+            {
+                door.OnPlayerRespawn();
+            }
         }
     }
 

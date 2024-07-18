@@ -334,7 +334,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
         DrawDashIndicator();
         DrawDebugRays();
         FiringSequence();
-        CheckIfPlayerIsHidden();
+        // CheckIfPlayerIsHidden();
     }
 
     private void CalculateDashPosition()

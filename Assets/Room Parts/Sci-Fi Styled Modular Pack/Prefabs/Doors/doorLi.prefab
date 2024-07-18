@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 265799939951953754}
   - component: {fileID: 265799939959438960}
   - component: {fileID: 4598551353887356189}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: door_1_left
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -143,7 +143,7 @@ GameObject:
   - component: {fileID: 265799939956226796}
   - component: {fileID: 2740252595036166316}
   - component: {fileID: 8004442983971484451}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: doorLi
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -296,8 +296,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   unlocked: 1
   requiredInputs: 5
-  doorLight: {fileID: 0}
-  animator: {fileID: 0}
+  resetOnRespawn: 0
+  doorId: 
 --- !u!1 &265799939950012826
 GameObject:
   m_ObjectHideFlags: 0
@@ -311,7 +311,7 @@ GameObject:
   - component: {fileID: 265799939952463398}
   - component: {fileID: 265799939959423726}
   - component: {fileID: 1310072212880754264}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: door_1_right
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -438,9 +438,17 @@ PrefabInstance:
       propertyPath: m_Name
       value: light_wall_3_blue
       objectReference: {fileID: 0}
+    - target: {fileID: 121986, guid: 8b5797a18349fb546be8acddc71151ff, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
     - target: {fileID: 135472, guid: 8b5797a18349fb546be8acddc71151ff, type: 3}
       propertyPath: m_Name
       value: doorLight2
+      objectReference: {fileID: 0}
+    - target: {fileID: 135472, guid: 8b5797a18349fb546be8acddc71151ff, type: 3}
+      propertyPath: m_Layer
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 135472, guid: 8b5797a18349fb546be8acddc71151ff, type: 3}
       propertyPath: m_TagString

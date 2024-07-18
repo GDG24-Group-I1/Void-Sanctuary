@@ -6,13 +6,16 @@ public class OpenDoors : MonoBehaviour, IDataPersistence
 {
     [SerializeField] private bool unlocked = true;
     [SerializeField] private int requiredInputs = 5;
-    public Light doorLight;
+    [SerializeField] private bool resetOnRespawn = false;
+    private Light doorLight;
     private int activeInputs = 0;
-    public Animator animator;
+    private Animator animator;
     public string doorId;
+    private bool originalStatus;
 
     public void LoadData(GameData data)
     {
+        originalStatus = unlocked;
         if (data.doorStatus.doorsMap.ContainsKey(doorId))
         {
             unlocked = data.doorStatus.doorsMap[doorId];
@@ -31,6 +34,7 @@ public class OpenDoors : MonoBehaviour, IDataPersistence
 
     void Start()
     {
+        doorLight = GetComponentInChildren<Light>();
         animator = GetComponent<Animator>();
         if (doorLight != null)
             if (!unlocked)
@@ -54,6 +58,15 @@ public class OpenDoors : MonoBehaviour, IDataPersistence
             // Chiudi la porta quando il giocatore esce dal trigger
             animator.ResetTrigger("open");
             animator.SetTrigger("close");
+        }
+    }
+
+    public void OnPlayerRespawn()
+    {
+        if (resetOnRespawn)
+        {
+            unlocked = originalStatus; 
+            changeLight();
         }
     }
 

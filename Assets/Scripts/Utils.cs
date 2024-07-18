@@ -102,6 +102,14 @@ public static class VectorExtensions
     }
 }
 
+public static class LINQExtensions
+{
+    public static IEnumerable<(T1, T2)> ZipPair<T1, T2>(this IEnumerable<T1> first, IEnumerable<T2> second)
+    {
+        return first.Zip(second, (f, s) => (f, s));
+    }
+}
+
 public static class CachedResources
 {
     private static readonly Dictionary<string, Object> cache = new();
