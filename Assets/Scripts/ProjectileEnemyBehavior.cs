@@ -73,7 +73,7 @@ public class ProjectileEnemyBehavior : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         aggroRange = GetComponentInChildren<SphereCollider>().radius;
 
-        attackCooldownTimer = new Timer()
+        attackCooldownTimer = new Timer(this)
         {
             OnTimerElapsed = () =>
             {
@@ -81,7 +81,7 @@ public class ProjectileEnemyBehavior : MonoBehaviour
                 return null;
             }
         };
-        searchTimer = new Timer()
+        searchTimer = new Timer(this)
         {
             OnTimerElapsed = () =>
             {
@@ -94,7 +94,7 @@ public class ProjectileEnemyBehavior : MonoBehaviour
                 return null;
             }
         };
-        searchMoveTimer = new Timer()
+        searchMoveTimer = new Timer(this)
         {
             OnTimerElapsed = () =>
             {

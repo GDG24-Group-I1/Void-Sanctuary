@@ -82,7 +82,7 @@ public class EnemyAI : MonoBehaviour
         animator = GetComponentInChildren<Animator>();
         rb = GetComponent<Rigidbody>();
         IsFrozen = false;
-        attackCooldownTimer = new Timer()
+        attackCooldownTimer = new Timer(this)
         {
             OnTimerElapsed = () =>
             {
@@ -90,7 +90,7 @@ public class EnemyAI : MonoBehaviour
                 return null;
             }
         };
-        staggerTimer = new Timer()
+        staggerTimer = new Timer(this)
         {
             OnTimerElapsed = () =>
             {

@@ -14,7 +14,7 @@ public class SwitchScript : MonoBehaviour
 
     void Start()
     {
-        cooldownTimer = new Timer()
+        cooldownTimer = new Timer(this)
         {
             OnTimerElapsed = () => { onCooldown = false; return null; }
         };

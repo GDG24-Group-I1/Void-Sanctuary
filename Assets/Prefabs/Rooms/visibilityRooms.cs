@@ -49,7 +49,7 @@ public class visibilityRooms : MonoBehaviour
 
     private void Start()
     {
-        timer = new Timer()
+        timer = new Timer(this)
         {
             OnTimerElapsed = () =>
             {

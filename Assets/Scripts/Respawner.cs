@@ -85,7 +85,7 @@ public class Respawner : MonoBehaviour, IDataPersistence
         Assert.IsNotNull(dashLoaderBorder, "DASH LOADER BORDER IS NOT SET IN PLAYER RESPAWNER OBJECT IN THE SCENE, PUT THE Canvas->DashLoader->DashLoaderBorder IN THE Dash Loader Border SLOT ON THIS GAME OBJECT");
         Assert.IsNotNull(uiWeaponImage, "UI WEAPON IMAGE IS NOT SET IN PLAYER RESPAWNER OBJECT IN THE SCENE, PUT THE Canvas->UiWeaponImage IN THE UI Weapon Image SLOT ON THIS GAME OBJECT");
         Assert.IsNotNull(youDiedText, "YOU DIED TEXT IS NOT SET IN PLAYER RESPAWNER OBJECT IN THE SCENE, PUT THE Canvas->YouDiedText IN THE You Died Text SLOT ON THIS GAME OBJECT");
-        respawnTimer = new Timer()
+        respawnTimer = new Timer(this)
         {
             OnTimerElapsed = () =>
             {

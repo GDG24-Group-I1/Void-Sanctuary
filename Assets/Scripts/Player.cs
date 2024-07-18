@@ -219,7 +219,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
         dialogBox = GameObject.Find("DialogBox");
         renderers = GetComponentsInChildren<Renderer>().Where(x => x is not LineRenderer).ToArray();
         rb.freezeRotation = true;
-        movementCooldownTimer = new Timer()
+        movementCooldownTimer = new Timer(this)
         {
             OnTimerElapsed = () =>
             {
@@ -227,7 +227,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
                 return null;
             }
         };
-        turningCooldownTimer = new Timer()
+        turningCooldownTimer = new Timer(this)
         {
             OnTimerElapsed = () =>
             {
@@ -235,7 +235,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
                 return null;
             }
         };
-        actionCooldownTimer = new Timer()
+        actionCooldownTimer = new Timer(this)
         {
             OnTimerElapsed = () =>
             {
@@ -243,7 +243,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
                 return null;
             }
         };
-        fireCooldownTimer = new Timer()
+        fireCooldownTimer = new Timer(this)
         {
             OnTimerElapsed = () =>
             {
@@ -251,7 +251,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
                 return null;
             }
         };
-        firingStageCooldown = new Timer()
+        firingStageCooldown = new Timer(this)
         {
             OnTimerElapsed = () =>
             {
@@ -261,7 +261,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
                 return null;
             }
         };
-        dashCooldownTimer = new Timer()
+        dashCooldownTimer = new Timer(this)
         {
             OnTimerElapsed = () =>
             {
@@ -269,7 +269,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
                 return null;
             }
         };
-        staggerTimer = new Timer()
+        staggerTimer = new Timer(this)
         {
             OnTimerElapsed = () =>
             {

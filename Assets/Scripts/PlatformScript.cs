@@ -25,7 +25,7 @@ public class PlatformScript : MonoBehaviour
     {
         startingPosition = transform.position;
 
-        movementCooldownTimer = new Timer()
+        movementCooldownTimer = new Timer(this)
         {
             OnTimerElapsed = () =>
             {

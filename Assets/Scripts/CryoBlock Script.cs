@@ -17,7 +17,7 @@ public class CryoBlockScript : MonoBehaviour
     void Start()
     {
         transform.position = startingPosition;
-        offsetTimer = new Timer()
+        offsetTimer = new Timer(this)
         {
             OnTimerElapsed = () =>
             {

@@ -13,7 +13,7 @@ public class CreditsScroll : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        timer = new Timer()
+        timer = new Timer(this)
         {
             OnTimerElapsed = () =>
             {

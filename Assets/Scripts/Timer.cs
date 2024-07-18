@@ -13,6 +13,7 @@ public enum TimerType
 public class Timer
 {
     private readonly MonoBehaviour ownerObject;
+    private readonly MonoBehaviour referenceObject;
     private IEnumerator timerCoroutine;
 
     public float Duration { get; private set; } = 0f;
@@ -22,7 +23,8 @@ public class Timer
 
     public bool IsRunning => timerCoroutine != null;
     
-    public Timer(TimerType type = TimerType.Scaled) { 
+    public Timer(MonoBehaviour referenceObject, TimerType type = TimerType.Scaled) {
+        this.referenceObject = referenceObject;
         ownerObject = TimerHelperSingleton.GetInstance(); 
         timerType = type; 
     }
@@ -61,7 +63,11 @@ public class Timer
     private void OnElapsed()
     {
         Assert.IsNotNull(ownerObject, "Timer owner object is null");
-        var ret = OnTimerElapsed?.Invoke();
+        float? ret = null;
+        if (referenceObject == null)
+        {
+            ret = OnTimerElapsed?.Invoke();
+        }
         ownerObject.StopCoroutine(timerCoroutine);
         timerCoroutine = null;
         if (ret != null)
