@@ -2123,7 +2123,7 @@ PrefabInstance:
       objectReference: {fileID: 3504659731332715114}
     - target: {fileID: 586952378447412945, guid: 096cc5014b6f4904aa215c5365c25672, type: 3}
       propertyPath: closingDoor
-      value: 
+      value: door_entrance
       objectReference: {fileID: 0}
     - target: {fileID: 586952378447412945, guid: 096cc5014b6f4904aa215c5365c25672, type: 3}
       propertyPath: swordEnemyPrefab
@@ -2235,7 +2235,7 @@ PrefabInstance:
       objectReference: {fileID: 3504659731332715114}
     - target: {fileID: 1851420063618687265, guid: 096cc5014b6f4904aa215c5365c25672, type: 3}
       propertyPath: closingDoor
-      value: 
+      value: door_entrance
       objectReference: {fileID: 0}
     - target: {fileID: 1851420063618687265, guid: 096cc5014b6f4904aa215c5365c25672, type: 3}
       propertyPath: enemySpawnTypes.Array.size
@@ -2347,7 +2347,7 @@ PrefabInstance:
       objectReference: {fileID: 3504659731332715114}
     - target: {fileID: 6570201469032779980, guid: 096cc5014b6f4904aa215c5365c25672, type: 3}
       propertyPath: closingDoor
-      value: 
+      value: door_entrance
       objectReference: {fileID: 0}
     - target: {fileID: 6570201469032779980, guid: 096cc5014b6f4904aa215c5365c25672, type: 3}
       propertyPath: swordEnemyPrefab
@@ -2427,7 +2427,7 @@ PrefabInstance:
       objectReference: {fileID: 3504659731332715114}
     - target: {fileID: 6623998373584924020, guid: 096cc5014b6f4904aa215c5365c25672, type: 3}
       propertyPath: closingDoor
-      value: 
+      value: door_entrance
       objectReference: {fileID: 0}
     - target: {fileID: 6623998373584924020, guid: 096cc5014b6f4904aa215c5365c25672, type: 3}
       propertyPath: swordEnemyPrefab
@@ -2507,7 +2507,7 @@ PrefabInstance:
       objectReference: {fileID: 3504659731332715114}
     - target: {fileID: 7037881569984198578, guid: 096cc5014b6f4904aa215c5365c25672, type: 3}
       propertyPath: closingDoor
-      value: 
+      value: door_entrance
       objectReference: {fileID: 0}
     - target: {fileID: 7037881569984198578, guid: 096cc5014b6f4904aa215c5365c25672, type: 3}
       propertyPath: swordEnemyPrefab

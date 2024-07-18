@@ -102,6 +102,7 @@ MonoBehaviour:
   - {fileID: 2100000, guid: a32407f707afc9740af43793c2b0fd5e, type: 2}
   - {fileID: 2100000, guid: 6ed0162cbc73cea449ccbf9d315cb441, type: 2}
   - {fileID: 2100000, guid: 8a68f5a994b1fdd4d965955d4602ecdd, type: 2}
+  dashIndicatorPrefab: {fileID: 1591834235240405216, guid: ab12f62557da297438c7730483405a8e, type: 3}
   ouchSound: {fileID: 8300000, guid: 3a6069c3408398740b9640a02b228408, type: 3}
   deathSound: {fileID: 8300000, guid: c1142b3b50068c2428d166f0879142b2, type: 3}
   dashSound: {fileID: 8300000, guid: fc41f768e732dd347b2a1ec8e5ddf927, type: 3}

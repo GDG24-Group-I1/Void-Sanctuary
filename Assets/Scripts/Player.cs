@@ -61,6 +61,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
     [SerializeField] private float slowDownFactor = 0.25f;
     [SerializeField] private List<Sprite> weaponSprites;
     [SerializeField] private Material[] weaponMaterials;
+    [SerializeField] private GameObject dashIndicatorPrefab;
 
     [Header("Sounds")]
     [SerializeField] private AudioClip ouchSound;
@@ -151,7 +152,9 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
     private Timer dashCooldownTimer;
     private Timer staggerTimer;
     private PlayerAnimator animator;
-    Renderer[] renderers;
+    private Renderer[] renderers;
+    private Vector3 calculatedDashPosition;
+    private GameObject dashIndicator;
 
     private GameData gameData;
     public void LoadData(GameData data)
@@ -315,6 +318,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
         CheckGround();
         HandleMovement();
         StartDashing();
+        CalculateDashPosition();
         ExecuteDash();
     }
 
@@ -327,9 +331,71 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
 
     private void Update()
     {
+        DrawDashIndicator();
         DrawDebugRays();
         FiringSequence();
         CheckIfPlayerIsHidden();
+    }
+
+    private void CalculateDashPosition()
+    {
+        var notPlayerLayer = ~LayerMask.GetMask("playerLayer", "enemyLayer");
+        var hasHit = Physics.Raycast(transform.position + Vector3.up, transform.forward, out RaycastHit hit, dashDistance, notPlayerLayer);
+        var groundLayer = LayerMask.NameToLayer("groundLayer");
+        Vector3 newPosition;
+        if (hasHit)
+        {
+            if (hit.collider.gameObject.layer == groundLayer)
+            {
+                // if we hit the ground, move to the hit point
+                newPosition = hit.point;
+            }
+            else
+            {
+                // if we hit something else (e.g. wall or enemy), adjust the position so we don't go through it
+                var realDashDistance = hit.distance - stopDistance;
+                newPosition = transform.position + transform.forward * realDashDistance;
+            }
+        }
+        else
+        {
+            var destination = transform.position + (Vector3.up * 2) + transform.forward * dashDistance;
+            // we haven't hit anything, check if the ground is the same Y level as the player
+            var groundHit = Physics.Raycast(destination, Vector3.down, out RaycastHit groundHeightHit, Mathf.Infinity, groundLayerMask);
+            if (groundHit)
+            {
+                // if we hit the ground, move to the hit point
+                newPosition = groundHeightHit.point;
+            }
+            else
+            {
+                // if we didn't hit the ground, move to the destinationawwww
+                newPosition = transform.position + transform.forward * dashDistance;
+            }
+        }
+        calculatedDashPosition = newPosition;
+    }
+
+    private void DrawDashIndicator()
+    {
+        if (!gameData.savedSettings.drawDashIndicator)
+        {
+            if (dashIndicator != null)
+            {
+                Destroy(dashIndicator);
+                dashIndicator = null;
+            }
+            return;
+        }
+        if (!canDash || !canMove) return;
+        if (dashIndicator == null)
+        {
+            dashIndicator = Instantiate(dashIndicatorPrefab, calculatedDashPosition, Quaternion.identity);
+        } else
+        {
+            dashIndicator.transform.position = calculatedDashPosition;
+        }
+
     }
 
     private static void SetRendererOpacity(GameObject obj, float alpha)
@@ -790,47 +856,12 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
     {
         if (executeDash)
         {
-            var notPlayerLayer = ~LayerMask.GetMask("playerLayer", "enemyLayer");
-            var hasHit = Physics.Raycast(transform.position + Vector3.up, transform.forward, out RaycastHit hit, dashDistance, notPlayerLayer);
-            var groundLayer = LayerMask.NameToLayer("groundLayer");
-            Vector3 newPosition;
-            if (hasHit)
-            {
-                if (hit.collider.gameObject.layer == groundLayer)
-                {
-                    // if we hit the ground, move to the hit point
-                    newPosition = hit.point;
-                }
-                else
-                {
-                    // if we hit something else (e.g. wall or enemy), adjust the position so we don't go through it
-                    var realDashDistance = hit.distance - stopDistance;
-                    newPosition = transform.position + transform.forward * realDashDistance;
-                }
-            }
-            else
-            {
-                var destination = transform.position + (Vector3.up * 2) + transform.forward * dashDistance;
-                // we haven't hit anything, check if the ground is the same Y level as the player
-                var groundHit = Physics.Raycast(destination, Vector3.down, out RaycastHit groundHeightHit, Mathf.Infinity, groundLayerMask);
-                if (groundHit)
-                {
-                    // if we hit the ground, move to the hit point
-                    newPosition = groundHeightHit.point;
-                }
-                else
-                {
-                    // if we didn't hit the ground, move to the destinationawwww
-                    newPosition = transform.position + transform.forward * dashDistance;
-                }
-            }
-
             rb.isKinematic = true;
             var Xoffsets = new float[] { -.5f, .5f };
             for (int i = 1; i < 4; i++)
             {
                 var startingPosition = transform.position + (0.5f * i * Vector3.up);
-                var endingPosition = newPosition + (0.5f * i * Vector3.up);
+                var endingPosition = calculatedDashPosition + (0.5f * i * Vector3.up);
                 for (int j = 0; j < Xoffsets.Length; j++)
                 {
                     var trail = Instantiate(trailPrefab, startingPosition + Xoffsets[j] * Vector3.right, transform.rotation);
@@ -839,7 +870,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
                     trailScript.PlayerTransform = transform;
                 }
             }
-            transform.position = newPosition;
+            transform.position = calculatedDashPosition;
         }
         executeDash = false;
     }
@@ -927,6 +958,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
         StopAllCoroutines();
         gameInput.UnregisterPlayer(this);
         DataPersistenceManager.GetInstance().UnregisterDataPersistenceObject(this);
+        Destroy(dashIndicator);
     }
 
     #region Input actions

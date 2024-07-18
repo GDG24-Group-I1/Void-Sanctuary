@@ -11,11 +11,13 @@ public struct SavedSettings
     public bool holdDownToRun;
     public bool slowDownAttack;
     public float volume;
+    public bool drawDashIndicator;
 
     public static SavedSettings DefaultSettings => new()
     {
         holdDownToRun = true,
-        slowDownAttack = true,
+        slowDownAttack = false,
+        drawDashIndicator = true,
         volume = 1f
     };
 }

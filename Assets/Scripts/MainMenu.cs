@@ -24,12 +24,14 @@ public class MainMenu : MonoBehaviour, IDataPersistence
     [SerializeField] private Slider volumeSlider;
     [SerializeField] private Toggle holdRunToggle;
     [SerializeField] private Toggle slowDownAttackToggle;
+    [SerializeField] private Toggle drawDashIndicatorToggle;
 
     public void LoadData(GameData data)
     {
         gameData = data;
         holdRunToggle.isOn = gameData.savedSettings.holdDownToRun;
         slowDownAttackToggle.isOn = gameData.savedSettings.slowDownAttack;
+        drawDashIndicatorToggle.isOn = gameData.savedSettings.drawDashIndicator;
         volumeSlider.value = gameData.savedSettings.volume;
     }
     void Start()
@@ -144,6 +146,10 @@ public class MainMenu : MonoBehaviour, IDataPersistence
     public void OnSlowdownAttackChanged(bool value)
     {
         gameData.savedSettings.slowDownAttack = value;
+    }
+    public void OnDrawDashIndicatorChanged(bool value)
+    {
+        gameData.savedSettings.drawDashIndicator = value;
     }
 
     public void OnResetSaveDataClicked()

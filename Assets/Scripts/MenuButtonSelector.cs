@@ -20,7 +20,7 @@ public class MenuButtonSelector : MonoBehaviour, IDataPersistence
     [SerializeField] private GameObject mouseKeyboardView;
     [SerializeField] private Toggle holdDownToRunToggle;
     [SerializeField] private Toggle slowDownAttackToggle;
-    [SerializeField] private Toggle drawDebugRaysToggle;
+    [SerializeField] private Toggle drawDashIndicatorToggle;
 
     private GameInput inputHandler;
 
@@ -64,6 +64,7 @@ public class MenuButtonSelector : MonoBehaviour, IDataPersistence
         volumeSlider.value = gameData.savedSettings.volume;
         holdDownToRunToggle.isOn = gameData.savedSettings.holdDownToRun;
         slowDownAttackToggle.isOn = gameData.savedSettings.slowDownAttack;
+        drawDashIndicatorToggle.isOn = gameData.savedSettings.drawDashIndicator;
     }
 
     public void OnHoldDownToRunChanged(bool value)
@@ -73,6 +74,10 @@ public class MenuButtonSelector : MonoBehaviour, IDataPersistence
     public void OnSlowdownAttackChanged(bool value)
     {
         gameData.savedSettings.slowDownAttack = value;
+    }
+    public void OnDrawDashIndicatorChanged(bool value)
+    {
+        gameData.savedSettings.drawDashIndicator = value;
     }
     public void OnExitGameClicked()
     {
