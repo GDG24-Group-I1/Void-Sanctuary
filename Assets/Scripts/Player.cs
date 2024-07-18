@@ -976,6 +976,21 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
         Destroy(dashIndicator);
     }
 
+    public void FinalLeverActivated()
+    {
+        canMove = false;
+        canTurn = false;
+        canAct = false;
+        canFire = false;
+        canAttack = false;
+        canDash = false;
+        IsRunning = false;
+        IsWalking = false;
+        IsDashing = false;
+        IsAttacking = false;
+        IsFalling = AnimationState.None;
+    }
+
     #region Input actions
 
     public void OnMove(InputAction.CallbackContext context) { }

@@ -116,7 +116,8 @@ public static class DialogData
         {"CryoRoom", new Dialog("Pathfinding algorithm suggest creating a bridge by halting the conveyors", 2f, 1f) },
         {"GeneratorRoom", new Dialog("Begin generator reboot sequence \nWARNING: security will react to unautorized access", 2f, 1f) },
         {"DownRoom", new Dialog("Generator succesfully restarted, procede to the bridge to verify system integrity", 2f, 1f) },
-        {"BossRoom", new Dialog("WARNING: high level security asset detected", 2f, 1f) }
+        {"BossRoom", new Dialog("WARNING: high level security asset detected", 2f, 1f) },
+        {"BossDefeat", new Dialog("Turn off the security systems to begin proper maintenance", 2f, 1f) }
     };
 
     public static Dialog GetDialog(string dialogId)

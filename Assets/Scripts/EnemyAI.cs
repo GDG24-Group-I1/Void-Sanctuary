@@ -22,7 +22,10 @@ public class EnemyAI : MonoBehaviour
         {
             agent.isStopped = value;
             isFrozen = value;
-            animator.SetBool("Frozen", value);
+            if (Type != EnemyType.Boss)
+            {
+                animator.SetBool("Frozen", value);
+            }
         }
     }
 
@@ -407,6 +410,8 @@ public class EnemyAI : MonoBehaviour
         float intervalDuration = realLingerTimeAfterDeath / flashIntervals.Length;
         int[] intervalsCount = flashIntervals.Select(x => (int)(intervalDuration / x)).ToArray();
         yield return new WaitForSeconds(waitBeforeFlashing);
+        player.GetComponent<Player>().TriggerDialog("BossDefeat");
+        transform.parent.GetComponentInChildren<BossLever>().SetEnabled(true);
         while (currentInterval < flashIntervals.Length)
         {
             yield return new WaitForSeconds(flashIntervals[currentInterval]);
@@ -431,6 +436,10 @@ public class EnemyAI : MonoBehaviour
         }
         if (health <= 0)
         {
+            if (healthBar != null && Type == EnemyType.Boss)
+            {
+                healthBar.gameObject.SetActive(false);
+            }
             canAttack = false;
             agent.angularSpeed = 0;
             agent.isStopped = true;
