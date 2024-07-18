@@ -70,6 +70,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
     [SerializeField] private AudioClip attackSound;
     [SerializeField] private AudioClip shootSound;
     [SerializeField] private AudioClip pickupSound;
+    [SerializeField] private AudioClip switchPowerup;
 
     public Transform CameraTransform { get; set; }
     public GameObject HealthBar { get; set; }
@@ -1123,6 +1124,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
                 aimLaserRenderer.sharedMaterial = newMaterial;
                 outlineEffect.enabled.value = true;
             }
+            audioSource.PlayOneShot(switchPowerup);
         }
     }
 

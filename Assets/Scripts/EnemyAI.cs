@@ -7,9 +7,11 @@ using UnityEngine.AI;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-[RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(Rigidbody), typeof(AudioSource))]
 public class EnemyAI : MonoBehaviour
 {
+    private AudioSource audioSource;
+
     public NavMeshAgent agent;
     public Transform player;
     public LayerMask whatIsGround, whatIsPlayer;
@@ -79,6 +81,16 @@ public class EnemyAI : MonoBehaviour
     // only for boss
     private Slider healthBar;
 
+    [Header("Sounds")]
+    [SerializeField] private AudioClip attackSound;
+    [SerializeField] private AudioClip deathSound;
+    [SerializeField] private AudioClip activationSound;
+    [SerializeField] private AudioClip hitSound;
+
+    [Header("Sounds")]
+    [SerializeField] private AudioClip bossMeleeAttackSound;
+    [SerializeField] private AudioClip bossRangedAttackSound;
+
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -114,6 +126,7 @@ public class EnemyAI : MonoBehaviour
 
     private void Start()
     {
+        audioSource = GetComponent<AudioSource>();
         if (Type == EnemyType.Melee)
         {
             leftArmCollider.enabled = false;
@@ -410,8 +423,11 @@ public class EnemyAI : MonoBehaviour
         float intervalDuration = realLingerTimeAfterDeath / flashIntervals.Length;
         int[] intervalsCount = flashIntervals.Select(x => (int)(intervalDuration / x)).ToArray();
         yield return new WaitForSeconds(waitBeforeFlashing);
-        player.GetComponent<Player>().TriggerDialog("BossDefeat");
-        transform.parent.GetComponentInChildren<BossLever>().SetEnabled(true);
+        if (Type == EnemyType.Boss)
+        {
+            player.GetComponent<Player>().TriggerDialog("BossDefeat");
+            transform.parent.GetComponentInChildren<BossLever>().SetEnabled(true);
+        }
         while (currentInterval < flashIntervals.Length)
         {
             yield return new WaitForSeconds(flashIntervals[currentInterval]);

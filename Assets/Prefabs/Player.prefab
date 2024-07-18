@@ -103,12 +103,13 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 6ed0162cbc73cea449ccbf9d315cb441, type: 2}
   - {fileID: 2100000, guid: 8a68f5a994b1fdd4d965955d4602ecdd, type: 2}
   dashIndicatorPrefab: {fileID: 1591834235240405216, guid: ab12f62557da297438c7730483405a8e, type: 3}
-  ouchSound: {fileID: 8300000, guid: 3a6069c3408398740b9640a02b228408, type: 3}
-  deathSound: {fileID: 8300000, guid: c1142b3b50068c2428d166f0879142b2, type: 3}
+  ouchSound: {fileID: 8300000, guid: f9a065c9a9a3b7a4fbfb24455eef65cb, type: 3}
+  deathSound: {fileID: 8300000, guid: 1db882fabbaff8e46bf69e37589ffcf8, type: 3}
   dashSound: {fileID: 8300000, guid: fc41f768e732dd347b2a1ec8e5ddf927, type: 3}
-  attackSound: {fileID: 8300000, guid: 7b0f0e23028bf104aad594cf87539e80, type: 3}
+  attackSound: {fileID: 8300000, guid: 7ab4e10956bda874dbc13bb471993801, type: 3}
   shootSound: {fileID: 8300000, guid: a917ead7fe043d6499ec98f84160df8e, type: 3}
   pickupSound: {fileID: 8300000, guid: 71a859854dea14c4facce036afc78a96, type: 3}
+  switchPowerup: {fileID: 8300000, guid: 6c8cb35d67aaacc41883aa7b33a4e42d, type: 3}
 --- !u!114 &2916950646172925459
 MonoBehaviour:
   m_ObjectHideFlags: 0

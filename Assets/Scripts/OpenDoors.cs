@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(AudioSource))]
 public class OpenDoors : MonoBehaviour, IDataPersistence
 {
     [SerializeField] private bool unlocked = true;
@@ -12,6 +13,7 @@ public class OpenDoors : MonoBehaviour, IDataPersistence
     private Animator animator;
     public string doorId;
     private bool originalStatus;
+    private AudioSource audioSource;
 
     public void LoadData(GameData data)
     {
@@ -34,6 +36,7 @@ public class OpenDoors : MonoBehaviour, IDataPersistence
 
     void Start()
     {
+        audioSource = GetComponent<AudioSource>();
         doorLight = GetComponentInChildren<Light>();
         animator = GetComponent<Animator>();
         if (doorLight != null)
@@ -48,6 +51,7 @@ public class OpenDoors : MonoBehaviour, IDataPersistence
             // Attiva l'animazione per aprire la porta
             animator.ResetTrigger("close");
             animator.SetTrigger("open");
+            audioSource.Play();
         }
     }
 
@@ -58,6 +62,7 @@ public class OpenDoors : MonoBehaviour, IDataPersistence
             // Chiudi la porta quando il giocatore esce dal trigger
             animator.ResetTrigger("open");
             animator.SetTrigger("close");
+            audioSource.Play();
         }
     }
 

@@ -110,7 +110,7 @@ public static class DialogData
         {"Room_2", new Dialog("The emergency lockdown has blocked the way forward \nOverride it", 2f, 1f) },
         {"Corridor_2_3", new Dialog("Structural damage registered \nYou must find another way through", 2f, 1f) },
         {"Room_3", new Dialog("Debris detected \n\nMaintenence units cleared for magnetic manipulation", 2f, 1f) },
-        {"MagnetPowerup_pickup", new Dialog("Magnetic manipulator acquired \nPress {SwitchPowerup} to change active ability, Hold {RangedAttack} to activate", 2f, 1f) },
+        {"MagnetPowerup_pickup", new Dialog("Magnetic manipulator acquired. Press {SwitchPowerup} to change active ability, Hold {RangedAttack} to activate", 2f, 1f) },
         {"Corridor_3_4", new Dialog("Hostile security units detected ahead \nPrepare for offensive maintenance", 2f, 1f) },
         {"IcePowerup_pickup", new Dialog("Cryo beam acquired \nPress {SwitchPowerup} to change active ability", 2f, 1f) },
         {"CryoRoom", new Dialog("Pathfinding algorithm suggest creating a bridge by halting the conveyors", 2f, 1f) },

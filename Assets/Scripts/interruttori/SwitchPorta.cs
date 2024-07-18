@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
+[RequireComponent(typeof(AudioSource))]
 public class SwitchPorta : MonoBehaviour, IDataPersistence
 {
     public Light targetLight; // La luce che cambierà colore
@@ -13,6 +14,8 @@ public class SwitchPorta : MonoBehaviour, IDataPersistence
     private Animator animator; // Riferimento all'Animator
 
     public string doorId;
+
+    private AudioSource audioSource;
     public void LoadData(GameData data)
     {
         if (data.doorStatus.doorsMap.ContainsKey(doorId))
@@ -36,6 +39,7 @@ public class SwitchPorta : MonoBehaviour, IDataPersistence
 
     void Start()
     {
+        audioSource = GetComponent<AudioSource>();
         animator = GetComponent<Animator>(); // Ottiene il riferimento all'Animator dell'oggetto corrente
     }
 
@@ -49,6 +53,7 @@ public class SwitchPorta : MonoBehaviour, IDataPersistence
                 // Attiva l'animazione per aprire la porta
                 animator.ResetTrigger("close");
                 animator.SetTrigger("open");
+                audioSource.Play();
             }
         }
         
@@ -60,6 +65,7 @@ public class SwitchPorta : MonoBehaviour, IDataPersistence
             // Chiudi la porta quando il giocatore esce dal trigger
             animator.ResetTrigger("open");
             animator.SetTrigger("close");
+            audioSource.Play();
         }
     }
 
