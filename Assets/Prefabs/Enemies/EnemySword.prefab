@@ -58,7 +58,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 1
-  m_Speed: 5
+  m_Speed: 8
   m_Acceleration: 5
   avoidancePriority: 50
   m_AngularSpeed: 120
@@ -90,19 +90,20 @@ MonoBehaviour:
   whatIsPlayer:
     serializedVersion: 2
     m_Bits: 4096
-  stopDistance: 5
   walkPoint: {x: 0, y: 0, z: 0}
   walkPointRange: 5
   sightRange: 12
-  attackRange: 2
-  playerInSightRange: 1
-  playerInAttackRange: 1
+  attackingDistanceMelee: 5
+  stoppingDistanceMelee: 3
+  attackingDistanceRanged: 0
+  stoppingDistanceRanged: 0
   animationEnded: 0
-  isMelee: 1
+  enemyType: 0
   projectilePrefab: {fileID: 0}
   projectileHeight: 0.8
   projectileRange: 15
   lingerTimeAfterDeath: 5
+  distanceSwitchTypeAttack: 10
   leftArmCollider: {fileID: 7004134878183998896}
   rightArmCollider: {fileID: 499465763860669667}
   Type: 0

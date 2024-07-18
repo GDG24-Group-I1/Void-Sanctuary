@@ -90,19 +90,20 @@ MonoBehaviour:
   whatIsPlayer:
     serializedVersion: 2
     m_Bits: 4096
-  stopDistance: 9
   walkPoint: {x: 0, y: 0, z: 0}
   walkPointRange: 3
   sightRange: 16
-  attackRange: 10
-  playerInSightRange: 1
-  playerInAttackRange: 1
-  animationEnded: 0
-  isMelee: 0
+  attackingDistanceMelee: 0
+  stoppingDistanceMelee: 0
+  attackingDistanceRanged: 15
+  stoppingDistanceRanged: 10
+  animationEnded: 1
+  enemyType: 1
   projectilePrefab: {fileID: 2225220425910028821, guid: ad35dc2357e786a47be6650006d72a7e, type: 3}
   projectileHeight: 0.9
   projectileRange: 15
   lingerTimeAfterDeath: 5
+  distanceSwitchTypeAttack: 10
   leftArmCollider: {fileID: 0}
   rightArmCollider: {fileID: 0}
   Type: 1

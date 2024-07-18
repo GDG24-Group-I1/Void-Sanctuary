@@ -957,6 +957,10 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
         {
             StaggerFromHit(direction);
         }
+        else if (other.gameObject.name == "Bone.011" || other.gameObject.name == "Bone.014")
+        {
+            StaggerFromHit(direction);
+        }
     }
 
     public void OnDestroy()

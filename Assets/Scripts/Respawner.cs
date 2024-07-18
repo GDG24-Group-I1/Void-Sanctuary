@@ -9,7 +9,8 @@ using UnityEngine.UI;
 public enum EnemyType
 {
     Melee,
-    Ranged
+    Ranged,
+    Boss
 }
 
 struct EnemyData
@@ -33,6 +34,7 @@ public class Respawner : MonoBehaviour, IDataPersistence
     [SerializeField] private GameObject playerPrefab;
     [SerializeField] private GameObject enemySwordPrefab;
     [SerializeField] private GameObject enemyRangedPrefab;
+    [SerializeField] private GameObject enemyBossPrefab;
     private GameObject playerObject;
     [SerializeField] private Sprite[] availablePowerups;
     private Timer respawnTimer;
@@ -196,7 +198,14 @@ public class Respawner : MonoBehaviour, IDataPersistence
         {
             Destroy(enemyData.instance);
         }
-        var enemy = enemyData.type == EnemyType.Melee ? enemySwordPrefab : enemyRangedPrefab;
+        var enemy = enemyData.type switch
+        {
+            EnemyType.Melee => enemySwordPrefab,
+            EnemyType.Ranged => enemyRangedPrefab,
+            EnemyType.Boss => enemyBossPrefab,
+            _ => throw new ArgumentOutOfRangeException()
+        };
+
         enemyData.instance = Instantiate(enemy, enemyData.position, Quaternion.identity);
         if (enemyData.parent != null)
         {

@@ -25,7 +25,8 @@ public class EnemyAI : MonoBehaviour
         }
     }
 
-    public float stopDistance;
+    private float stopRange;
+    private float attackRange;
 
     // Patroling
     public Vector3 walkPoint;
@@ -33,21 +34,26 @@ public class EnemyAI : MonoBehaviour
     public float walkPointRange;
 
     // States
-    public float sightRange, attackRange;
-    public bool playerInSightRange, playerInAttackRange;
+    public float sightRange;
+    [SerializeField] private float attackingDistanceMelee;
+    [SerializeField] private float stoppingDistanceMelee;
+    [SerializeField] private float attackingDistanceRanged;
+    [SerializeField] private float stoppingDistanceRanged;
+    private bool playerInSightRange, playerInAttackRange;
 
     // Attack
     private bool canAttack = true;
     private float attackCooldown = 2f;
     public Timer attackCooldownTimer;
     public bool animationEnded = false;
-    public bool isMelee;
+    public int enemyType;
 
     // range attack
     [SerializeField] private GameObject projectilePrefab;
     [SerializeField] private float projectileHeight = 0.8f;
     [SerializeField] private float projectileRange = 15f;
     [SerializeField] private float lingerTimeAfterDeath = 5f;
+    [SerializeField] private float distanceSwitchTypeAttack = 10f;
 
     // melee attack
     [SerializeField] private BoxCollider leftArmCollider;
@@ -57,11 +63,12 @@ public class EnemyAI : MonoBehaviour
     public EnemyType Type;
 
     // combat
-    public float health = 3;
+    [SerializeField] private float health = 3;
     public float staggerDuration = 1f;
     public Timer staggerTimer;
     Animator animator;
     private Rigidbody rb;
+    private bool isMeleeAttacking;
 
     //
     Renderer[] renderers;
@@ -113,6 +120,31 @@ public class EnemyAI : MonoBehaviour
         playerInSightRange = Physics.CheckSphere(transform.position, sightRange, whatIsPlayer);
         playerInAttackRange = Physics.CheckSphere(transform.position, attackRange, whatIsPlayer);
 
+        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+        if (distanceToPlayer > distanceSwitchTypeAttack & enemyType == 2)
+        {
+            attackRange = attackingDistanceRanged;
+            stopRange = stoppingDistanceRanged;
+            isMeleeAttacking = false;
+        }
+        else if (distanceToPlayer <= distanceSwitchTypeAttack & enemyType == 2)
+        {
+            stopRange = stoppingDistanceMelee;
+            attackRange = attackingDistanceMelee;
+            isMeleeAttacking = true;
+        }
+
+        if (enemyType == 0)
+        {
+            stopRange = stoppingDistanceMelee;
+            attackRange = attackingDistanceMelee;
+        }
+        else
+        {
+            stopRange = stoppingDistanceRanged;
+            attackRange = attackingDistanceRanged;
+        }
+
         if (!playerInSightRange && !playerInAttackRange)
         {
             Patroling();
@@ -129,6 +161,13 @@ public class EnemyAI : MonoBehaviour
 
     private void Patroling()
     {
+
+        if (enemyType == 2)
+        {
+            animator.SetBool("isWalking", false);
+            agent.isStopped = true;
+        }
+
         if (!walkPointSet)
         {
             SearchWalkPoint();
@@ -164,7 +203,12 @@ public class EnemyAI : MonoBehaviour
 
     private void ChasePlayer()
     {
-        agent.stoppingDistance = stopDistance;
+        if(enemyType == 2)
+        {
+            animator.SetBool("isWalking", true);
+        }
+        agent.isStopped = false;
+        agent.stoppingDistance = stopRange;
         if (player != null)
             agent.SetDestination(player.position);
     }
@@ -172,42 +216,54 @@ public class EnemyAI : MonoBehaviour
     private void AttackPlayer()
     {
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
-        agent.SetDestination(player.position);
+        agent.SetDestination(player.position);  // Continuously update the destination to the player's position
 
-        // Check if the enemy is close enough to stop and is actually stopped
-        if (distanceToPlayer <= stopDistance + agent.stoppingDistance && !agent.pathPending)
+        // Check if the enemy is within the effective stop distance and has stopped moving
+        if (distanceToPlayer <= stopRange + agent.stoppingDistance && agent.remainingDistance <= agent.stoppingDistance && agent.velocity.sqrMagnitude == 0f)
         {
-            // Ensure the agent has actually stopped moving
-            if (agent.remainingDistance <= agent.stoppingDistance && !agent.hasPath || agent.velocity.sqrMagnitude == 0f)
-            {
-                Vector3 lookDirection = new Vector3(player.position.x, transform.position.y, player.position.z);
-                transform.LookAt(lookDirection);
+            transform.LookAt(new Vector3(player.position.x, transform.position.y, player.position.z)); // Look at player ignoring y difference
 
-                if (canAttack)
-                {
-                    if (isMelee)
-                    {
-                        MeleeAttack();
-                    }
-                    else
-                    {
-                        animator.SetTrigger("Attack");
-                        RangedAttack();
-                    }
-                    canAttack = false;
-                    attackCooldownTimer.Start(attackCooldown);
-                }
-            } else // agent is already close to the player, but still moving, make it stop
+            if (canAttack)
             {
-                // TODO: figure out if this is ok.
-                agent.SetDestination(transform.position);
+                agent.isStopped = true;
+                DetermineAttackType(distanceToPlayer);
+                canAttack = false;
+                attackCooldownTimer.Start(attackCooldown);
+            }
+            else 
+            {
+                agent.isStopped = false;    
+            }
+        }
+    }
+    private void DetermineAttackType(float distanceToPlayer)
+    {
+        if (enemyType == 0)  // Melee enemy
+        {
+            MeleeAttack();
+        }
+        else if (enemyType == 1)  // Regular ranged enemy
+        {
+            RangedAttack();
+        }
+        else if (enemyType == 2)  // Boss
+        {
+            if (isMeleeAttacking)
+            {
+                Debug.Log("Switching to melee attack");
+                MeleeAttack();
+            }
+            else
+            {
+                Debug.Log("Switching to ranged attack");
+                BossRangedAttack();
             }
         }
     }
 
     public void SetSwordSolidity(bool isSolid)
     {
-        if (Type != EnemyType.Melee) return;
+        if (Type == EnemyType.Ranged) return;
         leftArmCollider.enabled = isSolid;
         rightArmCollider.enabled = isSolid;
     }
@@ -237,20 +293,34 @@ public class EnemyAI : MonoBehaviour
 
     private void RangedAttack()
     {
-        //Debug.Log("Ranged attacking player");
-
+        animator.SetTrigger("Attack");
         Vector3 projectilePosition = new(transform.position.x, transform.position.y + projectileHeight, transform.position.z);
 
-        Vector3 directionToPlayer = (player.position - transform.position).normalized;
+        // Central projectile
+        ShootProjectile(projectilePosition, (player.position - transform.position).normalized);
+    }
 
-        Vector3 endingPosition = transform.position + directionToPlayer * projectileRange;
+    private void BossRangedAttack()
+    {
+        Vector3 projectilePosition = new(transform.position.x, transform.position.y + projectileHeight, transform.position.z);
+
+        // Central projectile
+        ShootProjectile(projectilePosition, (player.position - transform.position).normalized);
+
+        // Left projectile with a slight rotation
+        ShootProjectile(projectilePosition, Quaternion.Euler(0, -30, 0) * (player.position - transform.position).normalized);
+
+        // Right projectile with a slight rotation
+        ShootProjectile(projectilePosition, Quaternion.Euler(0, 30, 0) * (player.position - transform.position).normalized);
+    }
+
+    private void ShootProjectile(Vector3 startPosition, Vector3 direction)
+    {
+        Vector3 endingPosition = startPosition + direction * projectileRange;
         endingPosition.y += projectileHeight;
 
-        //Debug.Log($"Starting position: {startingPosition}, Ending position: {endingPosition}");
-
-        // Instantiate the projectile
-        GameObject projectile = Instantiate(projectilePrefab, projectilePosition, Quaternion.LookRotation(directionToPlayer));
-        projectile.transform.Rotate(90, 0, 0);
+        GameObject projectile = Instantiate(projectilePrefab, startPosition, Quaternion.LookRotation(direction));
+        projectile.transform.Rotate(90, 0, 0);  // Adjust rotation for the projectile's model if necessary
 
         if (projectile.TryGetComponent<ProjectileScript>(out var projectileScript))
         {
@@ -264,7 +334,7 @@ public class EnemyAI : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (isStaggered || health <= 0) return;
+        if (health <= 0) return;
         if (other.gameObject.CompareTag("Sword"))
         {
             health -= 1;
@@ -316,7 +386,7 @@ public class EnemyAI : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (isStaggered || health <= 0) return;
+        if (health <= 0) return;
         if (collision.gameObject.name == "Projectile(Clone)")
         {
             health -= 2;
