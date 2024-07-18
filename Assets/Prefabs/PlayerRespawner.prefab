@@ -47,6 +47,7 @@ MonoBehaviour:
   playerPrefab: {fileID: 3120664125272468870, guid: 602c5e512c353fa4f9089894d785261b, type: 3}
   enemySwordPrefab: {fileID: 4188234102827016206, guid: 9dac9a6f59137ee4c877ffa14b7324f7, type: 3}
   enemyRangedPrefab: {fileID: 8123513749073689288, guid: 2a02a2f46a8a06f4098f8e17d53709a8, type: 3}
+  enemyBossPrefab: {fileID: 7081471220835930038, guid: bc2151754c381744383b184d77686683, type: 3}
   availablePowerups:
   - {fileID: 21300000, guid: 5fed32202f487f34eb0a0097a88ffde1, type: 3}
   - {fileID: 21300000, guid: b7a323f34c371fb4c85158b25397dd23, type: 3}
