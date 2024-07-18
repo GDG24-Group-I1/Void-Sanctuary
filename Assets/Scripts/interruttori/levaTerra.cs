@@ -12,7 +12,7 @@ public class levaTerra : MonoBehaviour
 
     [SerializeField] private GameObject swordEnemyPrefab;
     [SerializeField] private GameObject projectileEnemyPrefab;
-    [SerializeField] private Vector3[] enemySpawnPoints = { new Vector3(124.5f, 35, -116.5f), new Vector3(88.5f, 35, -116.5f), new Vector3(124.5f, 35, -142.5f), new Vector3(88.5f, 35, -142.5f) };
+    [SerializeField] private Vector3[] enemySpawnPoints = { new Vector3(124.5f, 35, -136.5f), new Vector3(88.5f, 35, -136.5f), new Vector3(124.5f, 35, -162.5f), new Vector3(88.5f, 35, -162.5f) };
     [SerializeField] private EnemyType[] enemySpawnTypes = { EnemyType.Ranged, EnemyType.Ranged, EnemyType.Ranged, EnemyType.Ranged };
     [SerializeField] private Transform parentRoom;
     public bool active = false;
