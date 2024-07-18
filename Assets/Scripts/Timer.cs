@@ -4,10 +4,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assertions;
 
-public enum TimerType
+[Flags]
+public enum TimerFlags
 {
-    Scaled,
-    Realtime
+    Scaled = 0b001,
+    Realtime = 0b010,
+    AlwaysInvoke = 0b100
 }
 
 public class Timer
@@ -19,13 +21,14 @@ public class Timer
     public float Duration { get; private set; } = 0f;
     public Func<float?> OnTimerElapsed;
 
-    private readonly TimerType timerType;
+    private readonly TimerFlags timerType;
 
     public bool IsRunning => timerCoroutine != null;
     
-    public Timer(MonoBehaviour referenceObject, TimerType type = TimerType.Scaled) {
+    public Timer(MonoBehaviour referenceObject, TimerFlags type = TimerFlags.Scaled) {
         this.referenceObject = referenceObject;
-        ownerObject = TimerHelperSingleton.GetInstance(); 
+        ownerObject = TimerHelperSingleton.GetInstance();
+        Assert.IsFalse(type.HasFlag(TimerFlags.Scaled) && type.HasFlag(TimerFlags.Realtime), "Timer type cannot be both scaled and realtime");
         timerType = type; 
     }
 
@@ -64,7 +67,7 @@ public class Timer
     {
         Assert.IsNotNull(ownerObject, "Timer owner object is null");
         float? ret = null;
-        if (referenceObject == null)
+        if (referenceObject != null || timerType.HasFlag(TimerFlags.AlwaysInvoke))
         {
             ret = OnTimerElapsed?.Invoke();
         }
@@ -78,7 +81,7 @@ public class Timer
 
     private IEnumerator TimerCoroutine()
     {
-        if (timerType == TimerType.Scaled)
+        if (timerType.HasFlag(TimerFlags.Scaled))
             yield return new WaitForSeconds(Duration);
         else
             yield return new WaitForSecondsRealtime(Duration);
