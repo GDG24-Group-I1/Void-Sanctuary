@@ -301,7 +301,10 @@ public class EnemyAI : MonoBehaviour
 
     public void StaggerFromHit()
     {
-        healthBar.value = health;
+        if (healthBar != null && Type == EnemyType.Boss)
+        {
+            healthBar.value = health;
+        }
         agent.isStopped = true;
         rb.MovePosition(transform.position + transform.forward * -1);
         if (health <= 0) return;
