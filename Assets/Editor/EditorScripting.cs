@@ -49,8 +49,12 @@ public class EditorScripting : EditorWindow
         var sounds = AssetDatabase.FindAssets("t:AudioClip", new[] { "Assets/Sounds" }).Select(x => AssetDatabase.GUIDToAssetPath(x)).ToArray();
         var openDoorSound = sounds.Where(x => x.Contains("Door Opening")).First();
         var puzzleSolveSound = sounds.Where(x => x.Contains("PuzzleSolved")).First();
+        var leverActivateSound = sounds.Where(x => x.Contains("Lever")).First();
+        var buttonActivateSound = sounds.Where(x => x.Contains("Button")).First();
         var openDoorClip = AssetDatabase.LoadAssetAtPath<AudioClip>(openDoorSound);
         var puzzleSolveClip = AssetDatabase.LoadAssetAtPath<AudioClip>(puzzleSolveSound);
+        var leverActivateClip = AssetDatabase.LoadAssetAtPath<AudioClip>(leverActivateSound);
+        var buttonActivateClip = AssetDatabase.LoadAssetAtPath<AudioClip>(buttonActivateSound);
         Assert.IsTrue(prefabPaths.Length == 1);
         var prefabPath = AssetDatabase.GUIDToAssetPath(prefabPaths[0]);
         var rooms = PrefabUtility.LoadPrefabContents(prefabPath);
@@ -72,6 +76,49 @@ public class EditorScripting : EditorWindow
             }
             doors[i].SetSounds(openDoorClip, puzzleSolveClip);
         }
+
+        var leve = rooms.GetComponentsInChildren<levaTerra>();
+        var interruttori = rooms.GetComponentsInChildren<InterrutoreAllarme>();
+        var switches = rooms.GetComponentsInChildren<SwitchScript>();
+        var bossLevers = rooms.GetComponentsInChildren<BossLever>();
+
+        for (int i = 0; i < leve.Length; i++)
+        {
+            if (!leve[i].TryGetComponent(out AudioSource audioSource))
+            {
+                audioSource = leve[i].gameObject.AddComponent<AudioSource>();
+            }
+            audioSource.playOnAwake = false;
+            audioSource.clip = leverActivateClip;
+        }
+        for (int i = 0; i < interruttori.Length; i++)
+        {
+            if (!interruttori[i].TryGetComponent(out AudioSource audioSource))
+            {
+                audioSource = interruttori[i].gameObject.AddComponent<AudioSource>();
+            }
+            audioSource.playOnAwake = false;
+            audioSource.clip = leverActivateClip;
+        }
+        for (int i = 0; i < switches.Length; i++)
+        {
+            if (!switches[i].TryGetComponent(out AudioSource audioSource))
+            {
+                audioSource = switches[i].gameObject.AddComponent<AudioSource>();
+            }
+            audioSource.playOnAwake = false;
+            audioSource.clip = buttonActivateClip;
+        }
+        for (int i = 0; i < bossLevers.Length; i++)
+        {
+            if (!bossLevers[i].TryGetComponent(out AudioSource audioSource))
+            {
+                audioSource = bossLevers[i].gameObject.AddComponent<AudioSource>();
+            }
+            audioSource.playOnAwake = false;
+            audioSource.clip = leverActivateClip;
+        }
+
         PrefabUtility.SaveAsPrefabAsset(rooms, prefabPath);
     }
 

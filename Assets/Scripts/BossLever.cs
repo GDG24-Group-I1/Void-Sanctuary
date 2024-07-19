@@ -13,11 +13,13 @@ public class BossLever : MonoBehaviour
     private Image fadeImage;
     private bool isFading;
     private Animator animator;
+    private AudioSource audioSource;
 
     private float startFadeTime;
     // Start is called before the first frame update
     void Start()
     {
+        audioSource = GetComponent<AudioSource>();
         isFading = false;
         fadeImage = GameObject.Find("GameUI").transform.Find("FadeImage").GetComponent<Image>(); 
         fadeTimer = new Timer(this)
@@ -52,6 +54,7 @@ public class BossLever : MonoBehaviour
             fadeTimer.Start(requiredFadeTime);
             GameObject.FindWithTag("Player").GetComponent<Player>().FinalLeverActivated();
             animator.SetTrigger("attivo");
+            audioSource.Play();
         }
     }
 

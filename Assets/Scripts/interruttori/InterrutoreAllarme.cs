@@ -7,9 +7,11 @@ public class InterrutoreAllarme : MonoBehaviour
     public Light targetLight; // La luce che verrà attivata/disattivata
     public Animator animator; // Riferimento all'Animator
     public animLevaLigth luce;
+    private AudioSource audioSource;
     void Start()
     {
         animator = GetComponent<Animator>(); // Ottiene il riferimento all'Animator dell'oggetto corrente
+        audioSource = GetComponent<AudioSource>();
     }
 
 
@@ -25,6 +27,8 @@ public class InterrutoreAllarme : MonoBehaviour
             luce.cambioColore();
 
              animator.SetTrigger("attivo");
+
+            audioSource.Play();
             // Spegni tutte le luci con il tag "Alarm"
             foreach (GameObject lightObject in alarmLights)
             {

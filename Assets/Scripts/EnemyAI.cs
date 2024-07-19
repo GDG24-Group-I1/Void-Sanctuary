@@ -34,9 +34,6 @@ public class EnemyAI : MonoBehaviour
     private float stopRange;
     private float attackRange;
 
-    private float checkRate = 0.2f;
-    private float nextCheckTime = 0f;
-
     // Patroling
     public Vector3 walkPoint;
     bool walkPointSet;
@@ -177,8 +174,14 @@ public class EnemyAI : MonoBehaviour
         if (IsFrozen || isStaggered || health <= 0) return;
         // Update the detection of player
 
+        var oldPlayerInSightRange = playerInSightRange;
         playerInSightRange = Physics.CheckSphere(transform.position, sightRange, whatIsPlayer);
         playerInAttackRange = Physics.CheckSphere(transform.position, attackRange, whatIsPlayer);
+
+        if (oldPlayerInSightRange != playerInSightRange && playerInSightRange)
+        {
+            audioSource.PlayOneShot(activationSound);
+        }
 
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
         if (distanceToPlayer > distanceSwitchTypeAttack && Type == EnemyType.Boss)
@@ -349,6 +352,7 @@ public class EnemyAI : MonoBehaviour
         agent.isStopped = true;
         rb.MovePosition(transform.position + transform.forward * -1);
         if (health <= 0) return;
+        audioSource.PlayOneShot(hitSound);
         isStaggered = true;
         staggerTimer.Start(staggerDuration);
         InvokeRepeating(nameof(FlashEnemy), 0f, 0.1f);
@@ -364,11 +368,20 @@ public class EnemyAI : MonoBehaviour
 
     private void MeleeAttack()
     {
+        if (Type == EnemyType.Boss)
+        {
+            audioSource.PlayOneShot(bossMeleeAttackSound);
+        }
+        else
+        {
+            audioSource.PlayOneShot(attackSound);
+        }
         animator.SetTrigger("Attack");
     }
 
     private void RangedAttack()
     {
+        audioSource.PlayOneShot(attackSound);
         animator.SetTrigger("Attack");
         Vector3 projectilePosition = new(transform.position.x, transform.position.y + projectileHeight, transform.position.z);
 
@@ -378,6 +391,7 @@ public class EnemyAI : MonoBehaviour
 
     private void BossRangedAttack()
     {
+        audioSource.PlayOneShot(bossRangedAttackSound);
         Vector3 projectilePosition = new(transform.position.x, transform.position.y + projectileHeight, transform.position.z);
 
         // Central projectile
@@ -424,6 +438,7 @@ public class EnemyAI : MonoBehaviour
             agent.angularSpeed = 0;
             agent.isStopped = true;
             animator.SetTrigger("Death");
+            audioSource.PlayOneShot(deathSound);
             StartCoroutine(EnemyFlashDeath());
             Destroy(gameObject, lingerTimeAfterDeath);
         }

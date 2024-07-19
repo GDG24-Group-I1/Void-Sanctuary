@@ -11,9 +11,11 @@ public class SwitchScript : MonoBehaviour
     public float cooldownTime = 2.0f;
     private bool onCooldown = false;
     private Timer cooldownTimer;
+    private AudioSource audioSource;
 
     void Start()
     {
+        audioSource = GetComponent<AudioSource>();
         cooldownTimer = new Timer(this)
         {
             OnTimerElapsed = () => { onCooldown = false; return null; }
@@ -40,6 +42,7 @@ public class SwitchScript : MonoBehaviour
             isActive = !isActive;
             if (isActive)
             {
+                audioSource.Play();
                 ActivateSwitch();
                 if (singleUse)
                     DisableSwitch();

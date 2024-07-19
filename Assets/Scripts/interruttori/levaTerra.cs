@@ -19,9 +19,12 @@ public class levaTerra : MonoBehaviour
 
     public bool active = false;
     public Animator animator;
+    private AudioSource audioSource;
+
     void Start()
     {
         animator = GetComponent<Animator>(); // Ottiene il riferimento all'Animator dell'oggetto corrente
+        audioSource = GetComponent<AudioSource>();
     }
 
 
@@ -32,6 +35,7 @@ public class levaTerra : MonoBehaviour
             if (!active)
             {
                 active = true;
+                audioSource.Play();
                 changeLightColor();
                 animator.SetTrigger("attivo");
                 SendSignal();
