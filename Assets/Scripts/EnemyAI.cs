@@ -133,7 +133,6 @@ public class EnemyAI : MonoBehaviour
         if (Type == EnemyType.Boss)
         {
             bossDoor = GameObject.Find("boss_door").GetComponent<OpenDoors>(); 
-            bossDoor.Input(-1);
         }
         audioSource = GetComponent<AudioSource>();
         if (Type == EnemyType.Melee)
@@ -174,14 +173,8 @@ public class EnemyAI : MonoBehaviour
         if (IsFrozen || isStaggered || health <= 0 || player == null) return;
         // Update the detection of player
 
-        var oldPlayerInSightRange = playerInSightRange;
         playerInSightRange = Physics.CheckSphere(transform.position, sightRange, whatIsPlayer);
         playerInAttackRange = Physics.CheckSphere(transform.position, attackRange, whatIsPlayer);
-
-        if (oldPlayerInSightRange != playerInSightRange && playerInSightRange)
-        {
-            audioSource.PlayOneShot(activationSound);
-        }
 
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
         if (distanceToPlayer > distanceSwitchTypeAttack && Type == EnemyType.Boss)
@@ -352,6 +345,10 @@ public class EnemyAI : MonoBehaviour
         agent.isStopped = true;
         rb.MovePosition(transform.position + transform.forward * -1);
         if (health <= 0) return;
+        if (Type == EnemyType.Boss)
+        {
+            bossDoor.Input(-1);
+        }
         audioSource.PlayOneShot(hitSound);
         isStaggered = true;
         staggerTimer.Start(staggerDuration);

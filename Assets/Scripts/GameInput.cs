@@ -20,8 +20,15 @@ public class GameInput : MonoBehaviour
 
     public bool PauseCooldown { get; set; }
 
+    private AudioSource ambientSound;
+
     private void Start()
     {
+        var audioSource = GameObject.FindWithTag("AudioSource");
+        if (audioSource != null)
+        {
+            ambientSound = audioSource.GetComponent<AudioSource>();
+        }
         isPaused = false;
         pauseMenu = GameObject.Find("PauseMenu");
         dialogBox = GameObject.Find("DialogBox");
@@ -44,13 +51,22 @@ public class GameInput : MonoBehaviour
             Time.timeScale = 0;
         if (isPaused)
         {
+            if (ambientSound != null)
+            {
+                ambientSound.volume = 1f;
+            }
             playerInputActions.Player.Enable();
             playerInputActions.MenuActionMap.Disable();
         }
         else
         {
+            if (ambientSound != null)
+            {
+                ambientSound.volume = 0.3f;
+            }
             playerInputActions.Player.Disable();
             playerInputActions.MenuActionMap.Enable();
+            GameObject.FindWithTag("Player").GetComponent<Player>().StopLoopingSounds();
         }
         isPaused = !isPaused;
         var dialogHandler = dialogBox.GetComponent<DialogHandler>();

@@ -352,6 +352,15 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
         // CheckIfPlayerIsHidden();
     }
 
+    public void StopLoopingSounds()
+    {
+        audioSource.volume = 1f;
+        audioSource.Stop();
+        audioSource.loop = false;
+        audioSource.clip = null;
+        currentLoopingSound = CurrentLoopingSound.None;
+    }
+
     private void HandleLoopingSounds()
     {
         if (firingStage == FiringStage.aiming && currentMovableObject != -1)
@@ -401,7 +410,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
     private void CalculateDashPosition()
     {
         var notPlayerLayer = ~LayerMask.GetMask("playerLayer", "enemyLayer");
-        var hasHit = Physics.Raycast(transform.position + Vector3.up, transform.forward, out RaycastHit hit, dashDistance, notPlayerLayer);
+        var hasHit = Physics.Raycast(transform.position + Vector3.up, transform.forward, out RaycastHit hit, dashDistance, notPlayerLayer, QueryTriggerInteraction.Ignore);
         var groundLayer = LayerMask.NameToLayer("groundLayer");
         Vector3 newPosition;
         if (hasHit)
@@ -430,7 +439,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
             }
             else
             {
-                // if we didn't hit the ground, move to the destinationawwww
+                // if we didn't hit the ground, move to the destination
                 newPosition = transform.position + transform.forward * dashDistance;
             }
         }
