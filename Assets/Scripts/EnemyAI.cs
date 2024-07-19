@@ -34,6 +34,9 @@ public class EnemyAI : MonoBehaviour
     private float stopRange;
     private float attackRange;
 
+    private float checkRate = 0.2f;
+    private float nextCheckTime = 0f;
+
     // Patroling
     public Vector3 walkPoint;
     bool walkPointSet;
@@ -127,6 +130,9 @@ public class EnemyAI : MonoBehaviour
 
     private void Start()
     {
+        agent.autoRepath = false;
+        agent.updatePosition = true;
+        agent.updateRotation = false;
         if (Type == EnemyType.Boss)
         {
             bossDoor = GameObject.Find("boss_door").GetComponent<OpenDoors>(); 
@@ -170,6 +176,7 @@ public class EnemyAI : MonoBehaviour
     {
         if (IsFrozen || isStaggered || health <= 0) return;
         // Update the detection of player
+
         playerInSightRange = Physics.CheckSphere(transform.position, sightRange, whatIsPlayer);
         playerInAttackRange = Physics.CheckSphere(transform.position, attackRange, whatIsPlayer);
 
@@ -186,16 +193,18 @@ public class EnemyAI : MonoBehaviour
             attackRange = attackingDistanceMelee;
             isMeleeAttacking = true;
         }
-
-        if (Type == EnemyType.Melee)
+        if (Type != EnemyType.Boss)
         {
-            stopRange = stoppingDistanceMelee;
-            attackRange = attackingDistanceMelee;
-        }
-        else if (Type == EnemyType.Ranged)
-        {
-            stopRange = stoppingDistanceRanged;
-            attackRange = attackingDistanceRanged;
+            if (Type == EnemyType.Melee)
+            {
+                stopRange = stoppingDistanceMelee;
+                attackRange = attackingDistanceMelee;
+            }
+            else if (Type == EnemyType.Ranged)
+            {
+                stopRange = stoppingDistanceRanged;
+                attackRange = attackingDistanceRanged;
+            }
         }
 
         if (!playerInSightRange && !playerInAttackRange)
@@ -210,6 +219,16 @@ public class EnemyAI : MonoBehaviour
         {
             AttackPlayer();
         }
+
+        if (Vector3.Distance(agent.destination, player.position) > 1.0f)
+        {
+            agent.SetDestination(player.position);
+        }
+
+        // Manually handle rotation towards the player more smoothly
+        Vector3 direction = (player.position - transform.position).normalized;
+        Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
+        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f);
     }
 
     private void Patroling()
