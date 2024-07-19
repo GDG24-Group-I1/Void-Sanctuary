@@ -19,23 +19,11 @@ public class ProjectileScript : MonoBehaviour
         projectileMove();
     }
 
-    private void OnCollisionEnter(Collision other)
+    private void OnTriggerEnter(Collider other)
     {
         if (((1 << other.gameObject.layer) & ignoreLayers) != 0)
         {
             return;
-        }
-
-        //Debug.Log($"projectile hit: {other.gameObject.name}");
-        var isEnemy = other.gameObject.CompareTag("EnemyObj");
-        if (IceCube != null && isEnemy)
-        {
-            var enemyAi = other.gameObject.GetComponent<EnemyAI>();
-            if (!enemyAi.IsFrozen)
-            {
-                Instantiate(IceCube, other.transform.position, other.transform.rotation, other.transform);
-                enemyAi.IsFrozen = true;
-            }
         }
 
         var isBlock = other.gameObject.CompareTag("FreezableBlock");
@@ -48,6 +36,29 @@ public class ProjectileScript : MonoBehaviour
                 var iceCube = Instantiate(IceCube, cubePos, other.transform.rotation, other.transform);
                 iceCube.transform.localScale = new Vector3(iceCube.transform.localScale.x, iceCube.transform.localScale.y * 1.8f, iceCube.transform.localScale.z);
                 blockScript.isFrozen = true;
+            }
+        }
+
+
+        Destroy(gameObject);
+    }
+
+    private void OnCollisionEnter(Collision other)
+    {
+        if (((1 << other.gameObject.layer) & ignoreLayers) != 0)
+        {
+            return;
+        }
+
+        //Debug.Log($"projectile hit: {other.gameObject.name}");
+        var isEnemy = other.gameObject.CompareTag("EnemyObj");
+        if (IceCube != null && isEnemy)
+        {
+            var enemyAi = other.gameObject.GetComponent<EnemyAI>();
+            if (!enemyAi.IsFrozen && enemyAi.Type != EnemyType.Boss)
+            {
+                Instantiate(IceCube, other.transform.position, other.transform.rotation, other.transform);
+                enemyAi.IsFrozen = true;
             }
         }
 

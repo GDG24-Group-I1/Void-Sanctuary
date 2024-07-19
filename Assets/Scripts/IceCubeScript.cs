@@ -20,11 +20,28 @@ public class IceCubeScript : MonoBehaviour
         if (collision.gameObject.name == "Projectile(Clone)")
         {
             Debug.Log("Ice cube hit, unfreezing enemy");
-            if(transform.parent.TryGetComponent(out EnemyAI enemy))
+            if (transform.parent.TryGetComponent(out EnemyAI enemy))
             {
                 enemy.IsFrozen = false;
             }
-            else if(transform.parent.TryGetComponent(out CryoBlockScript block))
+            else if (transform.parent.TryGetComponent(out CryoBlockScript block))
+            {
+                block.isFrozen = false;
+            }
+            Destroy(gameObject);
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Sword"))
+        {
+            Debug.Log("Ice cube hit, unfreezing enemy");
+            if (transform.parent.TryGetComponent(out EnemyAI enemy))
+            {
+                enemy.IsFrozen = false;
+            }
+            else if (transform.parent.TryGetComponent(out CryoBlockScript block))
             {
                 block.isFrozen = false;
             }

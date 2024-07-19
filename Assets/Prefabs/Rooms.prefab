@@ -1621,15 +1621,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4235563839267973665, guid: e959cf44f33eb044887a57e0ad2cdb0f, type: 3}
       propertyPath: m_Size.x
-      value: 4.5
+      value: 4.5000005
       objectReference: {fileID: 0}
     - target: {fileID: 4235563839267973665, guid: e959cf44f33eb044887a57e0ad2cdb0f, type: 3}
       propertyPath: m_Size.y
-      value: 7
+      value: 7.843236
       objectReference: {fileID: 0}
     - target: {fileID: 4235563839267973665, guid: e959cf44f33eb044887a57e0ad2cdb0f, type: 3}
       propertyPath: m_Size.z
-      value: 4.2
+      value: 4.199999
       objectReference: {fileID: 0}
     - target: {fileID: 4235563839267973665, guid: e959cf44f33eb044887a57e0ad2cdb0f, type: 3}
       propertyPath: m_Center.x
@@ -1637,11 +1637,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4235563839267973665, guid: e959cf44f33eb044887a57e0ad2cdb0f, type: 3}
       propertyPath: m_Center.y
-      value: 4.2
+      value: 4.621618
       objectReference: {fileID: 0}
     - target: {fileID: 4235563839267973665, guid: e959cf44f33eb044887a57e0ad2cdb0f, type: 3}
       propertyPath: m_Center.z
-      value: 0.9
+      value: 0.90000015
+      objectReference: {fileID: 0}
+    - target: {fileID: 4235563839267973665, guid: e959cf44f33eb044887a57e0ad2cdb0f, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5044384692071670980, guid: e959cf44f33eb044887a57e0ad2cdb0f, type: 3}
       propertyPath: doorId
@@ -1897,12 +1901,12 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 4.5, y: 7, z: 4.2}
-  m_Center: {x: -3.8, y: 4.2, z: 0.9}
+  m_Size: {x: 4.5000005, y: 7.843236, z: 4.199999}
+  m_Center: {x: -3.8, y: 4.621618, z: 0.90000015}
 --- !u!1 &8246107847538798485 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8155760833881615923, guid: e959cf44f33eb044887a57e0ad2cdb0f, type: 3}
@@ -1940,12 +1944,12 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 4.5, y: 7, z: 4.2}
-  m_Center: {x: -3.8, y: 4.2, z: 0.9}
+  m_Size: {x: 4.5000005, y: 7.843236, z: 4.199999}
+  m_Center: {x: -3.8, y: 4.621618, z: 0.90000015}
 --- !u!4 &8892608811964132252 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8662672477907036730, guid: e959cf44f33eb044887a57e0ad2cdb0f, type: 3}
