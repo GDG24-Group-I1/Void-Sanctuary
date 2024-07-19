@@ -171,7 +171,7 @@ public class EnemyAI : MonoBehaviour
 
     private void Update()
     {
-        if (IsFrozen || isStaggered || health <= 0) return;
+        if (IsFrozen || isStaggered || health <= 0 || player == null) return;
         // Update the detection of player
 
         var oldPlayerInSightRange = playerInSightRange;
