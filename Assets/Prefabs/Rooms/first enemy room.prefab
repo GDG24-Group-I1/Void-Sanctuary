@@ -4606,6 +4606,10 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: 54.86026
       objectReference: {fileID: 0}
+    - target: {fileID: 1390139505426021211, guid: b779bc57f93202e4691ff89f98934761, type: 3}
+      propertyPath: roomMusic
+      value: 
+      objectReference: {fileID: 8300000, guid: f8988793070d39a4fa0066c8974ae7ba, type: 3}
     - target: {fileID: 1413725515800950033, guid: b779bc57f93202e4691ff89f98934761, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.000009298325

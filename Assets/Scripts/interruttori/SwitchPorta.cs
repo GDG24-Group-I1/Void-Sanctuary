@@ -1,9 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 
-[RequireComponent(typeof(AudioSource))]
 public class SwitchPorta : MonoBehaviour, IDataPersistence
 {
     public Light targetLight; // La luce che cambierà colore
@@ -16,6 +16,10 @@ public class SwitchPorta : MonoBehaviour, IDataPersistence
     public string doorId;
 
     private AudioSource audioSource;
+
+    [SerializeField] private AudioClip doorOpen;
+    [SerializeField] private AudioClip puzzleSolve;
+
     public void LoadData(GameData data)
     {
         if (data.doorStatus.doorsMap.ContainsKey(doorId))
@@ -23,12 +27,12 @@ public class SwitchPorta : MonoBehaviour, IDataPersistence
             var res = data.doorStatus.doorsMap[doorId];
             cubeSwitchActivated = res;
             swordSwitchActivated = res;
-            CheckSwitches();
+            CheckSwitchesNoSound();
         }
         else
         {
             data.doorStatus.doorsMap.Add(doorId, cubeSwitchActivated && swordSwitchActivated);
-            CheckSwitches();
+            CheckSwitchesNoSound();
         }
     }
 
@@ -37,9 +41,19 @@ public class SwitchPorta : MonoBehaviour, IDataPersistence
         data.doorStatus.doorsMap[doorId] = cubeSwitchActivated && swordSwitchActivated;
     }
 
+    private void PlayDoorSound()
+    {
+        if (!audioSource.isPlaying)
+        {
+            audioSource.PlayOneShot(doorOpen);
+        }
+    }
+
     void Start()
     {
-        audioSource = GetComponent<AudioSource>();
+        Assert.IsNotNull(puzzleSolve, "Sound for puzzle solve is not set in the inspector");
+        Assert.IsNotNull(doorOpen, "Sound for door open is not set in the inspector");
+        audioSource = GameObject.FindWithTag("AudioSource").GetComponent<AudioSource>();
         animator = GetComponent<Animator>(); // Ottiene il riferimento all'Animator dell'oggetto corrente
     }
 
@@ -53,7 +67,7 @@ public class SwitchPorta : MonoBehaviour, IDataPersistence
                 // Attiva l'animazione per aprire la porta
                 animator.ResetTrigger("close");
                 animator.SetTrigger("open");
-                audioSource.Play();
+                PlayDoorSound();
             }
         }
         
@@ -65,7 +79,19 @@ public class SwitchPorta : MonoBehaviour, IDataPersistence
             // Chiudi la porta quando il giocatore esce dal trigger
             animator.ResetTrigger("open");
             animator.SetTrigger("close");
-            audioSource.Play();
+            PlayDoorSound();
+        }
+    }
+
+    private void CheckSwitchesNoSound()
+    {
+        if (cubeSwitchActivated && swordSwitchActivated)
+        {
+            // Cambia il colore della luce
+            if (targetLight != null)
+            {
+                targetLight.color = newColor;
+            }
         }
     }
 
@@ -78,6 +104,17 @@ public class SwitchPorta : MonoBehaviour, IDataPersistence
             {
                 targetLight.color = newColor;
             }
+            audioSource.PlayOneShot(puzzleSolve);
         }
     }
+
+#if UNITY_EDITOR
+    public void SetSounds(AudioClip doorOpen, AudioClip puzzleSolve)
+    {
+        if (this.doorOpen == null)
+            this.doorOpen = doorOpen;
+        if (this.puzzleSolve == null)
+            this.puzzleSolve = puzzleSolve;
+    }
+#endif
 }

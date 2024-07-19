@@ -23,6 +23,7 @@ TagManager:
   - RespawnPoint
   - Powerup
   - FreezableBlock
+  - AudioSource
   layers:
   - Default
   - TransparentFX

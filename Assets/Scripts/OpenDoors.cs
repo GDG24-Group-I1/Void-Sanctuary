@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(AudioSource))]
 public class OpenDoors : MonoBehaviour, IDataPersistence
 {
     [SerializeField] private bool unlocked = true;
@@ -14,6 +13,9 @@ public class OpenDoors : MonoBehaviour, IDataPersistence
     public string doorId;
     private bool originalStatus;
     private AudioSource audioSource;
+
+    [SerializeField] private AudioClip doorOpen;
+    [SerializeField] private AudioClip puzzleSolve;
 
     public void LoadData(GameData data)
     {
@@ -34,9 +36,17 @@ public class OpenDoors : MonoBehaviour, IDataPersistence
         data.doorStatus.doorsMap[doorId] = unlocked;
     }
 
+    private void PlayDoorSound()
+    {
+        if (!audioSource.isPlaying)
+        {
+            audioSource.PlayOneShot(doorOpen);
+        }
+    }
+
     void Start()
     {
-        audioSource = GetComponent<AudioSource>();
+        audioSource = GameObject.FindWithTag("AudioSource").GetComponent<AudioSource>(); // Ottiene il riferimento all'AudioSource dell'oggetto corrente (la porta
         doorLight = GetComponentInChildren<Light>();
         animator = GetComponent<Animator>();
         if (doorLight != null)
@@ -48,10 +58,7 @@ public class OpenDoors : MonoBehaviour, IDataPersistence
     {
         if (other.CompareTag("Player") && unlocked)
         {
-            // Attiva l'animazione per aprire la porta
-            animator.ResetTrigger("close");
-            animator.SetTrigger("open");
-            audioSource.Play();
+            OpenDoor();
         }
     }
 
@@ -59,11 +66,24 @@ public class OpenDoors : MonoBehaviour, IDataPersistence
     {
         if (other.CompareTag("Player") && unlocked)
         {
-            // Chiudi la porta quando il giocatore esce dal trigger
-            animator.ResetTrigger("open");
-            animator.SetTrigger("close");
-            audioSource.Play();
+            CloseDoor();
         }
+    }
+
+    private void OpenDoor()
+    {
+        // Attiva l'animazione per aprire la porta
+        animator.ResetTrigger("close");
+        animator.SetTrigger("open");
+        PlayDoorSound();
+    }
+
+    private void CloseDoor()
+    {
+        // Chiudi la porta quando il giocatore esce dal trigger
+        animator.ResetTrigger("open");
+        animator.SetTrigger("close");
+        PlayDoorSound();
     }
 
     public void OnPlayerRespawn()
@@ -79,14 +99,19 @@ public class OpenDoors : MonoBehaviour, IDataPersistence
     {
         activeInputs += receivedInput;
         //Debug.Log($"door {gameObject.name} now has {activeInputs} inputs active");
-        if (activeInputs == requiredInputs)
+        if (activeInputs >= requiredInputs)
         {
             Debug.Log($"door {gameObject.name} is now unlocked");
             unlocked = true;
+            audioSource.PlayOneShot(puzzleSolve);
             changeLight();
         }
         else if (activeInputs < 0)
         {
+            if (unlocked)
+            {
+                CloseDoor();
+            }
             Debug.Log($"door {gameObject.name} is now locked");
             unlocked = false;
             changeLight();
@@ -101,4 +126,14 @@ public class OpenDoors : MonoBehaviour, IDataPersistence
         if (doorLight != null)
             doorLight.color = lightColor;
     }
+
+#if UNITY_EDITOR
+    public void SetSounds(AudioClip doorOpen, AudioClip puzzleSolve)
+    {
+        if (this.doorOpen == null)
+            this.doorOpen = doorOpen;
+        if (this.puzzleSolve == null)
+            this.puzzleSolve = puzzleSolve;
+    }
+#endif
 }

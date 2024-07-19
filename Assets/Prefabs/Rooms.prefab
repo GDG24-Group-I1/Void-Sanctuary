@@ -1651,6 +1651,14 @@ PrefabInstance:
       propertyPath: doorId
       value: accbbcb2-5a37-47aa-a7be-95898006715a
       objectReference: {fileID: 0}
+    - target: {fileID: 5044384692071670980, guid: e959cf44f33eb044887a57e0ad2cdb0f, type: 3}
+      propertyPath: doorOpen
+      value: 
+      objectReference: {fileID: 8300000, guid: 46ed3e2ce6cfa7042981d34ccbb6fe26, type: 3}
+    - target: {fileID: 5044384692071670980, guid: e959cf44f33eb044887a57e0ad2cdb0f, type: 3}
+      propertyPath: puzzleSolve
+      value: 
+      objectReference: {fileID: 8300000, guid: 9feb7aaf68afc704fb25e1a9aa81a81c, type: 3}
     - target: {fileID: 5350743090436674955, guid: e959cf44f33eb044887a57e0ad2cdb0f, type: 3}
       propertyPath: m_Enabled
       value: 1
@@ -2509,10 +2517,26 @@ PrefabInstance:
       propertyPath: doorId
       value: c919d48b-75c5-4b91-bbac-a88193358bb5
       objectReference: {fileID: 0}
+    - target: {fileID: 4727956400016999718, guid: 096cc5014b6f4904aa215c5365c25672, type: 3}
+      propertyPath: doorOpen
+      value: 
+      objectReference: {fileID: 8300000, guid: 46ed3e2ce6cfa7042981d34ccbb6fe26, type: 3}
+    - target: {fileID: 4727956400016999718, guid: 096cc5014b6f4904aa215c5365c25672, type: 3}
+      propertyPath: puzzleSolve
+      value: 
+      objectReference: {fileID: 8300000, guid: 9feb7aaf68afc704fb25e1a9aa81a81c, type: 3}
     - target: {fileID: 6245219815702617305, guid: 096cc5014b6f4904aa215c5365c25672, type: 3}
       propertyPath: doorId
       value: e7562dfa-7ca3-4762-82fc-5122c83f7dae
       objectReference: {fileID: 0}
+    - target: {fileID: 6245219815702617305, guid: 096cc5014b6f4904aa215c5365c25672, type: 3}
+      propertyPath: doorOpen
+      value: 
+      objectReference: {fileID: 8300000, guid: 46ed3e2ce6cfa7042981d34ccbb6fe26, type: 3}
+    - target: {fileID: 6245219815702617305, guid: 096cc5014b6f4904aa215c5365c25672, type: 3}
+      propertyPath: puzzleSolve
+      value: 
+      objectReference: {fileID: 8300000, guid: 9feb7aaf68afc704fb25e1a9aa81a81c, type: 3}
     - target: {fileID: 6570201469032779980, guid: 096cc5014b6f4904aa215c5365c25672, type: 3}
       propertyPath: parentRoom
       value: 
@@ -3727,10 +3751,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2844276912910443910, guid: 206988a1e088f7848bbd8060d7dd54c9, type: 3}
+      propertyPath: m_Name
+      value: boss_door
+      objectReference: {fileID: 0}
     - target: {fileID: 4616661049882329318, guid: 206988a1e088f7848bbd8060d7dd54c9, type: 3}
       propertyPath: doorId
       value: 9d62b5b7-471c-466f-853e-87440854d0e5
       objectReference: {fileID: 0}
+    - target: {fileID: 4616661049882329318, guid: 206988a1e088f7848bbd8060d7dd54c9, type: 3}
+      propertyPath: doorOpen
+      value: 
+      objectReference: {fileID: 8300000, guid: 46ed3e2ce6cfa7042981d34ccbb6fe26, type: 3}
+    - target: {fileID: 4616661049882329318, guid: 206988a1e088f7848bbd8060d7dd54c9, type: 3}
+      propertyPath: puzzleSolve
+      value: 
+      objectReference: {fileID: 8300000, guid: 9feb7aaf68afc704fb25e1a9aa81a81c, type: 3}
     - target: {fileID: 9087818826114105233, guid: 206988a1e088f7848bbd8060d7dd54c9, type: 3}
       propertyPath: m_Name
       value: boss room
@@ -4093,6 +4129,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26122340b513a024a8ba90083ef7b219, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  roomMusic: {fileID: 0}
 --- !u!4 &888541988349842712 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2752533558240982152, guid: b779bc57f93202e4691ff89f98934761, type: 3}
@@ -4869,6 +4906,14 @@ PrefabInstance:
       propertyPath: doorId
       value: 728bb892-0b4b-41f4-a678-11d37e801449
       objectReference: {fileID: 0}
+    - target: {fileID: 4387534959517199848, guid: 313cfacaa36db7742924b2b02704fdea, type: 3}
+      propertyPath: doorOpen
+      value: 
+      objectReference: {fileID: 8300000, guid: 46ed3e2ce6cfa7042981d34ccbb6fe26, type: 3}
+    - target: {fileID: 4387534959517199848, guid: 313cfacaa36db7742924b2b02704fdea, type: 3}
+      propertyPath: puzzleSolve
+      value: 
+      objectReference: {fileID: 8300000, guid: 9feb7aaf68afc704fb25e1a9aa81a81c, type: 3}
     - target: {fileID: 4733678817940849967, guid: 313cfacaa36db7742924b2b02704fdea, type: 3}
       propertyPath: speed
       value: 10
@@ -4877,6 +4922,14 @@ PrefabInstance:
       propertyPath: doorId
       value: 9b47eaf6-8c67-44d3-965a-40b23c2202d7
       objectReference: {fileID: 0}
+    - target: {fileID: 5614914606502196100, guid: 313cfacaa36db7742924b2b02704fdea, type: 3}
+      propertyPath: doorOpen
+      value: 
+      objectReference: {fileID: 8300000, guid: 46ed3e2ce6cfa7042981d34ccbb6fe26, type: 3}
+    - target: {fileID: 5614914606502196100, guid: 313cfacaa36db7742924b2b02704fdea, type: 3}
+      propertyPath: puzzleSolve
+      value: 
+      objectReference: {fileID: 8300000, guid: 9feb7aaf68afc704fb25e1a9aa81a81c, type: 3}
     - target: {fileID: 6085029058668938160, guid: 313cfacaa36db7742924b2b02704fdea, type: 3}
       propertyPath: speed
       value: 15
@@ -5324,6 +5377,14 @@ PrefabInstance:
       propertyPath: doorId
       value: 20554252-624e-422c-a949-06958344f008
       objectReference: {fileID: 0}
+    - target: {fileID: 8219130223105147714, guid: 34a83b935b80352499e60b0cae9f0d9e, type: 3}
+      propertyPath: doorOpen
+      value: 
+      objectReference: {fileID: 8300000, guid: 46ed3e2ce6cfa7042981d34ccbb6fe26, type: 3}
+    - target: {fileID: 8219130223105147714, guid: 34a83b935b80352499e60b0cae9f0d9e, type: 3}
+      propertyPath: puzzleSolve
+      value: 
+      objectReference: {fileID: 8300000, guid: 9feb7aaf68afc704fb25e1a9aa81a81c, type: 3}
     - target: {fileID: 8662672477907036730, guid: 34a83b935b80352499e60b0cae9f0d9e, type: 3}
       propertyPath: m_LocalPosition.x
       value: -49.33002
@@ -5658,10 +5719,26 @@ PrefabInstance:
       propertyPath: doorId
       value: d01cf4d4-5ea9-4069-a356-c1306b18b3ec
       objectReference: {fileID: 0}
+    - target: {fileID: 4387534959517199848, guid: 7aebc25346d9c054ea91eb2cfb11ecb0, type: 3}
+      propertyPath: doorOpen
+      value: 
+      objectReference: {fileID: 8300000, guid: 46ed3e2ce6cfa7042981d34ccbb6fe26, type: 3}
+    - target: {fileID: 4387534959517199848, guid: 7aebc25346d9c054ea91eb2cfb11ecb0, type: 3}
+      propertyPath: puzzleSolve
+      value: 
+      objectReference: {fileID: 8300000, guid: 9feb7aaf68afc704fb25e1a9aa81a81c, type: 3}
     - target: {fileID: 5614914606502196100, guid: 7aebc25346d9c054ea91eb2cfb11ecb0, type: 3}
       propertyPath: doorId
       value: c48f850d-3ce2-4200-9e4e-f987d32a1d70
       objectReference: {fileID: 0}
+    - target: {fileID: 5614914606502196100, guid: 7aebc25346d9c054ea91eb2cfb11ecb0, type: 3}
+      propertyPath: doorOpen
+      value: 
+      objectReference: {fileID: 8300000, guid: 46ed3e2ce6cfa7042981d34ccbb6fe26, type: 3}
+    - target: {fileID: 5614914606502196100, guid: 7aebc25346d9c054ea91eb2cfb11ecb0, type: 3}
+      propertyPath: puzzleSolve
+      value: 
+      objectReference: {fileID: 8300000, guid: 9feb7aaf68afc704fb25e1a9aa81a81c, type: 3}
     - target: {fileID: 9087818826114105233, guid: 7aebc25346d9c054ea91eb2cfb11ecb0, type: 3}
       propertyPath: m_Name
       value: room down
@@ -5846,6 +5923,14 @@ PrefabInstance:
       propertyPath: doorId
       value: 786b76e5-912a-4a8e-96ef-81cfd08ed53a
       objectReference: {fileID: 0}
+    - target: {fileID: 1334512514902681320, guid: ef132df0a84b80c45a0a45d738eeb4d4, type: 3}
+      propertyPath: doorOpen
+      value: 
+      objectReference: {fileID: 8300000, guid: 46ed3e2ce6cfa7042981d34ccbb6fe26, type: 3}
+    - target: {fileID: 1334512514902681320, guid: ef132df0a84b80c45a0a45d738eeb4d4, type: 3}
+      propertyPath: puzzleSolve
+      value: 
+      objectReference: {fileID: 8300000, guid: 9feb7aaf68afc704fb25e1a9aa81a81c, type: 3}
     - target: {fileID: 2697657399250429576, guid: ef132df0a84b80c45a0a45d738eeb4d4, type: 3}
       propertyPath: m_LocalPosition.x
       value: -10.730022
@@ -6206,6 +6291,10 @@ PrefabInstance:
       value: aa0c2b1a-5c74-4b4f-a562-d7e00ae8031f
       objectReference: {fileID: 0}
     - target: {fileID: 6721588149058953074, guid: 695ac3a8e03d19f49965ced9cc8c03ce, type: 3}
+      propertyPath: doorOpen
+      value: 
+      objectReference: {fileID: 8300000, guid: 46ed3e2ce6cfa7042981d34ccbb6fe26, type: 3}
+    - target: {fileID: 6721588149058953074, guid: 695ac3a8e03d19f49965ced9cc8c03ce, type: 3}
       propertyPath: unlocked
       value: 0
       objectReference: {fileID: 0}
@@ -6213,10 +6302,22 @@ PrefabInstance:
       propertyPath: doorLight
       value: 
       objectReference: {fileID: 3555966832040774793}
+    - target: {fileID: 6721588149058953074, guid: 695ac3a8e03d19f49965ced9cc8c03ce, type: 3}
+      propertyPath: puzzleSolve
+      value: 
+      objectReference: {fileID: 8300000, guid: 9feb7aaf68afc704fb25e1a9aa81a81c, type: 3}
     - target: {fileID: 8820222085620403982, guid: 695ac3a8e03d19f49965ced9cc8c03ce, type: 3}
       propertyPath: doorId
       value: 2234f84b-48ad-4fa9-afc0-d934872eace9
       objectReference: {fileID: 0}
+    - target: {fileID: 8820222085620403982, guid: 695ac3a8e03d19f49965ced9cc8c03ce, type: 3}
+      propertyPath: doorOpen
+      value: 
+      objectReference: {fileID: 8300000, guid: 46ed3e2ce6cfa7042981d34ccbb6fe26, type: 3}
+    - target: {fileID: 8820222085620403982, guid: 695ac3a8e03d19f49965ced9cc8c03ce, type: 3}
+      propertyPath: puzzleSolve
+      value: 
+      objectReference: {fileID: 8300000, guid: 9feb7aaf68afc704fb25e1a9aa81a81c, type: 3}
     - target: {fileID: 8820222085620403982, guid: 695ac3a8e03d19f49965ced9cc8c03ce, type: 3}
       propertyPath: requiredInputs
       value: 0

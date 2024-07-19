@@ -18,9 +18,14 @@ public class visibilityRooms : MonoBehaviour
     private VisibilityState visibilityState;
     private Timer timer;
 
+    private AudioSource audioSource;
+
+    [SerializeField] AudioClip roomMusic;
+
     private void Awake()
     {
         visibilityState = VisibilityState.Visible;
+        audioSource = GameObject.FindWithTag("AudioSource").GetComponent<AudioSource>();
         GetReferences();
     }
 
@@ -63,6 +68,17 @@ public class visibilityRooms : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
+            if (roomMusic != null)
+            {
+                var needsChangeMusic = audioSource.clip == null || audioSource.clip.name != roomMusic.name;
+                if (needsChangeMusic)
+                {
+                    audioSource.Stop();
+                    audioSource.clip = roomMusic;
+                    audioSource.loop = true;
+                    audioSource.Play();
+                }
+            }
             timer.Stop();
             visibilityState = VisibilityState.Visible;
             SetRoomVisibility();

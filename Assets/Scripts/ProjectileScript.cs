@@ -37,10 +37,10 @@ public class ProjectileScript : MonoBehaviour
                 iceCube.transform.localScale = new Vector3(iceCube.transform.localScale.x, iceCube.transform.localScale.y * 1.8f, iceCube.transform.localScale.z);
                 blockScript.isFrozen = true;
             }
+            Destroy(gameObject);
         }
 
 
-        Destroy(gameObject);
     }
 
     private void OnCollisionEnter(Collision other)

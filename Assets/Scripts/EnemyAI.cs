@@ -80,6 +80,7 @@ public class EnemyAI : MonoBehaviour
 
     // only for boss
     private Slider healthBar;
+    private OpenDoors bossDoor;
 
     [Header("Sounds")]
     [SerializeField] private AudioClip attackSound;
@@ -126,6 +127,11 @@ public class EnemyAI : MonoBehaviour
 
     private void Start()
     {
+        if (Type == EnemyType.Boss)
+        {
+            bossDoor = GameObject.Find("boss_door").GetComponent<OpenDoors>(); 
+            bossDoor.Input(-1);
+        }
         audioSource = GetComponent<AudioSource>();
         if (Type == EnemyType.Melee)
         {
@@ -427,6 +433,7 @@ public class EnemyAI : MonoBehaviour
         {
             player.GetComponent<Player>().TriggerDialog("BossDefeat");
             transform.parent.GetComponentInChildren<BossLever>().SetEnabled(true);
+            bossDoor.Input(int.MaxValue);
         }
         while (currentInterval < flashIntervals.Length)
         {

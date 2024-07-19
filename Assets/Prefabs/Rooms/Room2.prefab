@@ -145,6 +145,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26122340b513a024a8ba90083ef7b219, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  roomMusic: {fileID: 8300000, guid: 56abb435a2fb2aa499d526264a6f4681, type: 3}
 --- !u!1 &3644788646074636500
 GameObject:
   m_ObjectHideFlags: 0
@@ -7107,6 +7108,8 @@ MonoBehaviour:
   cubeSwitchActivated: 0
   swordSwitchActivated: 0
   doorId: 
+  doorOpen: {fileID: 0}
+  puzzleSolve: {fileID: 0}
 --- !u!1 &6070009761010560816 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 119082, guid: ea798cfb4939d4441b95d1bd39d0767f, type: 3}

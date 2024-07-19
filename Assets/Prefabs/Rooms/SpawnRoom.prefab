@@ -229,6 +229,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26122340b513a024a8ba90083ef7b219, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  roomMusic: {fileID: 8300000, guid: 7454124ebca857d4a9b6e6e066a2f7dc, type: 3}
 --- !u!1001 &215219173721531498
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2943,9 +2944,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   unlocked: 1
   requiredInputs: 5
-  doorLight: {fileID: 0}
-  animator: {fileID: 0}
+  resetOnRespawn: 0
   doorId: 
+  doorOpen: {fileID: 0}
+  puzzleSolve: {fileID: 0}
 --- !u!1001 &2982504693310545861
 PrefabInstance:
   m_ObjectHideFlags: 0

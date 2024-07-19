@@ -33,6 +33,14 @@ public enum FiringStage
     knockback
 }
 
+enum CurrentLoopingSound
+{
+    None,
+    Walk,
+    Run,
+    MagneticRay
+}
+
 [RequireComponent(typeof(Rigidbody), typeof(FloorCollider), typeof(AudioSource))]
 public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataPersistence
 {
@@ -71,6 +79,11 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
     [SerializeField] private AudioClip shootSound;
     [SerializeField] private AudioClip pickupSound;
     [SerializeField] private AudioClip switchPowerup;
+    [SerializeField] private AudioClip magnetRay;
+    [SerializeField] private AudioClip walk;
+    [SerializeField] private AudioClip run;
+
+    private CurrentLoopingSound currentLoopingSound;
 
     public Transform CameraTransform { get; set; }
     public GameObject HealthBar { get; set; }
@@ -317,6 +330,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
     {
         if (isDead) return;
         CheckGround();
+        HandleLoopingSounds();
         HandleMovement();
         StartDashing();
         CalculateDashPosition();
@@ -336,6 +350,52 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
         DrawDebugRays();
         FiringSequence();
         // CheckIfPlayerIsHidden();
+    }
+
+    private void HandleLoopingSounds()
+    {
+        if (firingStage == FiringStage.aiming && currentMovableObject != -1)
+        {
+            // using magnetic ray sound
+            if (currentLoopingSound != CurrentLoopingSound.MagneticRay)
+            {
+                audioSource.volume = 0.3f;
+                audioSource.clip = magnetRay;
+                audioSource.loop = true;
+                audioSource.Play();
+                currentLoopingSound = CurrentLoopingSound.MagneticRay;
+            }
+        } else if (IsRunning)
+        {
+            if (currentLoopingSound != CurrentLoopingSound.Run)
+            {
+                audioSource.volume = 0.3f;
+                audioSource.clip = run;
+                audioSource.loop = true;
+                audioSource.Play();
+                currentLoopingSound = CurrentLoopingSound.Run;
+            }
+        } else if (IsWalking)
+        {
+            if (currentLoopingSound != CurrentLoopingSound.Walk)
+            {
+                audioSource.volume = 0.3f;
+                audioSource.clip = walk;
+                audioSource.loop = true;
+                audioSource.Play();
+                currentLoopingSound = CurrentLoopingSound.Walk;
+            }
+        } else
+        {
+            if (currentLoopingSound != CurrentLoopingSound.None)
+            {
+                audioSource.volume = 1f;
+                audioSource.Stop();
+                audioSource.loop = false;
+                audioSource.clip = null;
+                currentLoopingSound = CurrentLoopingSound.None;
+            }
+        }
     }
 
     private void CalculateDashPosition()

@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEditor;
 using Unity.VisualScripting;
 using UnityEngine.Assertions;
+using System.Linq;
 
 public class EditorScripting : EditorWindow
 {
@@ -45,6 +46,11 @@ public class EditorScripting : EditorWindow
     private void GenerateDoorIds()
     {
         var prefabPaths = AssetDatabase.FindAssets("Rooms t:Prefab", new[] { "Assets/Prefabs" });
+        var sounds = AssetDatabase.FindAssets("t:AudioClip", new[] { "Assets/Sounds" }).Select(x => AssetDatabase.GUIDToAssetPath(x)).ToArray();
+        var openDoorSound = sounds.Where(x => x.Contains("Door Opening")).First();
+        var puzzleSolveSound = sounds.Where(x => x.Contains("PuzzleSolved")).First();
+        var openDoorClip = AssetDatabase.LoadAssetAtPath<AudioClip>(openDoorSound);
+        var puzzleSolveClip = AssetDatabase.LoadAssetAtPath<AudioClip>(puzzleSolveSound);
         Assert.IsTrue(prefabPaths.Length == 1);
         var prefabPath = AssetDatabase.GUIDToAssetPath(prefabPaths[0]);
         var rooms = PrefabUtility.LoadPrefabContents(prefabPath);
@@ -56,6 +62,7 @@ public class EditorScripting : EditorWindow
             {
                 doors[i].doorId = System.Guid.NewGuid().ToString();
             }
+            doors[i].SetSounds(openDoorClip, puzzleSolveClip);
         }
         for (int i = 0; i < doors2.Length; i++)
         {
@@ -63,6 +70,7 @@ public class EditorScripting : EditorWindow
             {
                 doors2[i].doorId = System.Guid.NewGuid().ToString();
             }
+            doors[i].SetSounds(openDoorClip, puzzleSolveClip);
         }
         PrefabUtility.SaveAsPrefabAsset(rooms, prefabPath);
     }
