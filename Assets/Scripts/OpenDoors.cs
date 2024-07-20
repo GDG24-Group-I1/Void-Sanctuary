@@ -106,7 +106,7 @@ public class OpenDoors : MonoBehaviour, IDataPersistence
             audioSource.PlayOneShot(puzzleSolve);
             changeLight();
         }
-        else if (activeInputs < 0)
+        else
         {
             if (unlocked)
             {
