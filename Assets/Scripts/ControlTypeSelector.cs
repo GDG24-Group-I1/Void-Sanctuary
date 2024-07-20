@@ -20,7 +20,7 @@ public class ControlTypeSelector : MonoBehaviour
             }
             else
             {
-                if (action.activeControl.device.displayName.Contains("DualSense"))
+                if (action.activeControl.device.displayName.Contains("DualSense") || action.activeControl.device.displayName.Contains("DualShock"))
                 {
                     SwitchShowedControls(ControlType.PSController);
                 }
@@ -40,7 +40,7 @@ public class ControlTypeSelector : MonoBehaviour
         }
         else
         {
-            if (device.displayName.Contains("DualSense"))
+            if (device.displayName.Contains("DualSense") || device.displayName.Contains("DualShock"))
             {
                 return ControlType.PSController;
             }

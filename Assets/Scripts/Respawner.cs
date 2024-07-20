@@ -193,6 +193,7 @@ public class Respawner : MonoBehaviour, IDataPersistence
             {
                 if (enemy != null)
                 {
+                    enemy.Unfreeze();
                     enemy.transform.position = ogPosition;
                     enemy.player = playerObject.transform;
                 }

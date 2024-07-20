@@ -357,6 +357,19 @@ public class EnemyAI : MonoBehaviour
         InvokeRepeating(nameof(FlashEnemy), 0f, 0.1f);
     }
 
+    public void Unfreeze()
+    {
+        if (isFrozen)
+        {
+            var iceCube = GetComponentInChildren<IceCubeScript>();
+            if (iceCube != null)
+            {
+                Destroy(iceCube.gameObject);
+                isFrozen = false;
+            }
+        }
+    }
+
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;

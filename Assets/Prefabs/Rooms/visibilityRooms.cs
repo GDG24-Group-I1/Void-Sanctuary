@@ -18,6 +18,7 @@ public class visibilityRooms : MonoBehaviour
     private List<(EnemyAI, Vector3)> dynamicEnemyAis;
 
     private VisibilityState visibilityState;
+    private VisibilityState previousVisibilityState;
     private Timer timer;
 
     private AudioSource audioSource;
@@ -113,11 +114,17 @@ public class visibilityRooms : MonoBehaviour
     public void ForceSetRoomVisibility(bool isVisible)
     {
         visibilityState = isVisible ? VisibilityState.Visible : VisibilityState.NotVisible;
+        previousVisibilityState = isVisible ? VisibilityState.NotVisible : VisibilityState.Visible;
         SetRoomVisibility();
     }
 
     public void SetRoomVisibility()
     {
+        if (visibilityState == previousVisibilityState)
+        {
+            return;
+        }
+        previousVisibilityState = visibilityState;
         bool isVisible = visibilityState == VisibilityState.Visible;
         foreach (Renderer renderer in renderers)
         {
@@ -144,6 +151,7 @@ public class visibilityRooms : MonoBehaviour
         {
             if (enemyAI.Item1 != null)
             {
+                enemyAI.Item1.Unfreeze();
                 enemyAI.Item1.gameObject.SetActive(isVisible);
                 if (isVisible)
                 {

@@ -110,7 +110,7 @@ public class GameInput : MonoBehaviour
             }
             else { 
                 IsKeyboardMovement = false; 
-                if (context.control.device.displayName.Contains("DualSense"))
+                if (context.control.device.displayName.Contains("DualSense") || context.control.device.displayName.Contains("DualShock"))
                 {
                     CurrentControl.Value = ControlType.PSController;
                 } else
