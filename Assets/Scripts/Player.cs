@@ -347,7 +347,6 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
     private void Update()
     {
         DrawDashIndicator();
-        DrawDebugRays();
         FiringSequence();
         // CheckIfPlayerIsHidden();
     }
@@ -722,17 +721,6 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
         audioSource.PlayOneShot(dashSound);
         DashLoaderBorder.GetComponent<CircularProgressBar>().StartProgressBar(dashCooldown);
         IsDashing = true;
-    }
-
-    private void DrawDebugRays()
-    {
-        if (false)
-        {
-            #region Debug rays for dashing
-            Debug.DrawRay(transform.position + Vector3.up, transform.forward * dashDistance, Color.red);
-            Debug.DrawRay(transform.position + Vector3.up + transform.forward * dashDistance, Vector3.down * 5, Color.red);
-            #endregion
-        }
     }
 
     private void FireProjectileCommon()

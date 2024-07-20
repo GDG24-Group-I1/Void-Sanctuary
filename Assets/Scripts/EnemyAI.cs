@@ -253,11 +253,6 @@ public class EnemyAI : MonoBehaviour
         transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f);
     }
 
-    private void HandleEnemyMovement(Vector3 direction)
-    {
-        
-    }
-
     private void SearchWalkPoint()
     {
         // Calculate random point in range

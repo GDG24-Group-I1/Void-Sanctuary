@@ -189,6 +189,14 @@ public class Respawner : MonoBehaviour, IDataPersistence
             {
                 door.OnPlayerRespawn();
             }
+            foreach (var (enemy, ogPosition) in room.visibilityRooms.GetDynamicEnemyList())
+            {
+                if (enemy != null)
+                {
+                    enemy.transform.position = ogPosition;
+                    enemy.player = playerObject.transform;
+                }
+            }
         }
     }
 

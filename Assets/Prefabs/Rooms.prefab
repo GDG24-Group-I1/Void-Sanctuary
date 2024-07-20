@@ -429,7 +429,7 @@ GameObject:
   - component: {fileID: 6756243350683701135}
   - component: {fileID: 4452245173804081959}
   - component: {fileID: 5764240977855903846}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: InvisibleWall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -988,7 +988,7 @@ GameObject:
   - component: {fileID: 4148196981361673843}
   - component: {fileID: 4752947561832923041}
   - component: {fileID: 2334912843668358717}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: InvisibleWall (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1298,7 +1298,7 @@ GameObject:
   - component: {fileID: 3102574237688635634}
   - component: {fileID: 4348726123389100183}
   - component: {fileID: 4410987965608066891}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: InvisibleWall (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1422,7 +1422,7 @@ GameObject:
   - component: {fileID: 1377184022186523999}
   - component: {fileID: 8796825763901238519}
   - component: {fileID: 5679221935557580098}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: InvisibleWall (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2292,7 +2292,7 @@ PrefabInstance:
     - target: {fileID: 586952378447412945, guid: 096cc5014b6f4904aa215c5365c25672, type: 3}
       propertyPath: parentRoom
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 3504659731332715114}
     - target: {fileID: 586952378447412945, guid: 096cc5014b6f4904aa215c5365c25672, type: 3}
       propertyPath: closingDoor
       value: door_entrance
@@ -2404,7 +2404,7 @@ PrefabInstance:
     - target: {fileID: 1851420063618687265, guid: 096cc5014b6f4904aa215c5365c25672, type: 3}
       propertyPath: parentRoom
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 3504659731332715114}
     - target: {fileID: 1851420063618687265, guid: 096cc5014b6f4904aa215c5365c25672, type: 3}
       propertyPath: closingDoor
       value: door_entrance
@@ -2540,7 +2540,7 @@ PrefabInstance:
     - target: {fileID: 6570201469032779980, guid: 096cc5014b6f4904aa215c5365c25672, type: 3}
       propertyPath: parentRoom
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 3504659731332715114}
     - target: {fileID: 6570201469032779980, guid: 096cc5014b6f4904aa215c5365c25672, type: 3}
       propertyPath: closingDoor
       value: door_entrance
@@ -2628,7 +2628,7 @@ PrefabInstance:
     - target: {fileID: 6623998373584924020, guid: 096cc5014b6f4904aa215c5365c25672, type: 3}
       propertyPath: parentRoom
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 3504659731332715114}
     - target: {fileID: 6623998373584924020, guid: 096cc5014b6f4904aa215c5365c25672, type: 3}
       propertyPath: swordEnemyPrefab
       value: 
@@ -2704,7 +2704,7 @@ PrefabInstance:
     - target: {fileID: 7037881569984198578, guid: 096cc5014b6f4904aa215c5365c25672, type: 3}
       propertyPath: parentRoom
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 3504659731332715114}
     - target: {fileID: 7037881569984198578, guid: 096cc5014b6f4904aa215c5365c25672, type: 3}
       propertyPath: swordEnemyPrefab
       value: 
@@ -5737,6 +5737,42 @@ PrefabInstance:
       propertyPath: doorId
       value: 05ceffb1-8b69-4a91-addc-58c05e345c1a
       objectReference: {fileID: 0}
+    - target: {fileID: 3133161592788776547, guid: 99696a742be4af44bafe470ea05d3e28, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.0873
+      objectReference: {fileID: 0}
+    - target: {fileID: 3133161592788776547, guid: 99696a742be4af44bafe470ea05d3e28, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.6144565
+      objectReference: {fileID: 0}
+    - target: {fileID: 3133161592788776547, guid: 99696a742be4af44bafe470ea05d3e28, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 3.83
+      objectReference: {fileID: 0}
+    - target: {fileID: 3133161592788776547, guid: 99696a742be4af44bafe470ea05d3e28, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3133161592788776547, guid: 99696a742be4af44bafe470ea05d3e28, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.9995483
+      objectReference: {fileID: 0}
+    - target: {fileID: 3133161592788776547, guid: 99696a742be4af44bafe470ea05d3e28, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3133161592788776547, guid: 99696a742be4af44bafe470ea05d3e28, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3133161592788776547, guid: 99696a742be4af44bafe470ea05d3e28, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.030053409
+      objectReference: {fileID: 0}
+    - target: {fileID: 3133161592788776547, guid: 99696a742be4af44bafe470ea05d3e28, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: -3.444
+      objectReference: {fileID: 0}
     - target: {fileID: 4603176881101478793, guid: 99696a742be4af44bafe470ea05d3e28, type: 3}
       propertyPath: doorId
       value: 7cbc6d8f-1f73-4282-ac5e-b61672918ed6
@@ -6678,6 +6714,18 @@ PrefabInstance:
       propertyPath: speed
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: 1222414987456803571, guid: 7aebc25346d9c054ea91eb2cfb11ecb0, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 2.575
+      objectReference: {fileID: 0}
+    - target: {fileID: 1222414987456803571, guid: 7aebc25346d9c054ea91eb2cfb11ecb0, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 146.99
+      objectReference: {fileID: 0}
+    - target: {fileID: 1222414987456803571, guid: 7aebc25346d9c054ea91eb2cfb11ecb0, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 68.61
+      objectReference: {fileID: 0}
     - target: {fileID: 1466205761240831860, guid: 7aebc25346d9c054ea91eb2cfb11ecb0, type: 3}
       propertyPath: m_Enabled
       value: 1
@@ -6750,6 +6798,18 @@ PrefabInstance:
       propertyPath: puzzleSolve
       value: 
       objectReference: {fileID: 8300000, guid: 9feb7aaf68afc704fb25e1a9aa81a81c, type: 3}
+    - target: {fileID: 7077868603779910260, guid: 7aebc25346d9c054ea91eb2cfb11ecb0, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 2.4035
+      objectReference: {fileID: 0}
+    - target: {fileID: 7077868603779910260, guid: 7aebc25346d9c054ea91eb2cfb11ecb0, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 137.73
+      objectReference: {fileID: 0}
+    - target: {fileID: 7077868603779910260, guid: 7aebc25346d9c054ea91eb2cfb11ecb0, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 65.26
+      objectReference: {fileID: 0}
     - target: {fileID: 8722646232948423858, guid: 7aebc25346d9c054ea91eb2cfb11ecb0, type: 3}
       propertyPath: speed
       value: 10
@@ -7644,6 +7704,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 6831206214783111699}
     m_Modifications:
+    - target: {fileID: 9055044469868869, guid: 695ac3a8e03d19f49965ced9cc8c03ce, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -6.49
+      objectReference: {fileID: 0}
+    - target: {fileID: 9055044469868869, guid: 695ac3a8e03d19f49965ced9cc8c03ce, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -42.9
+      objectReference: {fileID: 0}
     - target: {fileID: 150596147581208038, guid: 695ac3a8e03d19f49965ced9cc8c03ce, type: 3}
       propertyPath: m_LocalPosition.x
       value: -23.02
@@ -7700,6 +7768,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Point light plant_door_exit
       objectReference: {fileID: 0}
+    - target: {fileID: 6205229461161571151, guid: 695ac3a8e03d19f49965ced9cc8c03ce, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -3.4900007
+      objectReference: {fileID: 0}
+    - target: {fileID: 6205229461161571151, guid: 695ac3a8e03d19f49965ced9cc8c03ce, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -39.89999
+      objectReference: {fileID: 0}
     - target: {fileID: 6721588149058953074, guid: 695ac3a8e03d19f49965ced9cc8c03ce, type: 3}
       propertyPath: doorId
       value: aa0c2b1a-5c74-4b4f-a562-d7e00ae8031f
@@ -7720,6 +7796,14 @@ PrefabInstance:
       propertyPath: puzzleSolve
       value: 
       objectReference: {fileID: 8300000, guid: 9feb7aaf68afc704fb25e1a9aa81a81c, type: 3}
+    - target: {fileID: 7534993990429140940, guid: 695ac3a8e03d19f49965ced9cc8c03ce, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -8.355114
+      objectReference: {fileID: 0}
+    - target: {fileID: 7534993990429140940, guid: 695ac3a8e03d19f49965ced9cc8c03ce, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -44.737896
+      objectReference: {fileID: 0}
     - target: {fileID: 8820222085620403982, guid: 695ac3a8e03d19f49965ced9cc8c03ce, type: 3}
       propertyPath: doorId
       value: 2234f84b-48ad-4fa9-afc0-d934872eace9

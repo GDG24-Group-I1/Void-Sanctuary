@@ -17,7 +17,7 @@ public struct SavedSettings
     {
         holdDownToRun = true,
         slowDownAttack = false,
-        drawDashIndicator = true,
+        drawDashIndicator = false,
         volume = 1f
     };
 }

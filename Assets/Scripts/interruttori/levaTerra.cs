@@ -99,21 +99,33 @@ public class levaTerra : MonoBehaviour
             if (enemySpawnPoints.Length != enemySpawnTypes.Length)
                 return;
 
-            GameObject enemy;
-            Transform player = GameObject.FindGameObjectWithTag("Player").gameObject.transform;
+            GameObject enemy = null;
+            Transform player = GameObject.FindGameObjectWithTag("Player").transform;
             for (int i = 0; i < enemySpawnPoints.Length; i++)
             {
                 if (enemySpawnTypes[i] == EnemyType.Melee)
                 {
                     enemy = Instantiate(swordEnemyPrefab, enemySpawnPoints[i], Quaternion.Euler(90, 0, 0));
                     enemy.transform.SetParent(parentRoom, true);
-                    enemy.GetComponent<EnemyAI>().player = player;
+                    var enemyAi = enemy.GetComponent<EnemyAI>();
+                    enemyAi.player = player;
+                    if (parentRoom != null)
+                    {
+                        var visibilityRoom = parentRoom.GetComponent<visibilityRooms>();
+                        visibilityRoom.AddEnemy(enemyAi);
+                    }
                 }
                 else if (enemySpawnTypes[i] == EnemyType.Ranged)
                 {
                     enemy = Instantiate(projectileEnemyPrefab, enemySpawnPoints[i], Quaternion.Euler(90, 0, 0));
                     enemy.transform.SetParent(parentRoom, true);
-                    enemy.GetComponent<EnemyAI>().player = player;
+                    var enemyAi = enemy.GetComponent<EnemyAI>();
+                    enemyAi.player = player;
+                    if (parentRoom != null)
+                    {
+                        var visibilityRoom = parentRoom.GetComponent<visibilityRooms>();
+                        visibilityRoom.AddEnemy(enemyAi);
+                    }
                 }
             }
         }

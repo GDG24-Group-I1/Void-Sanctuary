@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 
@@ -14,6 +15,7 @@ public class visibilityRooms : MonoBehaviour
     private Renderer[] renderers;
     private Light[] lights;
     private EnemyAI[] enemyAIs;
+    private List<(EnemyAI, Vector3)> dynamicEnemyAis;
 
     private VisibilityState visibilityState;
     private Timer timer;
@@ -34,9 +36,19 @@ public class visibilityRooms : MonoBehaviour
         return enemyAIs;
     }
 
+    public List<(EnemyAI, Vector3)> GetDynamicEnemyList()
+    {
+        return dynamicEnemyAis;
+    }
+
     public void SetEnemyList(EnemyAI[] enemyList)
     {
         enemyAIs = enemyList;
+    }
+
+    public void AddEnemy(EnemyAI enemyAi)
+    {
+        dynamicEnemyAis.Add((enemyAi, enemyAi.transform.position));
     }
 
     private void GetReferences()
@@ -44,6 +56,7 @@ public class visibilityRooms : MonoBehaviour
         renderers ??= GetComponentsInChildren<Renderer>();
         lights ??= GetComponentsInChildren<Light>();
         enemyAIs ??= GetComponentsInChildren<EnemyAI>();
+        dynamicEnemyAis ??= new();
     }
 
     public void DeactivateRoomAtStart()
@@ -125,6 +138,17 @@ public class visibilityRooms : MonoBehaviour
             if (enemyAI != null)
             {
                 enemyAI.gameObject.SetActive(isVisible);
+            }
+        }
+        foreach (var enemyAI in dynamicEnemyAis)
+        {
+            if (enemyAI.Item1 != null)
+            {
+                enemyAI.Item1.gameObject.SetActive(isVisible);
+                if (isVisible)
+                {
+                    enemyAI.Item1.transform.position = enemyAI.Item2;
+                }
             }
         }
     }
