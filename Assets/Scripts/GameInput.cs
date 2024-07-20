@@ -107,8 +107,10 @@ public class GameInput : MonoBehaviour
             if (context.control.device is Keyboard or Mouse) { 
                 IsKeyboardMovement = true; 
                 CurrentControl.Value = ControlType.Mouse;
+                Cursor.visible = true;
             }
             else { 
+                Cursor.visible = false;
                 IsKeyboardMovement = false; 
                 if (context.control.device.displayName.Contains("DualSense") || context.control.device.displayName.Contains("DualShock"))
                 {
