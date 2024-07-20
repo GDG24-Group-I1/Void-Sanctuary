@@ -60,12 +60,12 @@ NavMeshAgent:
   m_AgentTypeID: 0
   m_Radius: 0.5
   m_Speed: 6
-  m_Acceleration: 4
+  m_Acceleration: 5
   avoidancePriority: 50
-  m_AngularSpeed: 120
+  m_AngularSpeed: 360
   m_StoppingDistance: 0
   m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 0
+  m_AutoBraking: 1
   m_AutoRepath: 1
   m_Height: 2
   m_BaseOffset: 1
@@ -113,6 +113,8 @@ MonoBehaviour:
   deathSound: {fileID: 8300000, guid: 1db882fabbaff8e46bf69e37589ffcf8, type: 3}
   activationSound: {fileID: 8300000, guid: 22356aed5257a8a4887840dc3e2218f5, type: 3}
   hitSound: {fileID: 8300000, guid: f9a065c9a9a3b7a4fbfb24455eef65cb, type: 3}
+  bossMeleeAttackSound: {fileID: 0}
+  bossRangedAttackSound: {fileID: 0}
 --- !u!54 &7796587839242472862
 Rigidbody:
   m_ObjectHideFlags: 0

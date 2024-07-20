@@ -127,7 +127,7 @@ public class EnemyAI : MonoBehaviour
 
     private void Start()
     {
-        agent.autoRepath = false;
+        agent.autoRepath = true;
         agent.updatePosition = true;
         agent.updateRotation = false;
         if (Type == EnemyType.Boss)
@@ -205,31 +205,23 @@ public class EnemyAI : MonoBehaviour
 
         if (!playerInSightRange && !playerInAttackRange)
         {
+            HandleEnemyRotation(agent.destination - transform.position);
             Patroling();
         }
         else if (playerInSightRange && !playerInAttackRange)
         {
+            HandleEnemyRotation(player.position - transform.position);
             ChasePlayer();
         }
         else if (playerInSightRange && playerInAttackRange)
         {
+            HandleEnemyRotation(player.position - transform.position);
             AttackPlayer();
         }
-
-        if (Vector3.Distance(agent.destination, player.position) > 1.0f)
-        {
-            agent.SetDestination(player.position);
-        }
-
-        // Manually handle rotation towards the player more smoothly
-        Vector3 direction = (player.position - transform.position).normalized;
-        Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
-        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f);
     }
 
     private void Patroling()
     {
-
         if (Type == EnemyType.Boss)
         {
             animator.SetBool("isWalking", false);
@@ -255,6 +247,17 @@ public class EnemyAI : MonoBehaviour
         }
     }
 
+    private void HandleEnemyRotation(Vector3 direction)
+    {
+        Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
+        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f);
+    }
+
+    private void HandleEnemyMovement(Vector3 direction)
+    {
+        
+    }
+
     private void SearchWalkPoint()
     {
         // Calculate random point in range
@@ -275,10 +278,14 @@ public class EnemyAI : MonoBehaviour
         {
             animator.SetBool("isWalking", true);
         }
+
         agent.isStopped = false;
         agent.stoppingDistance = stopRange;
+
         if (player != null)
+        {
             agent.SetDestination(player.position);
+        }
     }
 
     private void AttackPlayer()
