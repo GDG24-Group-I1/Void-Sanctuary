@@ -59,8 +59,8 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 1
-  m_Speed: 10
-  m_Acceleration: 5
+  m_Speed: 12
+  m_Acceleration: 10
   avoidancePriority: 50
   m_AngularSpeed: 360
   m_StoppingDistance: 0
@@ -95,9 +95,10 @@ MonoBehaviour:
   walkPointRange: 5
   sightRange: 12
   attackingDistanceMelee: 5
-  stoppingDistanceMelee: 3
+  stoppingDistanceMelee: 4
   attackingDistanceRanged: 0
   stoppingDistanceRanged: 0
+  attackCooldown: 2.5
   animationEnded: 0
   projectilePrefab: {fileID: 0}
   projectileHeight: 0.8

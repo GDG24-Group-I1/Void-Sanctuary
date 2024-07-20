@@ -49,7 +49,7 @@ public class EnemyAI : MonoBehaviour
 
     // Attack
     private bool canAttack = true;
-    private float attackCooldown = 2f;
+    [SerializeField] private float attackCooldown;
     public Timer attackCooldownTimer;
     public bool animationEnded = false;
 
@@ -289,7 +289,7 @@ public class EnemyAI : MonoBehaviour
         agent.SetDestination(player.position);  // Continuously update the destination to the player's position
 
         // Check if the enemy is within the effective stop distance and has stopped moving
-        if (distanceToPlayer <= stopRange + agent.stoppingDistance && agent.remainingDistance <= agent.stoppingDistance && agent.velocity.sqrMagnitude == 0f)
+        if (distanceToPlayer <= stopRange + agent.stoppingDistance && agent.remainingDistance <= agent.stoppingDistance)
         {
             transform.LookAt(new Vector3(player.position.x, transform.position.y, player.position.z)); // Look at player ignoring y difference
 
