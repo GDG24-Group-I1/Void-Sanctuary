@@ -37,7 +37,7 @@ public class CryoBlockScript : MonoBehaviour
 
     private void movePlatform()
     {
-        transform.position = Vector3.MoveTowards(transform.position, finalPosition, speed * Time.fixedDeltaTime);
+        transform.position = Vector3.MoveTowards(transform.position, finalPosition, speed * Time.deltaTime);
 
         var distance = Vector3.Distance(transform.position, finalPosition);
         if (distance <= 0.01)
