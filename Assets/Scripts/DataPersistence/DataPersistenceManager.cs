@@ -58,6 +58,7 @@ public class DataPersistenceManager : MonoBehaviour
     }
     public void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        Cursor.visible = true;
         dataPersistenceObjects = FindAllDataPersistanceObjects();
         LoadGame();
     }
