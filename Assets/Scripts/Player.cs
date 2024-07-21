@@ -46,6 +46,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
 {
     private const float firingKnockbackSpeed = 0f;
     private const int maxWallsCollided = 10;
+    private const int maxContactPoints = 10;
 
     private const string GunSpriteName = "GunTransparent";
     private const string IceSpriteName = "IceTransparent";
@@ -116,6 +117,8 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
     private bool hasGroundUnderneath = true;
     private Collider[] previousWallsCollided = Array.Empty<Collider>();
     private readonly RaycastHit[] wallsCollided = new RaycastHit[maxWallsCollided];
+    private ContactPoint[] contactPoints = new ContactPoint[maxContactPoints];
+    private float lowestGroundContactPoint = 0;
 
     private int weaponIndex = 0;
 
@@ -220,6 +223,16 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
                 ResetPlayer();
             }
         });
+        GetComponent<FloorCollider>().CollisionStayCallback = (collision) =>
+        {
+            if (collision.contactCount > contactPoints.Length)
+            {
+                contactPoints = new ContactPoint[collision.contactCount];
+            }
+            var pointCount = collision.GetContacts(contactPoints);
+            var yPoint = contactPoints.Take(pointCount).Select(x => transform.InverseTransformPoint(x.point).y).Min();
+            lowestGroundContactPoint = yPoint;
+        };
         animator = GetComponentInChildren<PlayerAnimator>();
         var swords = GameObject.FindGameObjectsWithTag("Sword");
         Debug.Assert(swords.Length == 1, "There should be exactly one sword in the scene");
@@ -537,6 +550,12 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
         if (!isGrounded && hasGroundUnderneath)
         {
             velocityChange.y = -9.8f;
+        }
+
+        if (lowestGroundContactPoint > 0.5f && !hasGroundUnderneath)
+        {
+            velocityChange = Vector3.zero;
+            lowestGroundContactPoint = 0;
         }
 
         rb.AddForce(velocityChange, ForceMode.VelocityChange);

@@ -5,10 +5,10 @@ using UnityEngine;
 
 public class FloorCollider : MonoBehaviour
 {
-    public Action CollisionEnterCallback { get; set; }
-    public Action CollisionExitCallback { get; set; }
+    public Action<Collision> CollisionEnterCallback { get; set; }
+    public Action<Collision> CollisionExitCallback { get; set; }
 
-    public Action CollisionStayCallback { get; set; }
+    public Action<Collision> CollisionStayCallback { get; set; }
 
     private LayerMask groundLayer;
 
@@ -21,7 +21,7 @@ public class FloorCollider : MonoBehaviour
     {
         if (collision.collider.gameObject.layer == groundLayer)
         {
-            CollisionStayCallback?.Invoke();
+            CollisionStayCallback?.Invoke(collision);
         }
     }
 
@@ -29,7 +29,7 @@ public class FloorCollider : MonoBehaviour
     {
         if (collision.collider.gameObject.layer == groundLayer)
         {
-            CollisionEnterCallback?.Invoke();
+            CollisionEnterCallback?.Invoke(collision);
         }
     }
 
@@ -37,7 +37,7 @@ public class FloorCollider : MonoBehaviour
     {
         if (collision.collider.gameObject.layer == groundLayer)
         {
-            CollisionExitCallback?.Invoke();
+            CollisionExitCallback?.Invoke(collision);
         }
     }
 }
