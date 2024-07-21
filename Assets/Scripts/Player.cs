@@ -156,6 +156,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
     private bool isPickingUpItem = false;
     private bool isStaggered = false;
     private bool isDead = false;
+    private bool finalLeverActivated = false;
     private Timer movementCooldownTimer;
     private Timer turningCooldownTimer;
     private Timer actionCooldownTimer;
@@ -186,6 +187,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
         canFire = false;
         canAttack = false;
         canDash = false;
+        finalLeverActivated = false;
         Animator animator = GetComponentInChildren<Animator>();
         animator.SetTrigger("Death");
         YouDiedText.SetActive(true);
@@ -195,6 +197,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
 
     private void Start()
     {
+        finalLeverActivated = false;
         DataPersistenceManager.GetInstance().RegisterDataPersistenceObject(this);
         youDiedTextAnimator = YouDiedText.GetComponent<Animator>();
         movableObjects = GameObject.FindGameObjectsWithTag("MovableObject");
@@ -319,7 +322,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
 
     private void FixedUpdate()
     {
-        if (isDead) return;
+        if (isDead || finalLeverActivated) return;
         CheckGround();
         HandleLoopingSounds();
         HandleMovement();
@@ -1020,6 +1023,7 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
         IsWalking = false;
         IsDashing = false;
         IsAttacking = false;
+        finalLeverActivated = true;
         IsFalling = AnimationState.None;
     }
 
