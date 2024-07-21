@@ -97,7 +97,8 @@ MonoBehaviour:
   attackingDistanceMelee: 0
   stoppingDistanceMelee: 0
   attackingDistanceRanged: 15
-  stoppingDistanceRanged: 10
+  stoppingDistanceRanged: 12
+  attackCooldown: 2.5
   animationEnded: 1
   projectilePrefab: {fileID: 2225220425910028821, guid: ad35dc2357e786a47be6650006d72a7e, type: 3}
   projectileHeight: 0.9
@@ -108,7 +109,7 @@ MonoBehaviour:
   rightArmCollider: {fileID: 0}
   Type: 1
   health: 3
-  staggerDuration: 1
+  staggerDuration: 0.5
   attackSound: {fileID: 8300000, guid: a917ead7fe043d6499ec98f84160df8e, type: 3}
   deathSound: {fileID: 8300000, guid: 1db882fabbaff8e46bf69e37589ffcf8, type: 3}
   activationSound: {fileID: 8300000, guid: 22356aed5257a8a4887840dc3e2218f5, type: 3}

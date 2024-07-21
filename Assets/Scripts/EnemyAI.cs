@@ -216,7 +216,14 @@ public class EnemyAI : MonoBehaviour
         else if (playerInSightRange && playerInAttackRange)
         {
             HandleEnemyRotation(player.position - transform.position);
-            AttackPlayer();
+            if(distanceToPlayer > stopRange)
+            {
+                ChasePlayer();
+            }
+            else if (distanceToPlayer <= stopRange)
+            {
+                AttackPlayer();
+            }
         }
     }
 
@@ -272,9 +279,10 @@ public class EnemyAI : MonoBehaviour
         if (Type == EnemyType.Boss)
         {
             animator.SetBool("isWalking", true);
+            agent.isStopped = false;
         }
 
-        agent.isStopped = false;
+        
         agent.stoppingDistance = stopRange;
 
         if (player != null)
@@ -287,7 +295,6 @@ public class EnemyAI : MonoBehaviour
     {
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
         agent.SetDestination(player.position);  // Continuously update the destination to the player's position
-
         // Check if the enemy is within the effective stop distance and has stopped moving
         if (distanceToPlayer <= stopRange + agent.stoppingDistance && agent.remainingDistance <= agent.stoppingDistance)
         {
@@ -295,14 +302,9 @@ public class EnemyAI : MonoBehaviour
 
             if (canAttack)
             {
-                agent.isStopped = true;
                 DetermineAttackType(distanceToPlayer);
                 canAttack = false;
                 attackCooldownTimer.Start(attackCooldown);
-            }
-            else
-            {
-                agent.isStopped = false;
             }
         }
     }
@@ -436,7 +438,7 @@ public class EnemyAI : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (Type == EnemyType.Boss && isStaggered) return;
+        if (isStaggered) return;
         if (health <= 0) return;
         if (other.gameObject.CompareTag("Sword"))
         {
@@ -496,7 +498,7 @@ public class EnemyAI : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (Type == EnemyType.Boss && isStaggered) return;
+        if (isStaggered) return;
         if (health <= 0) return;
         if (collision.gameObject.name == "Projectile(Clone)")
         {

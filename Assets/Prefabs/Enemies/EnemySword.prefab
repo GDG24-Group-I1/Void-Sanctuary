@@ -109,7 +109,7 @@ MonoBehaviour:
   rightArmCollider: {fileID: 499465763860669667}
   Type: 0
   health: 3
-  staggerDuration: 1
+  staggerDuration: 0.5
   attackSound: {fileID: 8300000, guid: 7ab4e10956bda874dbc13bb471993801, type: 3}
   deathSound: {fileID: 8300000, guid: 1db882fabbaff8e46bf69e37589ffcf8, type: 3}
   activationSound: {fileID: 8300000, guid: 22356aed5257a8a4887840dc3e2218f5, type: 3}
