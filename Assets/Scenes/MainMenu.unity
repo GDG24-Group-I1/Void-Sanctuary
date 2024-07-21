@@ -3427,7 +3427,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Draw debug indicator
+  m_Text: Draw dash indicator
 --- !u!222 &1031077783
 CanvasRenderer:
   m_ObjectHideFlags: 0
