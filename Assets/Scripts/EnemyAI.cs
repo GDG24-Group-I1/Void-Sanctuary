@@ -356,6 +356,9 @@ public class EnemyAI : MonoBehaviour
         audioSource.PlayOneShot(hitSound);
         isStaggered = true;
         staggerTimer.Start(staggerDuration);
+        if (IsInvoking(nameof(FlashEnemy))) {
+            CancelInvoke(nameof(FlashEnemy));
+        }
         InvokeRepeating(nameof(FlashEnemy), 0f, 0.1f);
     }
 

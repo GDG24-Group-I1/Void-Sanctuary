@@ -72,9 +72,10 @@ public class PlatformScript : MonoBehaviour
         transform.position = Vector3.MoveTowards(transform.position, transform.position + movements[movementStage], speed * Time.fixedDeltaTime * 0.25f);
 
         var distance = Vector3.Distance(transform.position, startingPosition);
-        
-        if (distance > Vector3.Distance(startingPosition + movements[movementStage], startingPosition))
+
+        if (distance > movements[movementStage].magnitude)
         {
+            transform.position = startingPosition + movements[movementStage];
             // setting current pos as step position to mesure distance traveled from
             startingPosition = transform.position;
             if (backtracking)
