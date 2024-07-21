@@ -66,7 +66,6 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
     [SerializeField] private Material glowMaterial;
     [SerializeField] private Material swordBaseMaterial;
     [SerializeField] private Material swordBackBaseMaterial;
-    [SerializeField] private float slowDownFactor = 0.25f;
     [SerializeField] private List<Sprite> weaponSprites;
     [SerializeField] private Material[] weaponMaterials;
     [SerializeField] private GameObject dashIndicatorPrefab;
@@ -120,7 +119,6 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
 
     private int weaponIndex = 0;
 
-    private float fixedDeltaTime;
     public bool IsWalking { get; private set; }
 
     public bool IsDashing { get; private set; }
@@ -194,13 +192,6 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
         youDiedTextAnimator.SetTrigger("PlayerDied");
         Destroy(gameObject, 3.0f);
     }
-
-
-    private void Awake()
-    {
-        fixedDeltaTime = Time.fixedDeltaTime;
-    }
-
 
     private void Start()
     {
@@ -889,11 +880,6 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
             sword.GetComponent<SkinnedMeshRenderer>().SwitchMaterial(glowMaterial, swordBaseMaterial);
             swordBack.GetComponent<SkinnedMeshRenderer>().SwitchMaterial(glowMaterial, swordBackBaseMaterial);
             IsSwordGlowing = false;
-            if (gameData.savedSettings.slowDownAttack)
-            {
-                Time.timeScale = 1.0f;
-                Time.fixedDeltaTime = fixedDeltaTime;
-            }
         }
     }
 
@@ -957,11 +943,6 @@ public class Player : MonoBehaviour, VoidSanctuaryActions.IPlayerActions, IDataP
         CanCombo = ComboState.CanCombo;
         sword.GetComponent<SkinnedMeshRenderer>().SwitchMaterial(swordBaseMaterial, glowMaterial);
         swordBack.GetComponent<SkinnedMeshRenderer>().SwitchMaterial(swordBackBaseMaterial, glowMaterial);
-        if (gameData.savedSettings.slowDownAttack)
-        {
-            Time.timeScale = slowDownFactor;
-            Time.fixedDeltaTime = fixedDeltaTime * Time.timeScale;
-        }
         IsSwordGlowing = true;
         DebugExt.LogCombo($"Can combo at time {Time.time} for {AttackNumber}");
     }
