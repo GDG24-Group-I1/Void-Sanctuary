@@ -9,14 +9,12 @@ using UnityEngine.Diagnostics;
 public struct SavedSettings
 {
     public bool holdDownToRun;
-    public bool slowDownAttack;
     public float volume;
     public bool drawDashIndicator;
 
     public static SavedSettings DefaultSettings => new()
     {
         holdDownToRun = true,
-        slowDownAttack = false,
         drawDashIndicator = false,
         volume = 1f
     };

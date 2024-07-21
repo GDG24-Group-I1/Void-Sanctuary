@@ -63,17 +63,12 @@ public class MenuButtonSelector : MonoBehaviour, IDataPersistence
         AudioListener.volume = gameData.savedSettings.volume;
         volumeSlider.value = gameData.savedSettings.volume;
         holdDownToRunToggle.isOn = gameData.savedSettings.holdDownToRun;
-        slowDownAttackToggle.isOn = gameData.savedSettings.slowDownAttack;
         drawDashIndicatorToggle.isOn = gameData.savedSettings.drawDashIndicator;
     }
 
     public void OnHoldDownToRunChanged(bool value)
     {
         gameData.savedSettings.holdDownToRun = value;
-    }
-    public void OnSlowdownAttackChanged(bool value)
-    {
-        gameData.savedSettings.slowDownAttack = value;
     }
     public void OnDrawDashIndicatorChanged(bool value)
     {
