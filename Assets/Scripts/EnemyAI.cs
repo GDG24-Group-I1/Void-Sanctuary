@@ -16,7 +16,8 @@ public class EnemyAI : MonoBehaviour
     public Transform player;
     public LayerMask whatIsGround, whatIsPlayer;
 
-    private bool isStaggered;
+    private bool _isStaggered; 
+    private bool isStaggered { get => _isStaggered ; set { animator.SetBool("Staggered", value); _isStaggered = value; }}
     private bool isFrozen;
     public bool IsFrozen
     {
@@ -50,6 +51,7 @@ public class EnemyAI : MonoBehaviour
     // Attack
     private bool canAttack = true;
     [SerializeField] private float attackCooldown;
+    [SerializeField] private float attackAfterHitCooldown;
     public Timer attackCooldownTimer;
     public bool animationEnded = false;
 
@@ -295,6 +297,7 @@ public class EnemyAI : MonoBehaviour
     {
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
         agent.SetDestination(player.position);  // Continuously update the destination to the player's position
+
         // Check if the enemy is within the effective stop distance and has stopped moving
         if (distanceToPlayer <= stopRange + agent.stoppingDistance && agent.remainingDistance <= agent.stoppingDistance)
         {
@@ -342,6 +345,7 @@ public class EnemyAI : MonoBehaviour
 
     public void StaggerFromHit()
     {
+        attackCooldownTimer.Start(attackAfterHitCooldown);
         if (healthBar != null && Type == EnemyType.Boss)
         {
             healthBar.value = health;
@@ -503,6 +507,7 @@ public class EnemyAI : MonoBehaviour
     {
         if (isStaggered) return;
         if (health <= 0) return;
+
         if (collision.gameObject.name == "Projectile(Clone)")
         {
             health -= 2;

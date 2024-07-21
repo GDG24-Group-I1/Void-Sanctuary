@@ -126,6 +126,7 @@ MonoBehaviour:
   attackingDistanceRanged: 15
   stoppingDistanceRanged: 10
   attackCooldown: 2
+  attackAfterHitCooldown: 0
   animationEnded: 0
   projectilePrefab: {fileID: 2225220425910028821, guid: ad35dc2357e786a47be6650006d72a7e, type: 3}
   projectileHeight: 0.9
